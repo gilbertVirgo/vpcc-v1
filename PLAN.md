@@ -141,33 +141,33 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 3 — Prismic content model
 
-- [x] `@prismicio/client` + `@prismicio/next` installed
-- [ ] **Blocked:** connect repo `9yoxbcr3`. The CLI needs a `prismic.config.json`, and only `prismic init` writes one — it opens a browser to authenticate, so it can't run unattended. Every `prismic field add` fails until it exists
+- [x] Connected repo **`de628675`**. `9yoxbcr3` turned out to be on the Legacy Builder, which the CLI can't drive; it had 0 documents, so a fresh Type Builder repo was cheaper than migrating
+- [x] `@prismicio/client`, `@prismicio/next`, `@prismicio/react` installed
 - [x] `src/prismicio.ts` — client, route resolver (`home` → `/`, everything else → `/:uid`), cache tags
 - [x] Preview + `draftMode` routes (`/api/preview`, `/api/exit-preview`)
 - [x] Revalidation webhook (`/api/revalidate`) — constant-time secret check, fails closed when the secret is unset
-- [x] Model authored as `scripts/prismic-model.sh` (every `prismic` CLI call, ready to run once the config exists)
-- [ ] **Custom types** — scripted, not yet pushed
-  - [ ] `settings` (singleton) — site name, nav links, footer groups, socials, contact email, default SEO/OG
-  - [ ] `page` (repeatable) — UID, SEO fields, slice zone
-  - [ ] `team_member` (repeatable) — name, role, bio rich text, photo, order
-  - [ ] `belief` (repeatable) *or* a repeatable group inside a `beliefs_list` slice — decide, don't do both
-  - [ ] `event` (repeatable) — title, date/time, location, body, image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events)
-- [ ] **Slice library** — scripted, not yet pushed; React components not yet written
-  - [ ] `PageHeader` — title (with accent-styled span), intro rich text
-  - [ ] `Feature` — image/slideshow + text + buttons, alternating alignment, optional enlargeable image
-  - [ ] `ContentGrid` — heading + intro + N cells (title / subtitle / body)
-  - [ ] `TeamGrid` — pulls `team_member` documents
-  - [ ] `BeliefsList` — numbered statement list
-  - [ ] `RichText`
-  - [ ] `CallToAction`
-  - [ ] `EventCard` — respects expiry
-  - [ ] `InfoList` — labelled detail rows (When / Where / Cost / Length), as used on ESOL
-  - [ ] `MapEmbed` — lazy-loaded Google Maps iframe, click-to-load placeholder
-  - [ ] `ImagePoster` — full-bleed poster image
-  - [ ] `ContactForm` — form embed slice
-- [ ] Every slice consumes Phase 1 primitives only. No slice-local styling escape hatches
-- [ ] `slicesimulator` route + mock content for each slice
+- [x] Model authored as `scripts/prismic-model.sh` — every `prismic` CLI call, re-runnable
+- [x] **Custom types** pushed: `settings`, `page`, `team_member`, `event`
+  - [x] `settings` (singleton) — site name, nav links, footer groups, socials, contact email, default SEO/OG
+  - [x] `page` (repeatable) — UID, SEO fields, slice zone
+  - [x] `team_member` (repeatable) — name, role, bio rich text, photo, order
+  - [x] Beliefs modelled as a repeatable group inside the `beliefs_list` slice, not a document type
+  - [x] `event` (repeatable) — title, date/time, location, body, image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events)
+- [x] **Slice library** — 12 slices pushed and built as React components
+  - [x] `PageHeader` — title (with accent-styled span), intro rich text
+  - [x] `Feature` — image/slideshow + text + buttons, alternating alignment, optional enlargeable image
+  - [x] `ContentGrid` — heading + intro + N cells (title / subtitle / body)
+  - [x] `TeamGrid` — pulls `team_member` documents
+  - [x] `BeliefsList` — numbered statement list
+  - [x] `RichText`
+  - [x] `CallToAction`
+  - [x] `EventCard` — respects expiry
+  - [x] `InfoList` — labelled detail rows (When / Where / Cost / Length), as used on ESOL
+  - [x] `MapEmbed` — lazy-loaded Google Maps iframe, click-to-load placeholder
+  - [x] `ImagePoster` — full-bleed poster image
+  - [x] `ContactForm` — form embed slice
+- [x] Every slice consumes Phase 1 primitives only — enforced by `lint:tokens`
+- [ ] Render each slice against sample content — **nothing has been seen rendered yet**; the repository has no documents
 
 **Exit criteria:** each slice renders correctly in Slice Simulator from mock data, at all breakpoints.
 
