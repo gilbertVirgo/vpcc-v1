@@ -50,7 +50,7 @@ docs/             design-system.md
 
 ## Notes
 
-Fonts come from Adobe Fonts kit `ccy7tqi` (Area Inktrap, Ivyora Text). The kit's
+Fonts come from Adobe Fonts kit `ccy7tqi` (Area Inktrap). The kit's
 allowed-domains list has to include any new preview host or the fonts fall back
 silently.
 

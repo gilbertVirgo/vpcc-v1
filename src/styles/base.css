@@ -100,14 +100,14 @@
 		color: var(--color-accent-contrast);
 	}
 
-	/* Serif accent. Carried over from the old site's `.serif` span, which set
-	   fragments of headings — "Hot Cross Buns", "(in brief)" — in a contrasting
-	   face. Optical size differs between the families, so Ivyora is nudged up
-	   slightly to sit right next to Area Inktrap. */
+	/* Accent fragment. Carries over the two-tone headings from the old site —
+	   "April 3rd: Hot Cross Buns", "Our story (in brief)" — where part of the
+	   line was set apart from the rest.
+
+	   The old site used a second face for this. Here the contrast is weight:
+	   500 against the heading's 700, same family, same size. Nothing to load,
+	   and it stays inside Area Inktrap. */
 	.font-accent {
-		font-family: var(--font-serif);
-		font-weight: var(--font-weight-regular);
-		font-size: 1.06em;
-		letter-spacing: -0.005em;
+		font-weight: var(--font-weight-medium);
 	}
 }

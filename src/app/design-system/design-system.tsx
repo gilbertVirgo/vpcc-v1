@@ -241,7 +241,7 @@ function Typography() {
 	return (
 		<Block
 			title="Typography"
-			description="Area Inktrap at 500 and 700 carries everything. Ivyora Text is an accent only — heading fragments and pull quotes, never body copy."
+			description="One family. Area Inktrap at 500 and 700 carries everything — emphasis comes from weight, size and colour rather than a second face."
 			tone="sunken"
 		>
 			<Stack gap="xl">
@@ -269,7 +269,7 @@ function Typography() {
 				</div>
 
 				<div>
-					<Subheading>Accent serif</Subheading>
+					<Subheading>Accent fragment · weight 500 against 700</Subheading>
 					<Heading size="h1">
 						April 3rd: <Accent>Hot Cross Buns</Accent>
 					</Heading>

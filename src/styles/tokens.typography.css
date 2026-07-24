@@ -1,35 +1,32 @@
 /*
  * Typography tokens
  * -----------------------------------------------------------------------------
- * Area Inktrap  — 500 / 700, roman + italic. Everything.
- * Ivyora Text   — 400 / 700, roman + italic. ACCENT ONLY: heading fragments,
- *                 pull quotes, the occasional standfirst. Never body copy.
+ * Area Inktrap — 500 / 700, roman + italic. One family, everything.
  *
- * Both are served from the Adobe Fonts kit `ccy7tqi`, linked in the root
- * layout. Area Inktrap ships no weight below 500 and none between 500 and 700,
- * so the scale below never asks for one.
+ * Served from the Adobe Fonts kit `ccy7tqi`, linked in the root layout. Area
+ * Inktrap ships no weight below 500 and none between 500 and 700, so the scale
+ * below never asks for one.
+ *
+ * Emphasis is carried by weight, size and colour — not by a second face.
  *
  * Sizes are fluid between a 375px and a 1500px viewport.
  */
 
 @theme {
 	/* Drop Tailwind's default families, size scale and weight scale. Only the
-	   weights that exist in the two families survive, so `font-light` or
+	   two weights Area Inktrap actually ships survive, so `font-light` or
 	   `font-black` fail loudly at author time rather than silently synthesising
 	   a weight in the browser. */
 	--font-*: initial;
 	--text-*: initial;
 	--font-weight-*: initial;
 
-	--font-weight-regular: 400; /* Ivyora Text only */
-	--font-weight-medium: 500; /* Area Inktrap body + headings */
-	--font-weight-bold: 700; /* both families */
+	--font-weight-medium: 500; /* body and most headings */
+	--font-weight-bold: 700; /* emphasis */
 
 	--font-sans:
 		"area-inktrap", ui-sans-serif, system-ui, -apple-system,
 		"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	--font-serif:
-		"ivyora-text", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
 	/* ---- Scale ----------------------------------------------------------- */
 	--text-display: clamp(2.75rem, 1.6667rem + 4.622vw, 6rem);

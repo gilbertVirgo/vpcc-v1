@@ -1,14 +1,18 @@
 import type { Metadata, Viewport } from "next";
 
+import { Footer } from "@/components/layout/footer";
+import { Navigation } from "@/components/layout/navigation";
+import { SkipLink } from "@/components/ui/a11y";
+import { siteConfig } from "@/lib/site-config";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
 	title: {
-		default: "Victoria Park Community Church",
-		template: "%s · Victoria Park Community Church",
+		default: siteConfig.name,
+		template: `%s · ${siteConfig.name}`,
 	},
-	description:
-		"A welcoming community rooted in the gospel near Victoria Park, Tower Hamlets.",
+	description: siteConfig.description,
 };
 
 export const viewport: Viewport = {
@@ -25,10 +29,15 @@ export default function RootLayout({
 			<head>
 				<link rel="preconnect" href="https://use.typekit.net" crossOrigin="" />
 				<link rel="preconnect" href="https://p.typekit.net" crossOrigin="" />
-				{/* Adobe Fonts: area-inktrap (500/700) + ivyora-text (400/700) */}
+				{/* Adobe Fonts: area-inktrap (500/700) */}
 				<link rel="stylesheet" href="https://use.typekit.net/ccy7tqi.css" />
 			</head>
-			<body>{children}</body>
+			<body className="flex min-h-dvh flex-col">
+				<SkipLink />
+				<Navigation />
+				{children}
+				<Footer />
+			</body>
 		</html>
 	);
 }

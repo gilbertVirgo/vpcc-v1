@@ -69,18 +69,19 @@ exists for the occasional dark band, not a theme.
 
 ## Typography
 
-- **Area Inktrap** — 500 and 700, roman and italic. Everything.
-- **Ivyora Text** — 400 and 700, roman and italic. **Accent only**: heading
-  fragments, pull quotes. Never body copy.
+**Area Inktrap** — 500 and 700, roman and italic. One family, everything.
 
-Both come from Adobe Fonts kit `ccy7tqi`, linked in the root layout.
+From Adobe Fonts kit `ccy7tqi`, linked in the root layout.
+
+There is no second face. Emphasis comes from weight, size and colour.
 
 Area Inktrap has no weight below 500 and nothing between 500 and 700. The
-weight scale is restricted to `font-regular` / `font-medium` / `font-bold` so
+weight scale is restricted to `font-medium` (500) and `font-bold` (700) so
 `font-light` fails at author time instead of silently synthesising a weight.
 `font-synthesis` is off in `base.css` for the same reason.
 
-The accent serif reproduces the old site's `.serif` span:
+`Accent` reproduces the old site's two-tone headings by dropping a fragment to
+weight 500 against the heading's 700 — same family, same size:
 
 ```tsx
 <Heading size="h1">April 3rd: <Accent>Hot Cross Buns</Accent></Heading>

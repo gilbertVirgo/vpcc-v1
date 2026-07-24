@@ -18,7 +18,7 @@ phase until the previous phase's "Exit criteria" are all ticked.
 | Styling | Tailwind CSS v4 (CSS-first `@theme`) over a CSS-custom-property token layer |
 | CMS | Prismic (Slice Machine) |
 | Host | Netlify (`@netlify/plugin-nextjs`) |
-| Fonts | **Area Inktrap** 500/700 (primary) + **Ivyora Text** 400/700 (serif accent), via Adobe Fonts `https://use.typekit.net/ccy7tqi.css` |
+| Font | **Area Inktrap** 500/700 only, via Adobe Fonts `https://use.typekit.net/ccy7tqi.css`. No second face. |
 | Primary | `#FF9035` |
 | Light | `#FCFCF5` |
 | Dark | `#0B0C17` |
@@ -44,11 +44,11 @@ Change them there before Phase 1 starts, not after.
 ### 1.2 Typography
 
 - [x] Add Typekit stylesheet to root layout `<head>` with `<link rel="preconnect">` to `use.typekit.net` and `p.typekitcdn.com`
-- [x] Define `--font-sans: "area-inktrap", <system fallback>` and `--font-serif: "ivyora-text", <serif fallback>`
+- [x] Define `--font-sans: "area-inktrap", <system fallback>`
 - [ ] Metric-adjusted fallback faces (`size-adjust`, `ascent-override`) to cut CLS on first paint — needs the real font metrics measured first
 - [x] Fluid modular type scale using `clamp()` — `display / h1 / h2 / h3 / body-lg / body / body-sm / caption / overline`
 - [x] Area Inktrap has only 500 and 700: 500 = body + most headings, 700 = emphasis. Weight scale restricted to the weights that exist; `font-synthesis` off. Both families ship real italics, so no faux italic is needed
-- [x] Ivyora Text (400/700) is the **accent serif only** — heading fragments, pull quotes. Never body copy. Ports the old `.serif` span treatment
+- [x] Two-tone headings (the old site's `.serif` span) ported as a **weight** contrast — fragment at 500 against the heading's 700. No second typeface
 - [x] Line-height, letter-spacing (tighter as size increases), and `text-wrap: balance` on headings / `pretty` on paragraphs
 - [x] Measure cap: body copy max ~68ch
 
@@ -83,7 +83,7 @@ Change them there before Phase 1 starts, not after.
 - [x] `prefers-reduced-motion: reduce` kill-switch at the token level — one place, not per-component (the current site re-implements this in every block)
 - [x] `useInView` reveal hook built on `IntersectionObserver` — fires once, `rootMargin` tuned so content is never revealed below the fold on fast scroll
 - [x] `<Reveal>` and `<Stagger>` primitives: fade + ≤12px rise, 60–80ms stagger. Replaces the `setTimeout` cascades in the old `renderBlock.js`
-- [ ] Page-transition treatment (App Router `template.tsx` or view transitions) — short cross-fade, no slide. Deferred to Phase 2, where the shell and real routes exist
+- [x] Page-transition treatment — `template.tsx` cross-fade with a 4px lift, built in Phase 2 once real routes existed
 - [x] Hover/focus/press micro-interactions defined once on the Button/Link primitives
 
 ### 1.6 Component primitives
@@ -123,14 +123,16 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 2 — App shell
 
-- [ ] Root layout: html lang, font links, `<SkipLink>`, global providers
-- [ ] `Navigation` — Home / What's On / About / Beliefs / Connect + `Donate` button
-  - [ ] Mobile drawer: focus trap, body scroll lock, `Esc`, animated with Phase 1 motion tokens
-  - [ ] Active-route state; scroll-aware background transition
-- [ ] `Footer` — four link groups: **Connect**, **Legal**, **Quick Links**, **Associated Organisations** (content in Appendix A)
-- [ ] `error.tsx`, `not-found.tsx`, `loading.tsx`
-- [ ] `Dialog` provider (replaces old `ModalContext`)
-- [ ] Responsive pass across all five breakpoints
+- [x] Root layout: `lang="en-GB"`, Typekit preconnect + stylesheet, `<SkipLink>`, nav/footer shell
+- [x] `Navigation` — Home / What's On / About / Beliefs / Connect + `Donate` button
+  - [x] Mobile drawer: native `<dialog>` (focus trap, `Esc`, inert background from the platform) + body scroll lock, right-pinned slide on the motion tokens
+  - [x] Active-route state (centre-out underline, `aria-current`); drawer closes on any navigation, including back/forward
+  - [ ] Scroll-aware background transition — built, but **unverified**: the preview pane runs backgrounded so `requestAnimationFrame` never fires
+- [x] `Footer` — four link groups on `surface-inverse`; 5 policy PDFs copied into `public/assets/pdf` and serving
+- [x] `error.tsx`, `not-found.tsx`, `loading.tsx`
+- [ ] `Dialog` provider (replaces old `ModalContext`) — deferred to Phase 3. Forms now use inline `FormStatus`, so the only remaining consumer is the enlargeable feature image, which the Feature slice introduces
+- [x] Responsive check at 375px and 1280px
+- [ ] Remaining breakpoints (500 / 750 / 1150 / 1350 / 1500) — worth a pass once real page content exists in Phase 4
 
 **Exit criteria:** shell navigable at every breakpoint, keyboard-only, with reduced motion on.
 
@@ -302,7 +304,7 @@ Change them there before Phase 1 starts, not after.
 Resolved 2026-07-24:
 
 - **Typekit `ccy7tqi`** — confirmed configured and domain-allowed.
-- **Serif accent** — `ivyora-text` (400, 700) added to the kit. Accent use only.
+- **Serif accent** — tried `ivyora-text`, rejected on sight (2026-07-24). Single family: Area Inktrap only. Two-tone headings are a weight contrast instead.
 - **`#0B0C17`** — text and footer colour only. No inverse theme, no dark mode.
 - **Stripe** — not used. Donate remains a contact form.
 - **Forms** — Next Route Handlers. Gmail app-password sending retained, behind an adapter.

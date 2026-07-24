@@ -128,8 +128,9 @@ export interface AccentProps {
 }
 
 /**
- * Ivyora Text set inside an Area Inktrap line. Carries over the old site's
- * treatment of heading fragments — "Hot Cross Buns", "(in brief)".
+ * Sets a fragment of a heading apart by dropping it to weight 500 against the
+ * heading's 700. Carries over the old site's two-tone headings — "Hot Cross
+ * Buns", "(in brief)" — without a second typeface.
  *
  * Use it on a fragment, never on a whole heading, and never on body copy.
  */

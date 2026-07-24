@@ -63,7 +63,7 @@ const twMerge = extendTailwindMerge({
 	override: {
 		classGroups: {
 			"font-size": [{ text: TEXT_SIZES }],
-			"font-weight": [{ font: ["regular", "medium", "bold"] }],
+			"font-weight": [{ font: ["medium", "bold"] }],
 			"text-color": [{ text: COLORS }],
 			"bg-color": [{ bg: COLORS }],
 			"border-color": [{ border: COLORS }],
@@ -74,7 +74,7 @@ const twMerge = extendTailwindMerge({
 	extend: {
 		classGroups: {
 			"max-w": [{ "max-w": ["narrow", "text", "default", "wide"] }],
-			"font-family": [{ font: ["sans", "serif"] }],
+			"font-family": [{ font: ["sans"] }],
 		},
 	},
 });
