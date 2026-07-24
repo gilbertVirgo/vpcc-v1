@@ -1,26 +1,19 @@
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import type { Content } from "@prismicio/client";
+import type { SliceComponentProps } from "@prismicio/react";
+import type { FC } from "react";
 
-/**
- * Props for `RichText`.
- */
+import { PrismicProse } from "@/components/prismic/rich-text";
+import { Container, Section } from "@/components/ui/layout";
+
 export type RichTextProps = SliceComponentProps<Content.RichTextSlice>;
 
-/**
- * Component for "Rich text" Slices.
- */
-const RichText: FC<RichTextProps> = ({ slice }) => {
-	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
-};
+/** Free-form prose, for anything the structured slices don't cover. */
+const RichText: FC<RichTextProps> = ({ slice }) => (
+	<Section spacing="sm">
+		<Container size="text">
+			<PrismicProse field={slice.primary.content} />
+		</Container>
+	</Section>
+);
 
-export default RichText
+export default RichText;

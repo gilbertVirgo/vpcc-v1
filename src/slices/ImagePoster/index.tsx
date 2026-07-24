@@ -1,26 +1,50 @@
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import type { Content } from "@prismicio/client";
+import type { SliceComponentProps } from "@prismicio/react";
+import NextLink from "next/link";
+import type { FC } from "react";
 
-/**
- * Props for `ImagePoster`.
- */
+import { Reveal } from "@/components/motion/reveal";
+import { linkHref } from "@/components/prismic/link";
+import { PrismicMedia } from "@/components/prismic/media";
+import { PrismicProse } from "@/components/prismic/rich-text";
+import { Container, Section } from "@/components/ui/layout";
+
 export type ImagePosterProps = SliceComponentProps<Content.ImagePosterSlice>;
 
-/**
- * Component for "Image poster" Slices.
- */
+/** A poster image — event flyers and the like. */
 const ImagePoster: FC<ImagePosterProps> = ({ slice }) => {
+	const href = linkHref(slice.primary.link);
+
+	const image = (
+		<PrismicMedia
+			field={slice.primary.image}
+			ratio="portrait"
+			sizes="(min-width: 750px) 44rem, 100vw"
+		/>
+	);
+
 	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
+		<Section spacing="sm">
+			<Container size="text">
+				<Reveal>
+					{href ? (
+						<NextLink
+							href={href}
+							className="block transition-opacity duration-base ease-standard hover:opacity-90"
+						>
+							{image}
+						</NextLink>
+					) : (
+						image
+					)}
+					<PrismicProse
+						field={slice.primary.caption}
+						className="mt-4 text-caption"
+					/>
+				</Reveal>
+			</Container>
+		</Section>
+	);
 };
 
-export default ImagePoster
+export default ImagePoster;

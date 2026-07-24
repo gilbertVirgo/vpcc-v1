@@ -1,26 +1,48 @@
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import type { Content } from "@prismicio/client";
+import type { SliceComponentProps } from "@prismicio/react";
+import type { FC } from "react";
 
-/**
- * Props for `CallToAction`.
- */
+import { Reveal } from "@/components/motion/reveal";
+import { PrismicButtonGroup } from "@/components/prismic/link";
+import { PrismicHeading, PrismicProse } from "@/components/prismic/rich-text";
+import { Container, Section } from "@/components/ui/layout";
+
 export type CallToActionProps = SliceComponentProps<Content.CallToActionSlice>;
 
-/**
- * Component for "Call to action" Slices.
- */
+const TONES = {
+	default: undefined,
+	sunken: "sunken",
+	inverse: "inverse",
+} as const;
+
 const CallToAction: FC<CallToActionProps> = ({ slice }) => {
+	const tone = TONES[slice.primary.tone ?? "sunken"];
+	const inverse = tone === "inverse";
+
 	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
+		<Section spacing="md" tone={tone}>
+			<Container size="text" className="text-center">
+				<Reveal>
+					<PrismicHeading
+						field={slice.primary.title}
+						as="h2"
+						size="h2"
+						tone={inverse ? "inverse" : undefined}
+					/>
+					<PrismicProse
+						field={slice.primary.body}
+						className={`mx-auto mt-5 ${inverse ? "text-ink-inverse" : ""}`}
+					/>
+					<div className="mt-8 flex justify-center">
+						<PrismicButtonGroup
+							buttons={slice.primary.buttons}
+							size="lg"
+						/>
+					</div>
+				</Reveal>
+			</Container>
+		</Section>
+	);
 };
 
-export default CallToAction
+export default CallToAction;

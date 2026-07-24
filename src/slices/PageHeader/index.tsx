@@ -1,26 +1,23 @@
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import type { Content } from "@prismicio/client";
+import type { SliceComponentProps } from "@prismicio/react";
+import type { FC } from "react";
 
-/**
- * Props for `PageHeader`.
- */
+import { PrismicHeading, PrismicProse } from "@/components/prismic/rich-text";
+import { Container, Section } from "@/components/ui/layout";
+
 export type PageHeaderProps = SliceComponentProps<Content.PageHeaderSlice>;
 
 /**
- * Component for "Page header" Slices.
+ * The opening block of a page. Renders the h1, so a page should carry at most
+ * one — every other slice heading is an h2.
  */
-const PageHeader: FC<PageHeaderProps> = ({ slice }) => {
-	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
-};
+const PageHeader: FC<PageHeaderProps> = ({ slice }) => (
+	<Section as="header" spacing="lg">
+		<Container size="text">
+			<PrismicHeading field={slice.primary.title} as="h1" size="h1" />
+			<PrismicProse field={slice.primary.intro} className="mt-6 text-body-lg" />
+		</Container>
+	</Section>
+);
 
-export default PageHeader
+export default PageHeader;
