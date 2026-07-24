@@ -200,8 +200,9 @@ Change them there before Phase 1 starts, not after.
 - [x] Honeypot (answers 200 so bots get no signal) + best-effort per-IP rate limit, 5/min
 - [x] Success and error as inline `FormStatus`, replacing the old modal-then-redirect-home that threw away the visitor's place
 - [x] Env vars documented in `.env.example`
-- [ ] Set them in the Netlify UI
-- [ ] Manual send test against a real inbox — **blocked**: the supplied Gmail app password is rejected by Google (`535-5.7.8 Username and Password not accepted`). SMTP auth verified as failing; nothing sent
+- [ ] Set them in the Netlify UI: `GMAIL_USER`, `GMAIL_PASS`, `NEXT_PUBLIC_GA_ID`, `PRISMIC_WEBHOOK_SECRET`, `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`, `NEXT_PUBLIC_SITE_URL`
+- [x] Gmail SMTP auth verified for `hello@vpcc.church` (connection only — nothing sent)
+- [ ] Manual send test against a real inbox — needs the go-ahead to actually send
 
 **Exit criteria:** both forms deliver end-to-end on a Netlify deploy preview; bad input, bot input, and provider failure all handled visibly.
 
