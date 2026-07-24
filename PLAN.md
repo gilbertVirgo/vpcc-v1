@@ -175,15 +175,17 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 4 — Core pages
 
-- [ ] `/` — Home: Sundays · What's On · About us · What we believe · Connect with us (+ time-limited event feature at top)
-- [ ] `/whats-on` — Calendar link, Prayer meetings, Sundays, Women's breakfast, Cell groups, Life skills course
-- [ ] `/about` — "Our story (in brief)" + Our team grid
-- [ ] `/beliefs` — UCCF / FIEC framing paragraph + 10 belief statements
-- [ ] `[uid]` catch-all driven by the `page` type, so new pages need no code
-- [ ] Per-page metadata from Prismic (`generateMetadata`)
-- [ ] All copy pulled verbatim from Appendix A / the CRA source, including typographic apostrophes
+- [x] `/` — Home, driven by the `home` document
+- [x] `/whats-on` — Calendar, Prayer meetings, Sundays, Women's breakfast, Cell groups, Life skills course
+- [x] `/about` — "Our story (in brief)" + team grid
+- [x] `/beliefs` — UCCF / FIEC framing + 10 statements
+- [x] `[uid]` catch-all driven by the `page` type, so new pages need no code
+- [x] Per-page metadata from Prismic (`generateMetadata`)
+- [x] All copy pulled verbatim from the CRA source, including typographic apostrophes
 
 **Exit criteria:** all four pages content-complete from Prismic; Lighthouse ≥ 95 across the board on each.
+
+> **Blocked:** the 12 migrated documents are unpublished, so no page renders yet.
 
 ---
 
@@ -193,8 +195,8 @@ Change them there before Phase 1 starts, not after.
 - [x] `/donate` — same component, separate recipient and subject via a `variant` prop
 - [x] Replaced both Netlify Functions with one route handler at `/api/contact`
 - [x] reCAPTCHA v3 verified server-side — success, score ≥ 0.5, and action match. The old site minted a token and never checked it, which made it decorative
-- [ ] Mail delivery: Gmail app-password via Nodemailer. Isolate behind a `sendMail()` adapter so swapping to Resend/Postmark later is a one-file change
-- [ ] Donate stays a contact form. **No Stripe** — no checkout, no webhook
+- [x] Mail delivery: Gmail app-password via Nodemailer, behind a `sendMail()` adapter
+- [x] Donate stays a contact form. **No Stripe** — no checkout, no webhook
 - [x] Honeypot (answers 200 so bots get no signal) + best-effort per-IP rate limit, 5/min
 - [x] Success and error as inline `FormStatus`, replacing the old modal-then-redirect-home that threw away the visitor's place
 - [x] Env vars documented in `.env.example`
@@ -218,18 +220,21 @@ Change them there before Phase 1 starts, not after.
 ## Phase 7 — Assets, SEO, analytics, a11y, performance
 
 **Assets**
-- [ ] Migrate photography into Prismic; keep static PDFs and icons in `public/`
+- [x] Photography migrated into Prismic (11 images); PDFs and icons stay in `public/`
 - [ ] Re-export images at correct dimensions; AVIF/WebP via `next/image`
 - [ ] Decide whether the existing filtered/duotone photo treatment is retained, and if so make it a CSS layer rather than baked-into-file
-- [ ] Migrate the 7 policy PDFs and the Google Docs safeguarding link
-- [ ] New favicon set, `apple-touch-icon`, `manifest.json`, `theme-color: #FF9035`
+- [x] Policy PDFs copied to `public/assets/pdf` and the Google Docs safeguarding link carried over
+- [x] Favicon, apple-touch-icon and `manifest.ts` wired up
+- [ ] Raster favicon fallback (`.ico`/PNG) for clients that don't take SVG
 
 **SEO**
-- [ ] Metadata API defaults + per-page overrides; canonical URLs
-- [ ] `sitemap.ts`, `robots.ts`
-- [ ] JSON-LD: `Church` / `Organization` + `Event` for dated events
+- [x] Metadata API defaults + per-page overrides; `metadataBase` so canonicals and OG URLs are absolute
+- [x] `sitemap.ts` (from published Prismic pages, via the route resolver) and `robots.ts` (deploy previews disallow everything)
+- [x] JSON-LD `Church`, driven by the settings document
+- [ ] JSON-LD `Event` for dated events — add when the first event document exists
 - [ ] New OG + Twitter images matching the redesign
-- [ ] **301 redirects for every existing URL** — `/whats-on`, `/about`, `/beliefs`, `/connect`, `/donate`, `/esol`, `/art-course`, `/art-course-exhibition`
+- [x] Paths for `/whats-on`, `/about`, `/beliefs`, `/connect`, `/donate` are unchanged, so no redirect is needed
+- [ ] `/esol`, `/art-course`, `/art-course-exhibition` — these 404 today. Rebuild them (Phase 6) or redirect them
 
 **Analytics**
 - [ ] Re-add GA4 `G-6YS7D18ZT5` via `next/script` (`afterInteractive`), or replace with a cookieless alternative
