@@ -200,9 +200,12 @@ Change them there before Phase 1 starts, not after.
 - [x] Honeypot (answers 200 so bots get no signal) + best-effort per-IP rate limit, 5/min
 - [x] Success and error as inline `FormStatus`, replacing the old modal-then-redirect-home that threw away the visitor's place
 - [x] Env vars documented in `.env.example`
-- [ ] Set them in the Netlify UI: `GMAIL_USER`, `GMAIL_PASS`, `NEXT_PUBLIC_GA_ID`, `PRISMIC_WEBHOOK_SECRET`, `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`, `NEXT_PUBLIC_SITE_URL`
+- [x] Set on Netlify: `GMAIL_USER`, `GMAIL_PASS`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`
+- [ ] `PRISMIC_WEBHOOK_SECRET` — set when the webhook is registered (Phase 9)
+- [ ] `NEXT_PUBLIC_SITE_URL` — deliberately unset until DNS cutover, so preview builds advertise their own URL and `robots.txt` keeps them out of the index
 - [x] Gmail SMTP auth verified for `hello@vpcc.church` (connection only — nothing sent)
-- [ ] Manual send test against a real inbox — needs the go-ahead to actually send
+- [x] End-to-end send from `localhost` — `POST /api/contact` 200, reCAPTCHA passed, mail accepted by Gmail
+- [ ] End-to-end send from the deployed site — 403, reCAPTCHA rejected: `vpcc-v1.netlify.app` is not on the key's allowed-domain list
 
 **Exit criteria:** both forms deliver end-to-end on a Netlify deploy preview; bad input, bot input, and provider failure all handled visibly.
 
@@ -272,8 +275,10 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 9 — Launch
 
-- [ ] Netlify site created; branch deploys + deploy previews on
-- [ ] Env vars set in Netlify (production + preview contexts)
+- [x] Netlify site created — `vpcc-v1` → https://vpcc-v1.netlify.app, first production deploy live
+- [ ] Connect the GitHub repo in the Netlify UI so pushes deploy themselves — deploys are CLI-driven until then, and there are no deploy previews
+- [x] Env vars set in Netlify (see Phase 5 for the two deliberately still unset)
+- [ ] Add `vpcc-v1.netlify.app` to the reCAPTCHA key's allowed domains — until then the deployed forms return 403
 - [ ] Prismic webhook → Netlify build/revalidate, verified
 - [ ] Cross-browser: Safari (macOS + iOS), Chrome, Firefox, Android Chrome
 - [ ] Real-device check on a small phone (≤375px wide)
