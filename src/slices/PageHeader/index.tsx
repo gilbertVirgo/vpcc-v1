@@ -10,9 +10,12 @@ export type PageHeaderProps = SliceComponentProps<Content.PageHeaderSlice>;
 /**
  * The opening block of a page. Renders the h1, so a page should carry at most
  * one — every other slice heading is an h2.
+ *
+ * `header` spacing pads above only: the following slice supplies the gap below,
+ * so the intro doesn't float in the middle of two stacked paddings.
  */
 const PageHeader: FC<PageHeaderProps> = ({ slice }) => (
-	<Section as="header" spacing="lg">
+	<Section as="header" spacing="header">
 		<Container size="text">
 			<PrismicHeading field={slice.primary.title} as="h1" size="h1" />
 			<PrismicProse field={slice.primary.intro} className="mt-6 text-body-lg" />

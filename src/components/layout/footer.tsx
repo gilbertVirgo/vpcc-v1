@@ -93,7 +93,9 @@ function FooterLink({
 
 	const content = (
 		<>
-			{icon ? <Icon name={icon} className="size-4 opacity-70" /> : null}
+			{/* No extra opacity — the link is already at 80%, and a hairline
+			    stroke at 16px disappears if it is dimmed twice. */}
+			{icon ? <Icon name={icon} className="size-4" /> : null}
 			{children}
 		</>
 	);

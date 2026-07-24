@@ -58,6 +58,8 @@ const section = cva("", {
 			sm: "section-y-sm",
 			md: "section-y",
 			lg: "section-y-lg",
+			/* A page's opening band — see section-t-lg in utilities.css. */
+			header: "section-t-lg",
 		},
 		tone: {
 			default: "",

@@ -38,6 +38,18 @@
 }
 
 /*
+ * A page's opening band: full lead-in above, nothing below.
+ *
+ * Adjacent sections each apply their own padding, so the visible gap between
+ * two is the sum of both. Between a page header and the content it introduces
+ * that reads as a hole — the intro belongs with what follows, not adrift above
+ * it. Leaving the bottom to the next section gives one gap instead of two.
+ */
+@utility section-t-lg {
+	padding-block-start: var(--space-section-lg);
+}
+
+/*
  * Transition duration
  * -----------------------------------------------------------------------------
  * Tailwind v4 has no theme namespace for `duration-*` — it only accepts bare
