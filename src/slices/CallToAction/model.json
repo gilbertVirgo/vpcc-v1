@@ -1,0 +1,63 @@
+{
+  "id": "call_to_action",
+  "name": "Call to action",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "body": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Body",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "buttons": {
+          "type": "Group",
+          "config": {
+            "label": "Buttons",
+            "fields": {
+              "label": {
+                "type": "Text",
+                "config": {
+                  "label": "Label"
+                }
+              },
+              "link": {
+                "type": "Link",
+                "config": {
+                  "label": "Link"
+                }
+              }
+            }
+          }
+        },
+        "tone": {
+          "type": "Select",
+          "config": {
+            "label": "Tone",
+            "default_value": "sunken",
+            "options": [
+              "default",
+              "sunken",
+              "inverse"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

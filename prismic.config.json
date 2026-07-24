@@ -1,4 +1,9 @@
 {
   "repositoryName": "de628675",
-  "routes": []
+  "routes": [
+    {
+      "type": "page",
+      "path": "/:uid"
+    }
+  ]
 }

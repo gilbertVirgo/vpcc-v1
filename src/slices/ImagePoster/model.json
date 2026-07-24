@@ -1,0 +1,36 @@
+{
+  "id": "image_poster",
+  "name": "Image poster",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "image": {
+          "type": "Image",
+          "config": {
+            "label": "Image"
+          }
+        },
+        "caption": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Caption",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "link": {
+          "type": "Link",
+          "config": {
+            "label": "Link"
+          }
+        }
+      }
+    }
+  ]
+}

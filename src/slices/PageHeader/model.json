@@ -1,0 +1,31 @@
+{
+  "id": "page_header",
+  "name": "Page header",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading1"
+          }
+        },
+        "intro": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Intro",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        }
+      }
+    }
+  ]
+}

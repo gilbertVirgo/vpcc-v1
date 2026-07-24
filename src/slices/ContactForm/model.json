@@ -1,0 +1,42 @@
+{
+  "id": "contact_form",
+  "name": "Contact form",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "intro": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Intro",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "form": {
+          "type": "Select",
+          "config": {
+            "label": "Form",
+            "default_value": "contact",
+            "options": [
+              "contact",
+              "donate"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

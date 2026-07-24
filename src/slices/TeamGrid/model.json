@@ -1,0 +1,57 @@
+{
+  "id": "team_grid",
+  "name": "Team grid",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "intro": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Intro",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "members": {
+          "type": "Group",
+          "config": {
+            "label": "Members",
+            "fields": {
+              "member": {
+                "type": "Link",
+                "config": {
+                  "label": "Team member",
+                  "select": "document",
+                  "customtypes": [
+                    {
+                      "id": "team_member",
+                      "fields": [
+                        "name",
+                        "role",
+                        "bio",
+                        "photo"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

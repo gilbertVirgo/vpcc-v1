@@ -1,0 +1,42 @@
+{
+  "id": "map_embed",
+  "name": "Map embed",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "address": {
+          "type": "Text",
+          "config": {
+            "label": "Address"
+          }
+        },
+        "embed_url": {
+          "type": "Text",
+          "config": {
+            "label": "Google Maps embed URL"
+          }
+        },
+        "directions_link": {
+          "type": "Link",
+          "config": {
+            "label": "Directions link"
+          }
+        }
+      }
+    }
+  ]
+}

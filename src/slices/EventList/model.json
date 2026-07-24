@@ -1,0 +1,53 @@
+{
+  "id": "event_list",
+  "name": "Event list",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "events": {
+          "type": "Group",
+          "config": {
+            "label": "Events",
+            "fields": {
+              "event": {
+                "type": "Link",
+                "config": {
+                  "label": "Event",
+                  "select": "document",
+                  "customtypes": [
+                    {
+                      "id": "event",
+                      "fields": [
+                        "title",
+                        "starts_at",
+                        "ends_at",
+                        "location",
+                        "body",
+                        "image",
+                        "expires_at"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

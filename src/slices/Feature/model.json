@@ -1,0 +1,82 @@
+{
+  "id": "feature",
+  "name": "Feature",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "body": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Body",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "images": {
+          "type": "Group",
+          "config": {
+            "label": "Images",
+            "fields": {
+              "image": {
+                "type": "Image",
+                "config": {
+                  "label": "Image"
+                }
+              }
+            }
+          }
+        },
+        "buttons": {
+          "type": "Group",
+          "config": {
+            "label": "Buttons",
+            "fields": {
+              "label": {
+                "type": "Text",
+                "config": {
+                  "label": "Label"
+                }
+              },
+              "link": {
+                "type": "Link",
+                "config": {
+                  "label": "Link"
+                }
+              }
+            }
+          }
+        },
+        "image_position": {
+          "type": "Select",
+          "config": {
+            "label": "Image position",
+            "default_value": "left",
+            "options": [
+              "left",
+              "right"
+            ]
+          }
+        },
+        "image_enlargeable": {
+          "type": "Boolean",
+          "config": {
+            "label": "Image can be enlarged"
+          }
+        }
+      }
+    }
+  ]
+}

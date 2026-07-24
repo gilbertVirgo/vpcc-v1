@@ -1,0 +1,45 @@
+{
+  "id": "info_list",
+  "name": "Info list",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "rows": {
+          "type": "Group",
+          "config": {
+            "label": "Rows",
+            "fields": {
+              "label": {
+                "type": "Text",
+                "config": {
+                  "label": "Label"
+                }
+              },
+              "value": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Value",
+                  "multi": "paragraph,strong,em,hyperlink"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

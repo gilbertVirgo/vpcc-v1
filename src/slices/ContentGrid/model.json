@@ -1,0 +1,58 @@
+{
+  "id": "content_grid",
+  "name": "Content grid",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "intro": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Intro",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "cells": {
+          "type": "Group",
+          "config": {
+            "label": "Cells",
+            "fields": {
+              "title": {
+                "type": "Text",
+                "config": {
+                  "label": "Title"
+                }
+              },
+              "subtitle": {
+                "type": "Text",
+                "config": {
+                  "label": "Subtitle"
+                }
+              },
+              "body": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Body",
+                  "multi": "paragraph,strong,em,hyperlink"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "id": "settings",
+  "label": "Settings",
+  "repeatable": false,
+  "status": true,
+  "format": "custom",
+  "json": {
+    "Main": {
+      "site_name": {
+        "type": "Text",
+        "config": {
+          "label": "Site name"
+        }
+      },
+      "contact_email": {
+        "type": "Text",
+        "config": {
+          "label": "Contact email"
+        }
+      },
+      "nav": {
+        "type": "Group",
+        "config": {
+          "label": "Navigation",
+          "fields": {
+            "label": {
+              "type": "Text",
+              "config": {
+                "label": "Label"
+              }
+            },
+            "link": {
+              "type": "Link",
+              "config": {
+                "label": "Link"
+              }
+            }
+          }
+        }
+      },
+      "nav_cta_label": {
+        "type": "Text",
+        "config": {
+          "label": "Nav button label"
+        }
+      },
+      "nav_cta_link": {
+        "type": "Link",
+        "config": {
+          "label": "Nav button link"
+        }
+      },
+      "footer_links": {
+        "type": "Group",
+        "config": {
+          "label": "Footer links",
+          "fields": {
+            "section": {
+              "type": "Text",
+              "config": {
+                "label": "Section heading"
+              }
+            },
+            "label": {
+              "type": "Text",
+              "config": {
+                "label": "Label"
+              }
+            },
+            "link": {
+              "type": "Link",
+              "config": {
+                "label": "Link"
+              }
+            },
+            "icon": {
+              "type": "Select",
+              "config": {
+                "label": "Icon",
+                "default_value": "none",
+                "options": [
+                  "none",
+                  "instagram",
+                  "facebook",
+                  "mail"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "meeting_when": {
+        "type": "Text",
+        "config": {
+          "label": "Meeting time"
+        }
+      },
+      "meeting_venue": {
+        "type": "Text",
+        "config": {
+          "label": "Venue"
+        }
+      },
+      "meeting_address": {
+        "type": "Text",
+        "config": {
+          "label": "Address"
+        }
+      },
+      "meeting_directions": {
+        "type": "Link",
+        "config": {
+          "label": "Directions link"
+        }
+      },
+      "meta_title": {
+        "type": "Text",
+        "config": {
+          "label": "Default meta title"
+        }
+      },
+      "meta_description": {
+        "type": "Text",
+        "config": {
+          "label": "Default meta description"
+        }
+      },
+      "og_image": {
+        "type": "Image",
+        "config": {
+          "label": "Default share image"
+        }
+      }
+    }
+  }
+}

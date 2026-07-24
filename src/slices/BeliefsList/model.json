@@ -1,0 +1,46 @@
+{
+  "id": "beliefs_list",
+  "name": "Beliefs list",
+  "type": "SharedSlice",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default",
+      "docURL": "",
+      "imageUrl": "",
+      "version": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "single": "heading2"
+          }
+        },
+        "intro": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Intro",
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "statements": {
+          "type": "Group",
+          "config": {
+            "label": "Statements",
+            "fields": {
+              "statement": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Statement",
+                  "multi": "paragraph,strong,em,hyperlink"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
