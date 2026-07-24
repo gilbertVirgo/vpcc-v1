@@ -9,12 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Container } from "@/components/ui/layout";
 import { cn } from "@/lib/cn";
-import { siteConfig } from "@/lib/site-config";
+import type { NavLink } from "@/lib/site-config";
 
 /** Distance scrolled before the bar takes on a background and a hairline. */
 const SCROLL_THRESHOLD = 8;
 
-export function Navigation() {
+export interface NavigationProps {
+	links: NavLink[];
+	cta: NavLink;
+}
+
+export function Navigation({ links, cta }: NavigationProps) {
 	const pathname = usePathname();
 	const [scrolled, setScrolled] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -106,7 +111,7 @@ export function Navigation() {
 					{/* Desktop */}
 					<div className="hidden items-center gap-8 sm:flex">
 						<ul className="flex items-center gap-7">
-							{siteConfig.navigation.map((link) => (
+							{links.map((link) => (
 								<li key={link.href}>
 									<NavItem
 										href={link.href}
@@ -117,8 +122,8 @@ export function Navigation() {
 								</li>
 							))}
 						</ul>
-						<Button href={siteConfig.navCta.href} size="sm">
-							{siteConfig.navCta.label}
+						<Button href={cta.href} size="sm">
+							{cta.label}
 						</Button>
 					</div>
 
@@ -169,7 +174,7 @@ export function Navigation() {
 					</div>
 
 					<ul className="flex flex-1 flex-col gap-1 gutter pt-4">
-						{siteConfig.navigation.map((link) => (
+						{links.map((link) => (
 							<li key={link.href}>
 								<NextLink
 									href={link.href}
@@ -191,8 +196,8 @@ export function Navigation() {
 					</ul>
 
 					<div className="shrink-0 gutter pb-8">
-						<Button href={siteConfig.navCta.href} block>
-							{siteConfig.navCta.label}
+						<Button href={cta.href} block>
+							{cta.label}
 						</Button>
 					</div>
 				</div>

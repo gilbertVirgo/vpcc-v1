@@ -6,9 +6,15 @@ import { Container } from "@/components/ui/layout";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { isExternalHref } from "@/lib/links";
-import { siteConfig } from "@/lib/site-config";
+import type { FooterSection } from "@/lib/site-config";
 
-export function Footer() {
+export interface FooterProps {
+	name: string;
+	sections: FooterSection[];
+	meeting: { when: string; venue: string; address: string };
+}
+
+export function Footer({ name, sections, meeting }: FooterProps) {
 	const year = new Date().getFullYear();
 
 	return (
@@ -28,16 +34,16 @@ export function Footer() {
 								tone="inverse"
 								className="mt-6 max-w-[24ch] opacity-70"
 							>
-								{siteConfig.meeting.when}
+								{meeting.when}
 								<br />
-								{siteConfig.meeting.venue}
+								{meeting.venue}
 								<br />
-								{siteConfig.meeting.address}
+								{meeting.address}
 							</Text>
 						</div>
 
 						<div className="grid gap-10 xs:grid-cols-2 md:grid-cols-4">
-							{siteConfig.footer.map((section) => (
+							{sections.map((section) => (
 								<section key={section.title}>
 									<h2 className="text-overline uppercase opacity-60">
 										{section.title}
@@ -61,7 +67,7 @@ export function Footer() {
 
 					<div className="mt-16 border-t border-line-inverse pt-8">
 						<Text size="caption" tone="inverse" className="opacity-60">
-							© {year} {siteConfig.name}
+							© {year} {name}
 						</Text>
 					</div>
 				</div>
