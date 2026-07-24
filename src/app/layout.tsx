@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
+import { Analytics } from "@/components/analytics/analytics";
 import { Footer } from "@/components/layout/footer";
 import { Navigation } from "@/components/layout/navigation";
 import { ChurchJsonLd } from "@/components/seo/json-ld";
@@ -75,6 +76,7 @@ export default async function RootLayout({
 					sections={settings.footer}
 					meeting={settings.meeting}
 				/>
+				<Analytics />
 			</body>
 		</html>
 	);

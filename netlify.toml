@@ -7,3 +7,30 @@
 
 [[plugins]]
 	package = "@netlify/plugin-nextjs"
+
+# Pages retired in the redesign.
+#
+# These URLs are live on the current site and may be linked or indexed, so they
+# redirect rather than 404. Both were activity pages, and What's On is where
+# activities now live — a related page beats a dead end for anyone arriving
+# from an old link or a search result.
+#
+# 301, because the removal is permanent.
+
+[[redirects]]
+	from = "/esol"
+	to = "/whats-on"
+	status = 301
+	force = true
+
+[[redirects]]
+	from = "/art-course"
+	to = "/whats-on"
+	status = 301
+	force = true
+
+[[redirects]]
+	from = "/art-course-exhibition"
+	to = "/whats-on"
+	status = 301
+	force = true

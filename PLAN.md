@@ -201,7 +201,7 @@ Change them there before Phase 1 starts, not after.
 - [x] Success and error as inline `FormStatus`, replacing the old modal-then-redirect-home that threw away the visitor's place
 - [x] Env vars documented in `.env.example`
 - [ ] Set them in the Netlify UI
-- [ ] Manual send test against a real inbox — **blocked**: needs `GMAIL_USER`/`GMAIL_PASS` and the reCAPTCHA keys
+- [ ] Manual send test against a real inbox — **blocked**: the supplied Gmail app password is rejected by Google (`535-5.7.8 Username and Password not accepted`). SMTP auth verified as failing; nothing sent
 
 **Exit criteria:** both forms deliver end-to-end on a Netlify deploy preview; bad input, bot input, and provider failure all handled visibly.
 
@@ -209,10 +209,10 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 6 — Secondary & campaign pages
 
-- [ ] `/esol` — rebuilt from `PageHeader` + `ImagePoster` + `InfoList` + `CallToAction` + `MapEmbed` slices
-- [ ] `/art-course`
-- [ ] `/art-course-exhibition`
-- [ ] Kids — currently an empty stub. Build or drop (see Open Questions)
+- [x] `/esol` — **retired**. 301 to `/whats-on`
+- [x] `/art-course` — **retired**. 301 to `/whats-on`
+- [x] `/art-course-exhibition` — **retired**. 301 to `/whats-on`
+- [x] Kids — **dropped**. Never existed as more than a stub
 - [ ] Confirm no bespoke page-level CSS was introduced; anything reusable is promoted to a slice
 
 ---
@@ -234,11 +234,12 @@ Change them there before Phase 1 starts, not after.
 - [ ] JSON-LD `Event` for dated events — add when the first event document exists
 - [ ] New OG + Twitter images matching the redesign
 - [x] Paths for `/whats-on`, `/about`, `/beliefs`, `/connect`, `/donate` are unchanged, so no redirect is needed
-- [ ] `/esol`, `/art-course`, `/art-course-exhibition` — these 404 today. Rebuild them (Phase 6) or redirect them
+- [x] `/esol`, `/art-course`, `/art-course-exhibition` — retired, 301 to `/whats-on` in `netlify.toml`
 
 **Analytics**
-- [ ] Re-add GA4 `G-6YS7D18ZT5` via `next/script` (`afterInteractive`), or replace with a cookieless alternative
-- [ ] Confirm cookie-banner obligation given the analytics choice
+- [x] GA4 `G-6YS7D18ZT5` via `next/script` (`afterInteractive`), loaded only after consent
+- [x] Consent banner built. GA sets non-essential cookies, so under UK PECR it needs consent before loading — declining means the tag is never fetched
+- [ ] Have someone confirm the banner wording is acceptable to the church
 
 **Accessibility**
 - [ ] Keyboard pass on every page; visible focus throughout
@@ -326,8 +327,8 @@ Resolved 2026-07-24:
 
 | # | Question | Needed by |
 |---|---|---|
-| 1 | **Kids page** — build it out, or drop it? Currently a one-line stub. | Phase 6 |
+| ~~1~~ | ~~Kids page~~ — dropped | — |
 | 2 | **Photography** — reuse existing filtered/duotone images, or is new photography coming? If reusing, is the filter part of the brand or a legacy artefact? | Phase 7 |
-| 3 | **Analytics** — keep GA4 `G-6YS7D18ZT5`, or move to something cookieless and skip the consent banner? | Phase 7 |
+| ~~3~~ | ~~Analytics~~ — GA4, behind a consent banner | — |
 | 4 | **Content scope** — anything added or retired during the rebuild, or strictly a redesign of existing content? | Phase 8 |
 | 5 | **Launch date** — drives how much of Phases 6–7 is v1 vs. fast-follow. | Phase 9 |
