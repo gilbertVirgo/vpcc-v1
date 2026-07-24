@@ -15,11 +15,23 @@
 	/* Tailwind's 4px base is kept: space-4 = 1rem. */
 	--spacing: 0.25rem;
 
-	/* Vertical rhythm between page sections. Fluid, so a phone doesn't get
-	   desktop-sized voids. */
-	--space-section-sm: clamp(3rem, 2rem + 3vw, 5rem);
-	--space-section: clamp(4.5rem, 3rem + 5vw, 8rem);
-	--space-section-lg: clamp(6rem, 4rem + 7vw, 11rem);
+	/*
+	 * Vertical rhythm between page sections. Fluid, so a phone doesn't get
+	 * desktop-sized voids.
+	 *
+	 * These are half-gaps, not full ones. A page is a stack of sections and
+	 * each applies its padding top and bottom, so the space a reader actually
+	 * sees between two of them is the sum of both — the value here is doubled
+	 * in the common case. Sized as full gaps, consecutive features sat ~375px
+	 * apart and the page read as disconnected fragments.
+	 *
+	 * Padding rather than a collapsing margin because toned sections
+	 * (CallToAction's sunken and inverse bands) need the space inside their
+	 * own background, not between it and the next one.
+	 */
+	--space-section-sm: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+	--space-section: clamp(2.75rem, 2rem + 2.5vw, 4.5rem);
+	--space-section-lg: clamp(3.5rem, 2.5rem + 3.5vw, 6rem);
 
 	/* Horizontal page gutter. Every Container uses this — nothing else should
 	   set its own left/right page padding. */
