@@ -91,6 +91,33 @@
 }
 
 /*
+ * Pulls an element out of view without `display: none`.
+ *
+ * Used for the form honeypot: some bots skip hidden inputs, so the field has
+ * to remain rendered and laid out. It is `aria-hidden` and out of the tab
+ * order at the markup level, so no person encounters it.
+ */
+@utility offscreen {
+	position: absolute;
+	left: -100vw;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+/*
+ * reCAPTCHA badge.
+ *
+ * Google permits hiding it only where the attribution text is shown instead —
+ * which the contact form does, next to the submit button.
+ */
+@layer components {
+	.grecaptcha-badge {
+		visibility: hidden;
+	}
+}
+
+/*
  * Page transition — see src/app/template.tsx.
  *
  * `both` holds the from-state before the animation starts, so there is no

@@ -118,6 +118,7 @@ Change them there before Phase 1 starts, not after.
 - [x] Zero hard-coded colours or spacing outside the token files
 - [ ] Reduced-motion enabled → page is fully static and fully readable. Token kill-switch is in place; **not yet observed in a real browser**
 - [ ] Axe reports zero violations on `/design-system` — not yet run
+- [x] `/design-system` returns 404 in production and 200 when `NEXT_PUBLIC_SHOW_DESIGN_SYSTEM=true` — verified against a real production build
 
 ---
 
@@ -188,16 +189,17 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 5 — Forms & server routes
 
-- [ ] `/connect` — first name, last name, email, message. Client + server validation
-- [ ] `/donate` — same shape, separate handler and recipient
-- [ ] Move `netlify/functions/submitContactForm` + `submitDonateForm` to Next Route Handlers (`app/api/*/route.ts`)
-- [ ] reCAPTCHA v3 — token minted client-side, **verified server-side** (score threshold + action check)
+- [x] `/connect` — first name, last name, email, message. Client and server run the same validation from one shared module
+- [x] `/donate` — same component, separate recipient and subject via a `variant` prop
+- [x] Replaced both Netlify Functions with one route handler at `/api/contact`
+- [x] reCAPTCHA v3 verified server-side — success, score ≥ 0.5, and action match. The old site minted a token and never checked it, which made it decorative
 - [ ] Mail delivery: Gmail app-password via Nodemailer. Isolate behind a `sendMail()` adapter so swapping to Resend/Postmark later is a one-file change
 - [ ] Donate stays a contact form. **No Stripe** — no checkout, no webhook
-- [ ] Honeypot field + per-IP rate limit
-- [ ] Success / error states as inline `FormStatus`, not a modal-then-redirect-home (the current flow loses the user)
-- [ ] Env vars documented in `.env.example` and set in Netlify UI. **No secrets committed**
-- [ ] Manual send test against a real inbox before sign-off
+- [x] Honeypot (answers 200 so bots get no signal) + best-effort per-IP rate limit, 5/min
+- [x] Success and error as inline `FormStatus`, replacing the old modal-then-redirect-home that threw away the visitor's place
+- [x] Env vars documented in `.env.example`
+- [ ] Set them in the Netlify UI
+- [ ] Manual send test against a real inbox — **blocked**: needs `GMAIL_USER`/`GMAIL_PASS` and the reCAPTCHA keys
 
 **Exit criteria:** both forms deliver end-to-end on a Netlify deploy preview; bad input, bot input, and provider failure all handled visibly.
 

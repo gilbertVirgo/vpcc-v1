@@ -8,6 +8,17 @@ export const metadata: Metadata = {
 	robots: { index: false, follow: false },
 };
 
+/*
+ * Rendered per request rather than prerendered.
+ *
+ * `notFound()` called during static prerendering does not record a status in
+ * the route's prerender metadata, so Next serves the 404 *body* with a 200.
+ * A soft 404 on a route that is supposed to be absent in production is worth
+ * avoiding, and this page is dev/preview-only so there is nothing to gain from
+ * prerendering it.
+ */
+export const dynamic = "force-dynamic";
+
 /**
  * Every token and every component state on one page.
  *
