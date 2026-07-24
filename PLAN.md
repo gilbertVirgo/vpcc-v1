@@ -140,16 +140,19 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 3 — Prismic content model
 
-- [ ] Connect existing Prismic repo `9yoxbcr3` (`https://9yoxbcr3.cdn.prismic.io/api/v2`); add `@prismicio/client`, `@prismicio/next`, `slice-machine-ui`
-- [ ] `prismicio.ts` client + route resolver; link resolver for internal/external/asset links
-- [ ] Draft preview + Next.js `draftMode`; on-demand revalidation webhook → Netlify
-- [ ] **Custom types**
+- [x] `@prismicio/client` + `@prismicio/next` installed
+- [ ] **Blocked:** connect repo `9yoxbcr3`. The CLI needs a `prismic.config.json`, and only `prismic init` writes one — it opens a browser to authenticate, so it can't run unattended. Every `prismic field add` fails until it exists
+- [x] `src/prismicio.ts` — client, route resolver (`home` → `/`, everything else → `/:uid`), cache tags
+- [x] Preview + `draftMode` routes (`/api/preview`, `/api/exit-preview`)
+- [x] Revalidation webhook (`/api/revalidate`) — constant-time secret check, fails closed when the secret is unset
+- [x] Model authored as `scripts/prismic-model.sh` (every `prismic` CLI call, ready to run once the config exists)
+- [ ] **Custom types** — scripted, not yet pushed
   - [ ] `settings` (singleton) — site name, nav links, footer groups, socials, contact email, default SEO/OG
   - [ ] `page` (repeatable) — UID, SEO fields, slice zone
   - [ ] `team_member` (repeatable) — name, role, bio rich text, photo, order
   - [ ] `belief` (repeatable) *or* a repeatable group inside a `beliefs_list` slice — decide, don't do both
   - [ ] `event` (repeatable) — title, date/time, location, body, image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events)
-- [ ] **Slice library**
+- [ ] **Slice library** — scripted, not yet pushed; React components not yet written
   - [ ] `PageHeader` — title (with accent-styled span), intro rich text
   - [ ] `Feature` — image/slideshow + text + buttons, alternating alignment, optional enlargeable image
   - [ ] `ContentGrid` — heading + intro + N cells (title / subtitle / body)

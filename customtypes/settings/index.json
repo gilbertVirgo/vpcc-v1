@@ -1,0 +1,55 @@
+{
+  "id": "settings",
+  "label": "Settings",
+  "repeatable": false,
+  "status": true,
+  "format": "custom",
+  "json": {
+    "Main": {
+      "site_name": {
+        "type": "Text",
+        "config": {
+          "label": "Site name"
+        }
+      },
+      "contact_email": {
+        "type": "Text",
+        "config": {
+          "label": "Contact email"
+        }
+      },
+      "nav": {
+        "type": "Group",
+        "config": {
+          "label": "Navigation",
+          "fields": {
+            "label": {
+              "type": "Text",
+              "config": {
+                "label": "Label"
+              }
+            },
+            "link": {
+              "type": "Link",
+              "config": {
+                "label": "Link"
+              }
+            }
+          }
+        }
+      },
+      "nav_cta_label": {
+        "type": "Text",
+        "config": {
+          "label": "Nav button label"
+        }
+      },
+      "nav_cta_link": {
+        "type": "Link",
+        "config": {
+          "label": "Nav button link"
+        }
+      }
+    }
+  }
+}
