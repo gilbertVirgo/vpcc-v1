@@ -1,7 +1,6 @@
 "use client";
 
-import Script from "next/script";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Field, FormStatus, Input, Textarea } from "@/components/ui/form";
@@ -27,6 +26,32 @@ declare global {
 }
 
 const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+const RECAPTCHA_SRC = SITE_KEY
+	? `https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`
+	: null;
+
+/**
+ * Loads the reCAPTCHA script, once per page.
+ *
+ * Done imperatively rather than with next/script: the token is required for
+ * the form to work at all, and next/script's scheduling proved unreliable here
+ * — the tag was never injected on this route, which left every submission
+ * without a token and rejected by the server. A plain injection is predictable
+ * and happens the moment a form mounts.
+ *
+ * The guard on an existing tag matters because both /connect and /donate can
+ * render a form, and a second copy of the script resets grecaptcha.
+ */
+function loadRecaptcha() {
+	if (!RECAPTCHA_SRC) return;
+	if (document.querySelector(`script[src="${RECAPTCHA_SRC}"]`)) return;
+
+	const script = document.createElement("script");
+	script.src = RECAPTCHA_SRC;
+	script.async = true;
+	document.head.appendChild(script);
+}
 
 export interface ContactFormProps {
 	variant: ContactFormVariant;
@@ -54,6 +79,8 @@ export function ContactForm({
 	const [errorMessage, setErrorMessage] = useState("");
 	const honeypot = useRef<HTMLInputElement>(null);
 
+	useEffect(loadRecaptcha, []);
+
 	const update = useCallback(
 		(field: keyof ContactFormValues) =>
 			(
@@ -68,8 +95,28 @@ export function ContactForm({
 		[],
 	);
 
+	/**
+	 * Waits for the reCAPTCHA script to finish loading.
+	 *
+	 * Without this, a visitor who fills in the form faster than the script
+	 * loads submits with no token, and the server — which verifies tokens
+	 * properly — rejects them with a 403. Giving up immediately turned a slow
+	 * network into a broken form.
+	 */
+	async function waitForRecaptcha(timeoutMs = 5000): Promise<boolean> {
+		if (window.grecaptcha) return true;
+
+		const started = Date.now();
+		while (Date.now() - started < timeoutMs) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+			if (window.grecaptcha) return true;
+		}
+		return false;
+	}
+
 	async function getRecaptchaToken(): Promise<string | undefined> {
-		if (!SITE_KEY || !window.grecaptcha) return undefined;
+		if (!SITE_KEY) return undefined;
+		if (!(await waitForRecaptcha())) return undefined;
 
 		return new Promise((resolve) => {
 			window.grecaptcha?.ready(() => {
@@ -145,13 +192,6 @@ export function ContactForm({
 
 	return (
 		<>
-			{SITE_KEY ? (
-				<Script
-					src={`https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`}
-					strategy="lazyOnload"
-				/>
-			) : null}
-
 			<form onSubmit={handleSubmit} noValidate>
 				<Stack gap="lg">
 					{status === "error" ? (
