@@ -38,13 +38,23 @@ export function createClient(config: prismic.ClientConfig = {}) {
 	const client = prismic.createClient(repositoryName, {
 		routes,
 		/*
-		 * Published content is served from cache and busted by the webhook in
-		 * app/api/revalidate. Draft content must never be cached, or an editor
-		 * sees a stale preview.
+		 * Published content is served from cache, busted by the webhook in
+		 * app/api/revalidate. Draft content is never cached — Next disables the
+		 * data cache under draft mode — so an editor never sees a stale preview.
+		 *
+		 * The `revalidate` is the safety net, and it is not optional. Tags alone
+		 * mean the cache is only ever busted by the webhook, so one missing
+		 * PRISMIC_WEBHOOK_SECRET freezes every page at whatever the content was
+		 * when the site was last built — a publish then never appears at all,
+		 * however long you wait. Five minutes is deliberately shorter than the
+		 * hour the pages themselves hold: a page re-render must find the fetch
+		 * already stale, or the two windows compound and a change can take two
+		 * hours to surface. It costs nothing extra, because the fetch only runs
+		 * when a page re-renders in the first place.
 		 */
 		fetchOptions:
 			process.env.NODE_ENV === "production"
-				? { next: { tags: ["prismic"] }, cache: "force-cache" }
+				? { next: { tags: ["prismic"], revalidate: 300 } }
 				: { next: { revalidate: 5 } },
 		accessToken: process.env.PRISMIC_ACCESS_TOKEN,
 		...config,
