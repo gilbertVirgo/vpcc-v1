@@ -276,7 +276,7 @@ page(
 page(
 	WHATS_ON,
 	"What’s On",
-	"Prayer meetings, cell groups, women’s breakfasts and more at Victoria Park Community Church.",
+	"Prayer meetings, cell groups, Sunday gatherings and more at Victoria Park Community Church.",
 	[
 		pageHeader("What’s On", [
 			p(
@@ -315,20 +315,6 @@ page(
 				Boolean,
 			),
 			buttons: [button("Get directions", external(DIRECTIONS_URL))],
-		}),
-		feature({
-			title: "Women’s breakfast",
-			body: [
-				p(
-					"Join us for a morning of food, fellowship and fun at our women’s breakfasts.",
-				),
-				p(
-					"These gatherings happen throughout the year on an informal basis. All women are warmly welcome—get in touch to find out when the next one is happening.",
-				),
-			],
-			images: [assets.womens].filter(Boolean),
-			position: "right",
-			buttons: [button("Get in touch", pages[CONNECT])],
 		}),
 		feature({
 			title: "Cell groups",

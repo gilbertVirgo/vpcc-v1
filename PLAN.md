@@ -176,7 +176,7 @@ Change them there before Phase 1 starts, not after.
 ## Phase 4 — Core pages
 
 - [x] `/` — Home, driven by the `home` document
-- [x] `/whats-on` — Calendar, Prayer meetings, Sundays, Women's breakfast, Cell groups, Life skills course
+- [x] `/whats-on` — Calendar, Prayer meetings, Sundays, Cell groups, Life skills course
 - [x] `/about` — "Our story (in brief)" + team grid
 - [x] `/beliefs` — UCCF / FIEC framing + 10 statements
 - [x] `[uid]` catch-all driven by the `page` type, so new pages need no code
@@ -253,6 +253,7 @@ Change them there before Phase 1 starts, not after.
 - [ ] Axe clean sitewide
 
 **Performance**
+- [x] Blur-up placeholders on every Prismic image, fetched from imgix at 16px and inlined as a data URI (`lib/image-placeholder.ts`); `priority` on the page's lead image only
 - [ ] Font-loading strategy verified (no FOIT, minimal CLS from the Typekit `<link>`)
 - [ ] Lighthouse ≥ 95 mobile on every route
 - [ ] CLS < 0.05, LCP < 2.0s on 4G throttle
@@ -300,7 +301,7 @@ Change them there before Phase 1 starts, not after.
 **Home features:** Sundays · What's on? · About us · What we believe · Connect with us
 — plus time-limited event features that auto-expire.
 
-**What's On features:** Calendar · Prayer meetings · Sundays · Women's breakfast · Cell groups · Life skills course
+**What's On features:** Calendar · Prayer meetings · Sundays · Cell groups · Life skills course
 
 **About:** "Our story (in brief)" narrative + team grid (Ben Virgo — Lead Pastor; Gil Virgo — Pastor; Isaiah Jagdeo — Safeguarding Lead; Beth Jagdeo — Lead Kids Worker; Rachel Virgo — Life-Skills Coach)
 

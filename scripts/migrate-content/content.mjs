@@ -98,10 +98,6 @@ export const IMAGES = {
 		file: "assets/images/general--2.jpg",
 		alt: "Members of the church talking outdoors",
 	},
-	womens: {
-		file: "assets/images/womens-breakfast--filtered.jpg",
-		alt: "Women sharing breakfast together",
-	},
 	cellGroup: {
 		file: "assets/images/beliefs_filtered.JPG",
 		alt: "A cell group meeting in a living room",
