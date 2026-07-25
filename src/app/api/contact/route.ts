@@ -91,6 +91,14 @@ export async function POST(request: Request) {
 		);
 	}
 
+	/* The distribution of real submissions is the only evidence for whether the
+	   threshold in lib/recaptcha is set anywhere near right. Rejections are
+	   logged above; without this, the accepted half is invisible and the
+	   threshold can only ever be guessed at. */
+	if (recaptcha.score !== null) {
+		console.info(`reCAPTCHA accepted a ${variant} submission: ${recaptcha.score}`);
+	}
+
 	if (!isMailConfigured()) {
 		console.error("Mail is not configured; GMAIL_USER/GMAIL_PASS are unset.");
 		return Response.json(

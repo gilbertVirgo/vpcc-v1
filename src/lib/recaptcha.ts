@@ -10,8 +10,25 @@ import "server-only";
  * the action matches the form that claims to have produced it.
  */
 
-/** Google's score runs 0 (almost certainly a bot) to 1 (almost certainly human). */
-const SCORE_THRESHOLD = 0.5;
+/**
+ * Google's score runs 0 (almost certainly a bot) to 1 (almost certainly human).
+ *
+ * 0.5 is Google's suggested starting point and it was wrong here. v3 calibrates
+ * per key against that key's own traffic, and a key with no history scores
+ * nearly everyone 0.3 — verified against Google directly: a real person on the
+ * live site and an automated browser came back with the same 0.3. At 0.5 the
+ * form rejected every human who tried it.
+ *
+ * So this sits below that band rather than above it. Obvious automation still
+ * lands at 0.1 and is still refused, and the score is not the only thing
+ * standing between a bot and the mailbox — the honeypot and the rate limiter in
+ * the route both run first. Losing a real enquiry costs this church more than
+ * receiving a spam one.
+ *
+ * Raise it once the key has weeks of real traffic. The route logs the score of
+ * every accepted submission, which is the evidence to raise it on.
+ */
+const SCORE_THRESHOLD = 0.3;
 const VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
 interface VerifyResponse {
