@@ -8,11 +8,12 @@ import { linkHref } from "@/components/prismic/link";
 import { PrismicMedia } from "@/components/prismic/media";
 import { PrismicProse } from "@/components/prismic/rich-text";
 import { Container, Section } from "@/components/ui/layout";
+import { isLeadImageSlice } from "@/slices/context";
 
 export type ImagePosterProps = SliceComponentProps<Content.ImagePosterSlice>;
 
 /** A poster image — event flyers and the like. */
-const ImagePoster: FC<ImagePosterProps> = ({ slice }) => {
+const ImagePoster: FC<ImagePosterProps> = ({ slice, slices, index }) => {
 	const href = linkHref(slice.primary.link);
 
 	const image = (
@@ -20,6 +21,7 @@ const ImagePoster: FC<ImagePosterProps> = ({ slice }) => {
 			field={slice.primary.image}
 			ratio="portrait"
 			sizes="(min-width: 750px) 44rem, 100vw"
+			priority={isLeadImageSlice(slices, index)}
 		/>
 	);
 

@@ -12,6 +12,8 @@ export interface SlideshowImage {
 	alt: string;
 	width?: number;
 	height?: number;
+	/** Inline blur-up placeholder. See lib/image-placeholder. */
+	blurDataURL?: string;
 }
 
 export interface SlideshowProps {
@@ -100,6 +102,7 @@ export function Slideshow({
 				ratio={ratio}
 				sizes={sizes}
 				priority={priority}
+				blurDataURL={first.blurDataURL}
 				unoptimized={unoptimized}
 				className={className}
 			/>
@@ -159,6 +162,12 @@ export function Slideshow({
 							ratio={ratio}
 							sizes={sizes}
 							priority={priority && i === 0}
+							/* The other slides stay lazy. They share the box
+							   with the visible one, so the browser counts them
+							   as in view and fetches them as soon as the
+							   slideshow is on screen — and until it is, there
+							   is nothing to crossfade to. */
+							blurDataURL={image.blurDataURL}
 							unoptimized={unoptimized}
 							rounded={false}
 							className="h-full"

@@ -2,6 +2,7 @@ import { PrismicNextImage } from "@prismicio/next";
 import type { ImageField } from "@prismicio/client";
 
 import { cn } from "@/lib/cn";
+import { getBlurDataURL } from "@/lib/image-placeholder";
 
 const RATIOS = {
 	square: "aspect-square",
@@ -26,8 +27,12 @@ export interface PrismicMediaProps {
  * `PrismicNextImage` carries the alt text the editor set — an empty alt in
  * Prismic is a deliberate "decorative", so it is passed through rather than
  * substituted with a filename.
+ *
+ * Async because the blur-up placeholder is fetched from Prismic's imgix
+ * renderer at render time and inlined; it is cached, so this costs one request
+ * per asset per build rather than one per page view.
  */
-export function PrismicMedia({
+export async function PrismicMedia({
 	field,
 	ratio = "landscape",
 	sizes = "100vw",
@@ -36,6 +41,8 @@ export function PrismicMedia({
 	className,
 }: PrismicMediaProps) {
 	if (!field?.url) return null;
+
+	const blurDataURL = await getBlurDataURL(field.url);
 
 	return (
 		<div
@@ -51,6 +58,9 @@ export function PrismicMedia({
 				fill
 				sizes={sizes}
 				priority={priority}
+				{...(blurDataURL
+					? { placeholder: "blur" as const, blurDataURL }
+					: {})}
 				className="object-cover"
 			/>
 		</div>

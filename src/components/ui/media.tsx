@@ -29,6 +29,9 @@ export interface MediaProps
  * The ratio is reserved before the image loads, so a slow photo shifts nothing
  * on the page. `sizes` defaults to full-viewport; pass a real value wherever
  * the image is narrower than the viewport or it will over-fetch.
+ *
+ * Pass `blurDataURL` (see lib/image-placeholder) to blur up rather than snap
+ * in from the empty box.
  */
 export function Media({
 	ratio = "landscape",
@@ -38,8 +41,16 @@ export function Media({
 	alt,
 	width,
 	height,
+	blurDataURL,
+	placeholder,
 	...props
 }: MediaProps) {
+	/* `placeholder="blur"` throws without a blurDataURL, so the two are
+	   decided together rather than left to the caller to keep in step. */
+	const placeholderProps = blurDataURL
+		? ({ placeholder: "blur", blurDataURL } as const)
+		: ({ placeholder: placeholder ?? "empty" } as const);
+
 	if (ratio === "auto") {
 		return (
 			<NextImage
@@ -47,6 +58,7 @@ export function Media({
 				width={width}
 				height={height}
 				sizes={sizes}
+				{...placeholderProps}
 				className={cn(
 					"h-auto w-full",
 					rounded ? "rounded-lg" : "",
@@ -70,6 +82,7 @@ export function Media({
 				alt={alt}
 				fill
 				sizes={sizes}
+				{...placeholderProps}
 				className="object-cover"
 				{...props}
 			/>
