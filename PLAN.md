@@ -94,7 +94,7 @@ Change them there before Phase 1 starts, not after.
 - [x] `Section` / `Container` / `Grid` / `Stack`
 - [x] `Card`
 - [x] `Media` — wraps `next/image`, enforces an aspect-ratio box so images reserve space before load
-- [ ] Blur placeholders — needs real assets; wire up with Prismic imagery in Phase 3
+- [x] Blur placeholders — `lib/image-placeholder` fetches a 16px imgix render of each Prismic asset and inlines it as a data URI
 - [x] `Slideshow` — accessible carousel (keyboard, swipe, pause, live-region), replaces old `Slideshow.js`
 - [x] Form set: `Field`, `Label`, `Input`, `Textarea`, `Checkbox`, `Radio`, `Select`, `FieldError`, `FormStatus`
 - [x] `Dialog` / `Modal` — focus trap, scroll lock, `Esc`, restores focus on close
@@ -276,18 +276,20 @@ Change them there before Phase 1 starts, not after.
 
 ## Phase 9 — Launch
 
-- [x] Netlify site created — `vpcc-v1` → https://vpcc-v1.netlify.app, first production deploy live
-- [ ] Connect the GitHub repo in the Netlify UI so pushes deploy themselves — deploys are CLI-driven until then, and there are no deploy previews
+- [x] Netlify site created. The live site is the `vpcc-website` project (`88c9ff4a…`) serving https://vpcc.church; the original `vpcc-v1` project is now orphaned and wants decommissioning
+- [x] GitHub repo connected in the Netlify UI — a push to `main` deploys itself
 - [x] Env vars set in Netlify (see Phase 5 for the two deliberately still unset)
-- [ ] Add `vpcc-v1.netlify.app` to the reCAPTCHA key's allowed domains — until then the deployed forms return 403
-- [ ] Prismic webhook → Netlify build/revalidate, verified
+- [x] reCAPTCHA working on vpcc.church, verified against Google's siteverify end to end. The score threshold had to come down to 0.3: a new key scores nearly everyone 0.3, and 0.5 rejected every human. Raise it once the key has traffic history — accepted submissions log their score
+- [x] `PRISMIC_WEBHOOK_SECRET` set and `/api/revalidate` verified (401 without it, 200 with)
+- [ ] Register the webhook itself in Prismic — needs `npx prismic login` first
 - [ ] Cross-browser: Safari (macOS + iOS), Chrome, Firefox, Android Chrome
 - [ ] Real-device check on a small phone (≤375px wide)
 - [ ] Redirect map tested against the live URL list
 - [ ] Stakeholder review + sign-off
 - [ ] DNS cutover for `vpcc.church` (leave `calendar.vpcc.church` untouched)
 - [ ] HTTPS + HSTS confirmed; security headers set
-- [ ] Post-launch: 404 monitoring, GA traffic sanity check, form-delivery check
+- [x] Form delivery: a live submission returns 200 and nodemailer accepts it; confirm the mail actually lands in `gil@vpcc.church`
+- [ ] Post-launch: 404 monitoring, GA traffic sanity check
 - [ ] Archive the CRA repo, note the cutover date in its README
 
 ---
