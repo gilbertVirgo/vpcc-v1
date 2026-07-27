@@ -281,7 +281,7 @@ Change them there before Phase 1 starts, not after.
 - [x] Env vars set in Netlify (see Phase 5 for the two deliberately still unset)
 - [x] reCAPTCHA working on vpcc.church, verified against Google's siteverify end to end. The score threshold had to come down to 0.3: a new key scores nearly everyone 0.3, and 0.5 rejected every human. Raise it once the key has traffic history — accepted submissions log their score
 - [x] `PRISMIC_WEBHOOK_SECRET` set and `/api/revalidate` verified (401 without it, 200 with)
-- [ ] Register the webhook itself in Prismic — needs `npx prismic login` first
+- [x] Prismic webhook registered — `Netlify revalidate` → `https://vpcc.church/api/revalidate`, enabled, secret set, triggers `documentsPublished` + `documentsUnpublished`
 - [ ] Cross-browser: Safari (macOS + iOS), Chrome, Firefox, Android Chrome
 - [ ] Real-device check on a small phone (≤375px wide)
 - [ ] Redirect map tested against the live URL list
