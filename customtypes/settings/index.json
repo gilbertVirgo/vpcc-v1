@@ -89,17 +89,11 @@
           }
         }
       },
-      "notice_title": {
-        "type": "Text",
-        "config": {
-          "label": "Notice title"
-        }
-      },
-      "notice_description": {
+      "notice_text": {
         "type": "StructuredText",
         "config": {
-          "label": "Notice description",
-          "multi": "paragraph,strong,em,hyperlink"
+          "label": "Notice",
+          "single": "paragraph,strong,em,hyperlink"
         }
       },
       "notice_starts_at": {
