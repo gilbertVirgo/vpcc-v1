@@ -149,11 +149,11 @@ apply — otherwise a no-JS visitor or a non-executing crawler gets a blank page
 service, a venue moved at short notice. It is site-wide, set on the `settings`
 singleton, and rendered in the root layout below the nav.
 
-**One centred sentence, on a pale wash, between hairlines.**
+**One centred line, on a pale wash, between hairlines.**
 
 ```
-No Sunday service on Sundays 9 and 16 August — back as usual on 23 August
-└── title ──────┘ └────────────── description ──────────────────────────┘
+No Sunday service this week — we're back as usual on 23 August
+└──────── bold ───────────┘
 ```
 
 The first cut was a full-strength `accent` field the width of the viewport,
@@ -161,38 +161,43 @@ three stacked lines deep, with a calendar icon. It was the loudest thing on
 every page: it outweighed the h1 beneath it and collided with the logo and the
 nav button, which are the two places the brand orange is meant to land.
 `accent-subtle` is 1.15:1 against the page — enough to read as a separate band,
-not enough to compete for the eye. The ranking is done by the words: `ink` bold
-for the title, `ink-secondary` for the rest.
+not enough to compete for the eye.
 
-The band is ~50px. If a notice needs more room than one sentence, it wants a
-page, not a strip.
+The band is ~50px. If a notice needs more room than one line, it wants a page,
+not a strip.
 
-**The description continues the title's sentence.** Nothing is inserted between
-them but a single space, so the description supplies its own opening word and
-its own punctuation. That is what lets one model serve "No Sunday service **on
-Sundays 9 and 16 August**" and "Car park closed **— use the Grove Road
-entrance**" without the component guessing at grammar it cannot see.
+**The emphasis is the editor's.** The line is a single rich text field and a
+bold fragment takes `ink` against the line's `ink-secondary` — the same
+contrast a fixed title field used to carry, without the model insisting every
+notice has one. A model of title-plus-description could only ever put the
+emphasis at the front, and forced the editor to supply the punctuation joining
+two fields they could not see joined. One field with one bold run says the same
+thing and can put it anywhere.
 
 **The dates are a display window, and are never rendered.**
 
 ```
-notice_title        "No Sunday service"          the on switch
-notice_description  rich text, one sentence      continues the title
-notice_starts_at    2026-08-01                   optional — omit for "from now"
-notice_ends_at      2026-08-16                   optional — omit for "until pulled"
+notice_text       rich text, one block   the wording, and the on switch
+notice_starts_at  2026-08-03             optional — omit for "from now"
+notice_ends_at    2026-08-16             optional — omit for "until pulled"
 ```
 
-Both days are inclusive: 1 to 16 August covers all of the 1st and all of the
+Both days are inclusive: 3 to 16 August covers all of the 3rd and all of the
 16th. An earlier model derived the window from the days the notice was _about_
 and printed them in the sentence. It could not express two Sundays with a
 normal week between them without claiming the whole run, and it left an editor
 no way to stage a notice ahead of time. Keeping the dates out of the words
 means nothing in the model can contradict the wording — the editor writes the
-dates they mean, in the words they mean them.
+days they mean, in the words they mean them.
 
-The title is the on switch. Both dates being optional leaves nothing else that
-could stand for intent, so clearing the title is how a notice is pulled early.
-A notice with no end runs until someone does that.
+The wording is the on switch. Both dates being optional leaves nothing else
+that could stand for intent, so clearing the line is how a notice is pulled
+early, and a notice with no end runs until someone does that. Emptiness is
+judged by `hasContent`, which knows about the empty paragraph Prismic leaves
+behind when a field is cleared — without it the band would render as a stripe
+of colour with nothing written in it.
+
+The field is one block, not many. It is one line, and the model should say so.
 
 Days end at London midnight, not UTC — through the summer those are an hour
 apart, so a UTC boundary would take a Sunday notice down an hour early. See
@@ -207,7 +212,7 @@ routes is what eventually brings a notice up or takes it down. Same trade as
 `EventList`.
 
 Rich text in the band goes through `PrismicInline`, which flattens paragraphs to
-spans so the copy can sit mid-sentence. Its links underline in
+spans so the copy can sit inside a line. Its links underline in
 `decoration-current`, not `line-strong`: inline copy inherits its caller's
 colour, so a link has no colour of its own to be told apart by and the underline
 is the whole affordance — `line-strong` reaches 1.47:1 on this band, which is
@@ -237,7 +242,10 @@ exists to make unexpressible.
 - `Notice` is a named landmark, not a live region. It sits above `<main>`, so
   the skip link jumps past it; the name is how someone still finds it. It is
   server-rendered and present at load, so there is nothing to announce — an
-  alert would interrupt for content the reader is about to reach anyway.
+  alert would interrupt for content the reader is about to reach anyway. The
+  name is the fixed string "Notice" rather than the notice's own wording: a
+  landmark label wants to be a short handle, and the wording is a whole line of
+  prose that gets read on entering the region regardless.
 
 ## Adding to the system
 

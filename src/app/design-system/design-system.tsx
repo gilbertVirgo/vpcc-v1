@@ -717,21 +717,24 @@ function Notices() {
 				</Heading>
 				<Text tone="muted" measure className="mt-3">
 					A time-limited warning about a change to the ordinary run of
-					things. One centred sentence on a pale accent wash, between
+					things. One centred line on a pale accent wash, between
 					hairlines. Site-wide, and shown only inside the window set
-					in Settings — those dates never appear in the words.
+					in Settings — those dates never appear in the words. The
+					emphasis is the editor’s: a bold fragment takes `ink`
+					against the line’s `ink-secondary`.
 				</Text>
 			</Container>
 
 			<Stack gap="lg" className="mt-10">
-				<Notice title="No Sunday service">
-					on Sundays 9 and 16 August — we’re back as usual on 23
-					August
+				<Notice>
+					<strong>No Sunday service this week</strong> — we’re back as
+					usual on 23 August
 				</Notice>
 
-				{/* With a link in the description. */}
-				<Notice title="Meeting at Bethnal Green">
-					for the rest of the month —{" "}
+				{/* Bold mid-line rather than opening it. */}
+				<Notice>
+					We’re meeting at <strong>Bethnal Green</strong> for the rest
+					of the month —{" "}
 					<NextLink
 						href="/whats-on"
 						className="underline decoration-current underline-offset-4 hover:decoration-2"
@@ -740,8 +743,10 @@ function Notices() {
 					</NextLink>
 				</Notice>
 
-				{/* Title alone — an editor who has filled in nothing else. */}
-				<Notice title="No Sunday service this week" />
+				{/* No emphasis at all — an editor who bolded nothing. */}
+				<Notice>
+					The hall is closed for building work until Easter
+				</Notice>
 			</Stack>
 		</Section>
 	);

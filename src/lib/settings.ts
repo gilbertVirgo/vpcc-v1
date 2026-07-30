@@ -22,12 +22,12 @@ import { type FooterSection, type NavLink, siteConfig } from "./site-config";
  * the wording and the expiry — see formatNoticeDates in src/lib/dates.ts.
  */
 export interface SiteNoticeContent {
-	title: string;
-	description: RichTextField | null;
+	/** The whole notice, as one line. The editor's bold carries the emphasis. */
+	text: RichTextField;
 	/**
 	 * The window the notice shows in, as bare "YYYY-MM-DD". Both ends are
 	 * optional and both days are inclusive. These control visibility only —
-	 * they are never rendered, so nothing can contradict the description.
+	 * they are never rendered, so nothing can contradict the wording.
 	 */
 	startsAt: string | null;
 	endsAt: string | null;
@@ -119,21 +119,24 @@ export async function getSettings(): Promise<SiteSettings> {
 	const footer = [...sections.values()];
 
 	/*
-	 * The title is the notice's on switch.
+	 * The wording is the notice's on switch.
 	 *
 	 * Both dates are optional — no start means "from now", no end means "until
 	 * someone takes it down" — so there is nothing else that could stand for
-	 * intent. Clearing the title is how an editor pulls a notice early.
+	 * intent. Clearing the line is how an editor pulls a notice early.
 	 *
-	 * Every field here is read defensively, and not as belt-and-braces:
-	 * prismicio-types.d.ts describes the model in customtypes/, which runs
-	 * ahead of the repository until someone pushes. Between a deploy and that
-	 * push the API returns a document with none of these fields on it while
-	 * the generated types promise them, so anything that assumes their shape
-	 * throws — and the layout is where this is consumed, which takes down
-	 * every page.
+	 * Read defensively, and not as belt-and-braces: prismicio-types.d.ts
+	 * describes the model in customtypes/, which runs ahead of the repository
+	 * until someone pushes. Between a deploy and that push the API returns a
+	 * document with none of these fields on it while the generated types
+	 * promise them, so anything that assumes their shape throws — and the
+	 * layout is where this is consumed, which takes down every page.
+	 *
+	 * Whether the line has anything *worth* rendering is settled downstream by
+	 * `hasContent`, which knows about the empty paragraph Prismic leaves
+	 * behind when an editor clears a field.
 	 */
-	const noticeTitle = data.notice_title?.trim();
+	const noticeText = data.notice_text?.length ? data.notice_text : null;
 
 	return {
 		name: data.site_name?.trim() || FALLBACK.name,
@@ -147,10 +150,9 @@ export async function getSettings(): Promise<SiteSettings> {
 					}
 				: FALLBACK.navCta,
 		footer: footer.length > 0 ? footer : FALLBACK.footer,
-		notice: noticeTitle
+		notice: noticeText
 			? {
-					title: noticeTitle,
-					description: data.notice_description ?? null,
+					text: noticeText,
 					startsAt: data.notice_starts_at ?? null,
 					endsAt: data.notice_ends_at ?? null,
 				}

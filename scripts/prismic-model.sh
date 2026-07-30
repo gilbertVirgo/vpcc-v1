@@ -54,9 +54,8 @@ p field add select footer_links.icon --to-type settings --label "Icon" \
 # and are never rendered, so nothing in the model can contradict the wording.
 # Both ends are optional — no start means "from now", no end means "until
 # someone takes it down".
-p field add text notice_title --to-type settings --label "Notice title"
-p field add rich-text notice_description --to-type settings \
-	--label "Notice description" --allow paragraph,strong,em,hyperlink
+p field add rich-text notice_text --to-type settings --label "Notice" \
+	--allow paragraph,strong,em,hyperlink --single
 p field add date notice_starts_at --to-type settings --label "Notice shows from"
 p field add date notice_ends_at --to-type settings --label "Notice shows until"
 

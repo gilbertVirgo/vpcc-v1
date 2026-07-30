@@ -363,27 +363,16 @@ interface SettingsDocumentData {
 	footer_links: prismic.GroupField<Simplify<SettingsDocumentDataFooterLinksItem>>;
 	
 	/**
-	 * Notice title field in *Settings*
-	 *
-	 * - **Field Type**: Text
-	 * - **Placeholder**: *None*
-	 * - **API ID Path**: settings.notice_title
-	 * - **Tab**: Main
-	 * - **Documentation**: https://prismic.io/docs/fields/text
-	 */
-	notice_title: prismic.KeyTextField;
-
-	/**
-	 * Notice description field in *Settings*
+	 * Notice field in *Settings*
 	 *
 	 * - **Field Type**: Rich Text
 	 * - **Placeholder**: *None*
-	 * - **API ID Path**: settings.notice_description
+	 * - **API ID Path**: settings.notice_text
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
 	 */
-	notice_description: prismic.RichTextField;
-
+	notice_text: prismic.RichTextField;
+	
 	/**
 	 * Notice shows from field in *Settings*
 	 *
@@ -394,7 +383,7 @@ interface SettingsDocumentData {
 	 * - **Documentation**: https://prismic.io/docs/fields/date
 	 */
 	notice_starts_at: prismic.DateField;
-
+	
 	/**
 	 * Notice shows until field in *Settings*
 	 *
@@ -405,7 +394,7 @@ interface SettingsDocumentData {
 	 * - **Documentation**: https://prismic.io/docs/fields/date
 	 */
 	notice_ends_at: prismic.DateField;
-
+	
 	/**
 	 * Meeting time field in *Settings*
 	 *

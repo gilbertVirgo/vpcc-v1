@@ -1,4 +1,4 @@
-import { PrismicInline } from "@/components/prismic/rich-text";
+import { PrismicInline, hasContent } from "@/components/prismic/rich-text";
 import { Notice } from "@/components/ui/notice";
 import { isWithinWindow } from "@/lib/dates";
 import type { SiteNoticeContent } from "@/lib/settings";
@@ -24,11 +24,17 @@ export interface SiteNoticeProps {
  */
 export function SiteNotice({ notice, now }: SiteNoticeProps) {
 	if (!notice) return null;
+
+	/* Checked here rather than left to PrismicInline: that returns null for an
+	   empty field, which inside the band would leave a stripe of colour across
+	   every page with nothing written in it. */
+	if (!hasContent(notice.text)) return null;
+
 	if (!isWithinWindow(notice.startsAt, notice.endsAt, now)) return null;
 
 	return (
-		<Notice title={notice.title}>
-			<PrismicInline field={notice.description} />
+		<Notice>
+			<PrismicInline field={notice.text} />
 		</Notice>
 	);
 }
