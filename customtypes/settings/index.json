@@ -95,25 +95,23 @@
           "label": "Notice title"
         }
       },
-      "notice_body": {
+      "notice_description": {
         "type": "StructuredText",
         "config": {
-          "label": "Notice detail",
+          "label": "Notice description",
           "multi": "paragraph,strong,em,hyperlink"
         }
       },
-      "notice_dates": {
-        "type": "Group",
+      "notice_starts_at": {
+        "type": "Date",
         "config": {
-          "label": "Notice dates",
-          "fields": {
-            "date": {
-              "type": "Date",
-              "config": {
-                "label": "Date"
-              }
-            }
-          }
+          "label": "Notice shows from"
+        }
+      },
+      "notice_ends_at": {
+        "type": "Date",
+        "config": {
+          "label": "Notice shows until"
         }
       },
       "meeting_when": {
