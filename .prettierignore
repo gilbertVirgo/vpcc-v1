@@ -5,6 +5,10 @@ build/
 dist/
 .netlify/
 
+# Local tooling state, and the nested git worktrees it keeps under .claude —
+# each is a whole second checkout, with its own build output
+.claude/
+
 # Generated — reformatting these only churns against the next regeneration
 package-lock.json
 prismicio-types.d.ts
