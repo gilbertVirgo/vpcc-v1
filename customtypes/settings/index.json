@@ -89,6 +89,33 @@
           }
         }
       },
+      "notice_title": {
+        "type": "Text",
+        "config": {
+          "label": "Notice title"
+        }
+      },
+      "notice_body": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Notice detail",
+          "multi": "paragraph,strong,em,hyperlink"
+        }
+      },
+      "notice_dates": {
+        "type": "Group",
+        "config": {
+          "label": "Notice dates",
+          "fields": {
+            "date": {
+              "type": "Date",
+              "config": {
+                "label": "Date"
+              }
+            }
+          }
+        }
+      },
       "meeting_when": {
         "type": "Text",
         "config": {
