@@ -2,7 +2,12 @@ import { PrismicNextLink } from "@prismicio/next";
 import { PrismicRichText, type JSXMapSerializer } from "@prismicio/react";
 import type { RichTextField } from "@prismicio/client";
 
-import { Heading, type HeadingProps, Prose } from "@/components/ui/typography";
+import {
+	Heading,
+	type HeadingProps,
+	Prose,
+	type ProseProps,
+} from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 
 /*
@@ -24,6 +29,7 @@ const bodySerializer: JSXMapSerializer = {
 
 export interface PrismicProseProps {
 	field: RichTextField | null | undefined;
+	tone?: ProseProps["tone"];
 	className?: string;
 }
 
@@ -33,11 +39,11 @@ export interface PrismicProseProps {
  * Returns null for an empty field so a slice never leaves an empty element
  * taking up vertical rhythm.
  */
-export function PrismicProse({ field, className }: PrismicProseProps) {
+export function PrismicProse({ field, tone, className }: PrismicProseProps) {
 	if (!hasContent(field)) return null;
 
 	return (
-		<Prose className={className}>
+		<Prose tone={tone} className={className}>
 			<PrismicRichText field={field} components={bodySerializer} />
 		</Prose>
 	);

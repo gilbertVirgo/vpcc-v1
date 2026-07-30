@@ -31,7 +31,8 @@ const CallToAction: FC<CallToActionProps> = ({ slice }) => {
 					/>
 					<PrismicProse
 						field={slice.primary.body}
-						className={`mx-auto mt-5 ${inverse ? "text-ink-inverse" : ""}`}
+						tone={inverse ? "inverse" : undefined}
+						className="mx-auto mt-5"
 					/>
 					<div className="mt-8 flex justify-center">
 						<PrismicButtonGroup

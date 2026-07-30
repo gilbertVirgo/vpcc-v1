@@ -142,36 +142,74 @@ export function Accent({ className, children }: AccentProps) {
 /* Prose                                                                       */
 /* -------------------------------------------------------------------------- */
 
+const prose = cva(
+	[
+		"measure text-body",
+		"[&_p]:mt-4 [&_p:first-child]:mt-0",
+		"[&_h2]:text-h3 [&_h2]:mt-10",
+		"[&_h3]:text-h4 [&_h3]:mt-8",
+		"[&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6",
+		"[&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6",
+		"[&_li]:mt-1",
+		"[&_strong]:font-bold",
+		"[&_em]:italic",
+		"[&_a]:underline [&_a]:underline-offset-4",
+		"hover:[&_a]:decoration-current",
+		"[&_a]:transition-colors [&_a]:duration-fast [&_a]:ease-standard",
+	],
+	{
+		variants: {
+			tone: {
+				default: [
+					"text-ink-secondary",
+					"[&_h2]:text-ink [&_h3]:text-ink [&_strong]:text-ink",
+					"[&_a]:text-ink-accent [&_a]:decoration-line-strong",
+				],
+				/*
+				 * For rich text sitting on the accent fill.
+				 *
+				 * `ink-accent` is orange, so the default link colour would be
+				 * orange on orange. Here links take the band's own ink and lean
+				 * on the underline alone — which is the affordance that has to
+				 * carry the link anyway.
+				 */
+				accent: [
+					"text-accent-contrast",
+					"[&_h2]:text-accent-contrast [&_h3]:text-accent-contrast",
+					"[&_strong]:text-accent-contrast",
+					"[&_a]:text-accent-contrast [&_a]:decoration-current",
+				],
+				/*
+				 * For rich text sitting on a dark band.
+				 *
+				 * Same failure as `accent`, at the other end of the ramp: orange
+				 * links on near-black. Links take the band's own ink —
+				 * `ink-inverse` is 18.89:1 on `surface-inverse` — and the
+				 * underline follows with `decoration-current`, since
+				 * `line-strong` is a light-surface line and all but disappears
+				 * here.
+				 */
+				inverse: [
+					"text-ink-inverse",
+					"[&_h2]:text-ink-inverse [&_h3]:text-ink-inverse",
+					"[&_strong]:text-ink-inverse",
+					"[&_a]:text-ink-inverse [&_a]:decoration-current",
+				],
+			},
+		},
+		defaultVariants: { tone: "default" },
+	},
+);
+
+export interface ProseProps extends VariantProps<typeof prose> {
+	className?: string;
+	children?: ReactNode;
+}
+
 /**
  * Wrapper for CMS-authored rich text, where the markup is out of our hands.
  * Everything here targets bare elements, so it must stay scoped to this class.
  */
-export function Prose({
-	className,
-	children,
-}: {
-	className?: string;
-	children?: ReactNode;
-}) {
-	return (
-		<div
-			className={cn(
-				"measure text-body text-ink-secondary",
-				"[&_p]:mt-4 [&_p:first-child]:mt-0",
-				"[&_h2]:text-h3 [&_h2]:text-ink [&_h2]:mt-10",
-				"[&_h3]:text-h4 [&_h3]:text-ink [&_h3]:mt-8",
-				"[&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6",
-				"[&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6",
-				"[&_li]:mt-1",
-				"[&_strong]:font-bold [&_strong]:text-ink",
-				"[&_em]:italic",
-				"[&_a]:text-ink-accent [&_a]:underline [&_a]:underline-offset-4",
-				"[&_a]:decoration-line-strong hover:[&_a]:decoration-current",
-				"[&_a]:transition-colors [&_a]:duration-fast [&_a]:ease-standard",
-				className,
-			)}
-		>
-			{children}
-		</div>
-	);
+export function Prose({ tone, className, children }: ProseProps) {
+	return <div className={cn(prose({ tone }), className)}>{children}</div>;
 }
