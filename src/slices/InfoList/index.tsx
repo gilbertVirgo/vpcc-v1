@@ -15,7 +15,9 @@ export type InfoListProps = SliceComponentProps<Content.InfoListSlice>;
  * rather than only by layout.
  */
 const InfoList: FC<InfoListProps> = ({ slice }) => {
-	const rows = slice.primary.rows.filter((row) => row.label || row.value?.length);
+	const rows = slice.primary.rows.filter(
+		(row) => row.label || row.value?.length,
+	);
 
 	return (
 		<Section spacing="sm">
@@ -30,7 +32,11 @@ const InfoList: FC<InfoListProps> = ({ slice }) => {
 								className="grid gap-1 border-b border-line py-4 xs:grid-cols-[10rem_1fr] xs:gap-6"
 							>
 								<dt>
-									<Text size="overline" tone="muted" as="span">
+									<Text
+										size="overline"
+										tone="muted"
+										as="span"
+									>
 										{row.label}
 									</Text>
 								</dt>

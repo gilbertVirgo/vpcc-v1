@@ -32,7 +32,11 @@ const ContactForm: FC<ContactFormProps> = ({ slice }) => {
 				<PrismicProse field={slice.primary.intro} className="mt-5" />
 				<div className={hasIntro ? "mt-12" : undefined}>
 					<Form
-						variant={slice.primary.form === "donate" ? "donate" : "contact"}
+						variant={
+							slice.primary.form === "donate"
+								? "donate"
+								: "contact"
+						}
 					/>
 				</div>
 			</Container>

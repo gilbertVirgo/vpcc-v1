@@ -27,7 +27,12 @@ export function Logo({
 			focusable="false"
 			className={cn("size-10", className)}
 		>
-			<path fillRule="evenodd" clipRule="evenodd" d={MARK} fill="currentColor" />
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d={MARK}
+				fill="currentColor"
+			/>
 		</svg>
 	);
 }

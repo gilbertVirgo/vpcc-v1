@@ -31,7 +31,9 @@ export async function generateMetadata(): Promise<Metadata> {
 			siteName: settings.name,
 			title: settings.seo.title,
 			description: settings.seo.description,
-			images: settings.seo.image ? [{ url: settings.seo.image }] : undefined,
+			images: settings.seo.image
+				? [{ url: settings.seo.image }]
+				: undefined,
 		},
 		twitter: {
 			card: "summary_large_image",
@@ -71,10 +73,21 @@ export default async function RootLayout({
 	return (
 		<html lang="en-GB">
 			<head>
-				<link rel="preconnect" href="https://use.typekit.net" crossOrigin="" />
-				<link rel="preconnect" href="https://p.typekit.net" crossOrigin="" />
+				<link
+					rel="preconnect"
+					href="https://use.typekit.net"
+					crossOrigin=""
+				/>
+				<link
+					rel="preconnect"
+					href="https://p.typekit.net"
+					crossOrigin=""
+				/>
 				{/* Adobe Fonts: area-inktrap (500/700) */}
-				<link rel="stylesheet" href="https://use.typekit.net/ccy7tqi.css" />
+				<link
+					rel="stylesheet"
+					href="https://use.typekit.net/ccy7tqi.css"
+				/>
 				<ChurchJsonLd settings={settings} />
 			</head>
 			<body className="flex min-h-dvh flex-col">

@@ -13,8 +13,10 @@ const RATIOS = {
 
 export type AspectRatio = keyof typeof RATIOS;
 
-export interface MediaProps
-	extends Omit<NextImageProps, "className" | "fill" | "width" | "height"> {
+export interface MediaProps extends Omit<
+	NextImageProps,
+	"className" | "fill" | "width" | "height"
+> {
 	ratio?: AspectRatio;
 	rounded?: boolean;
 	className?: string;

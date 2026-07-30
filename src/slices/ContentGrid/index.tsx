@@ -19,8 +19,15 @@ const ContentGrid: FC<ContentGridProps> = ({ slice }) => {
 		<Section spacing="md">
 			<Container>
 				<div className="measure">
-					<PrismicHeading field={slice.primary.title} as="h2" size="h2" />
-					<PrismicProse field={slice.primary.intro} className="mt-5" />
+					<PrismicHeading
+						field={slice.primary.title}
+						as="h2"
+						size="h2"
+					/>
+					<PrismicProse
+						field={slice.primary.intro}
+						className="mt-5"
+					/>
 				</div>
 
 				{cells.length > 0 ? (
@@ -44,7 +51,10 @@ const ContentGrid: FC<ContentGridProps> = ({ slice }) => {
 										{cell.subtitle}
 									</Text>
 								) : null}
-								<PrismicProse field={cell.body} className="mt-4" />
+								<PrismicProse
+									field={cell.body}
+									className="mt-4"
+								/>
 							</Card>
 						))}
 					</Stagger>

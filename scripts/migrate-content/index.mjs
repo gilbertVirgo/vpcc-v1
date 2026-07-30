@@ -45,7 +45,10 @@ const DRY_RUN = !process.argv.includes("--run");
 
 function loadEnv() {
 	try {
-		const raw = readFileSync(new URL("../../.env.local", import.meta.url), "utf8");
+		const raw = readFileSync(
+			new URL("../../.env.local", import.meta.url),
+			"utf8",
+		);
 		for (const line of raw.split("\n")) {
 			const match = line.match(/^([A-Z0-9_]+)=(.*)$/);
 			if (match) process.env[match[1]] ??= match[2];
@@ -130,7 +133,13 @@ const slice = (type, primary) => ({
 const pageHeader = (title, intro = []) =>
 	slice("page_header", { title: [heading(title, 1)], intro });
 
-const feature = ({ title, body, images = [], buttons = [], position = "left" }) =>
+const feature = ({
+	title,
+	body,
+	images = [],
+	buttons = [],
+	position = "left",
+}) =>
 	slice("feature", {
 		title: [heading(title, 2)],
 		body,
@@ -204,22 +213,17 @@ page(
 	],
 );
 
-page(
-	DONATE,
-	"Donate",
-	"Support the work of Victoria Park Community Church.",
-	[
-		pageHeader("Thank you for supporting us", [
-			p(
-				"Thank you for your interest in supporting Victoria Park Community Church.",
-			),
-			p(
-				"Please share your contact details below, and we’ll be in touch soon to discuss the best way for you to make your donation.",
-			),
-		]),
-		slice("contact_form", { title: [], intro: [], form: "donate" }),
-	],
-);
+page(DONATE, "Donate", "Support the work of Victoria Park Community Church.", [
+	pageHeader("Thank you for supporting us", [
+		p(
+			"Thank you for your interest in supporting Victoria Park Community Church.",
+		),
+		p(
+			"Please share your contact details below, and we’ll be in touch soon to discuss the best way for you to make your donation.",
+		),
+	]),
+	slice("contact_form", { title: [], intro: [], form: "donate" }),
+]);
 
 page(
 	BELIEFS_PAGE,
@@ -237,7 +241,10 @@ page(
 							"UCCF doctrinal basis",
 							"https://www.uccf.org.uk/media/pages/impact/more/asked-to-be-a-leader/1964487579-1724852466/uccf_doctrinalbasis.pdf",
 						],
-						["doctrinal basis", "https://fiec.org.uk/who-we-are/beliefs"],
+						[
+							"doctrinal basis",
+							"https://fiec.org.uk/who-we-are/beliefs",
+						],
 						[
 							"ethos statements",
 							"https://fiec.org.uk/who-we-are/beliefs#ethos",
@@ -286,7 +293,9 @@ page(
 		feature({
 			title: "Calendar",
 			body: [
-				p("See all our upcoming events and activities on our calendar page."),
+				p(
+					"See all our upcoming events and activities on our calendar page.",
+				),
 			],
 			images: [assets.calendar].filter(Boolean),
 			buttons: [button("View calendar", external(CALENDAR_URL))],
@@ -311,9 +320,11 @@ page(
 					"We meet from 3:00pm–4:30pm at Victoria Park Baptist Church, 186 Grove Road, London E3 5TG.",
 				),
 			],
-			images: [assets.sundays1, assets.sundaysBaby, assets.sundays4].filter(
-				Boolean,
-			),
+			images: [
+				assets.sundays1,
+				assets.sundaysBaby,
+				assets.sundays4,
+			].filter(Boolean),
 			buttons: [button("Get directions", external(DIRECTIONS_URL))],
 		}),
 		feature({
@@ -359,9 +370,11 @@ page(
 					"We meet from 3:00pm–4:30pm at Victoria Park Baptist Church, 186 Grove Road, London E3 5TG.",
 				),
 			],
-			images: [assets.sundays1, assets.sundaysBaby, assets.sundays4].filter(
-				Boolean,
-			),
+			images: [
+				assets.sundays1,
+				assets.sundaysBaby,
+				assets.sundays4,
+			].filter(Boolean),
 			buttons: [button("Get directions", external(DIRECTIONS_URL))],
 		}),
 		feature({

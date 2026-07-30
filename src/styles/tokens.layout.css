@@ -61,9 +61,11 @@
 	/* ---- Elevation ------------------------------------------------------- */
 	/* Depth is expressed with hairline borders, not shadows. These two exist
 	   only for things that genuinely float above the page. */
-	--shadow-overlay: 0 1px 2px oklch(15.94% 0.0233 279.4 / 0.04),
+	--shadow-overlay:
+		0 1px 2px oklch(15.94% 0.0233 279.4 / 0.04),
 		0 8px 24px oklch(15.94% 0.0233 279.4 / 0.08);
-	--shadow-popover: 0 1px 2px oklch(15.94% 0.0233 279.4 / 0.05),
+	--shadow-popover:
+		0 1px 2px oklch(15.94% 0.0233 279.4 / 0.05),
 		0 16px 48px oklch(15.94% 0.0233 279.4 / 0.12);
 
 	/* ---- Depth ----------------------------------------------------------- */

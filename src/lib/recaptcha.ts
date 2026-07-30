@@ -39,8 +39,7 @@ interface VerifyResponse {
 }
 
 export type RecaptchaResult =
-	| { ok: true; score: number | null }
-	| { ok: false; reason: string };
+	{ ok: true; score: number | null } | { ok: false; reason: string };
 
 export function isRecaptchaConfigured(): boolean {
 	return Boolean(process.env.RECAPTCHA_SECRET_KEY);

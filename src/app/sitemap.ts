@@ -30,7 +30,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		return {
 			url: page.url ? `${base}${page.url === "/" ? "" : page.url}` : base,
 			lastModified: new Date(page.last_publication_date),
-			changeFrequency: isHome ? ("weekly" as const) : ("monthly" as const),
+			changeFrequency: isHome
+				? ("weekly" as const)
+				: ("monthly" as const),
 			priority: isHome ? 1 : 0.8,
 		};
 	});

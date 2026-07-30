@@ -63,9 +63,9 @@ function ConsentBanner() {
 			<Container>
 				<div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
 					<Text size="sm" tone="secondary" className="measure">
-						We’d like to use Google Analytics to understand how people
-						use this site. It sets cookies, so we’ll only do it if
-						you’re happy. Everything works either way.
+						We’d like to use Google Analytics to understand how
+						people use this site. It sets cookies, so we’ll only do
+						it if you’re happy. Everything works either way.
 					</Text>
 					<div className="flex shrink-0 gap-3">
 						<Button size="sm" onClick={() => setConsent("granted")}>

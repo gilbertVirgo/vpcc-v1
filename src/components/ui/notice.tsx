@@ -41,7 +41,7 @@ export function Notice({ title, when, children, className }: NoticeProps) {
 		 */
 		<aside
 			aria-label={title}
-			className={cn("border-line border-y bg-accent-subtle", className)}
+			className={cn("border-y border-line bg-accent-subtle", className)}
 		>
 			<Container>
 				<Text size="sm" tone="secondary" className="py-3 text-center">
@@ -56,7 +56,12 @@ export function Notice({ title, when, children, className }: NoticeProps) {
 						className="mr-2 inline size-4 align-middle text-ink"
 					/>
 					<strong className="font-bold text-ink">{title}</strong>
-					{when ? <> on <span className="text-ink">{when}</span></> : null}
+					{when ? (
+						<>
+							{" "}
+							on <span className="text-ink">{when}</span>
+						</>
+					) : null}
 					{children ? <> — {children}</> : null}
 				</Text>
 			</Container>

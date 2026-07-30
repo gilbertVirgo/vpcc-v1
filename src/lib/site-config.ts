@@ -41,65 +41,72 @@ const navCta: NavLink = { label: "Donate", href: "/donate" };
  * then have no `icon` property at all for the footer to read.
  */
 const footer: FooterSection[] = [
-		{
-			title: "Connect",
-			links: [
-				{
-					label: "@vpcc.church",
-					href: "https://www.instagram.com/vpcc.church",
-					icon: "instagram",
-				},
-				{
-					label: "Facebook",
-					href: "https://www.facebook.com/p/Victoria-Park-Community-Church-100091737656153",
-					icon: "facebook",
-				},
-				{ label: "ben@vpcc.church", href: "mailto:ben@vpcc.church", icon: "mail" },
-			],
-		},
-		{
-			title: "Legal",
-			links: [
-				{
-					label: "Safeguarding Policy",
-					href: "https://docs.google.com/document/d/101PolqYPxomDMh2NvkQrFp6m_RAvZvBWnlQN7ha0WgE/edit?usp=sharing",
-				},
-				{ label: "Complaint Policy", href: "/assets/pdf/complaint-policy.pdf" },
-				{
-					label: "Conflict of Interest Policy",
-					href: "/assets/pdf/conflict-of-interest-policy.pdf",
-				},
-				{
-					label: "Data Protection & Privacy Policy",
-					href: "/assets/pdf/data-protection-privacy-policy.pdf",
-				},
-				{
-					label: "Financial Management Policy",
-					href: "/assets/pdf/financial-management-policy.pdf",
-				},
-				{
-					label: "Serious Incident Reporting Policy",
-					href: "/assets/pdf/serious-incident-reporting-policy.pdf",
-				},
-			],
-		},
-		{
-			title: "Quick Links",
-			links: [
-				{ label: "Calendar", href: "https://calendar.vpcc.church" },
-				{ label: "Donate", href: "/donate" },
-			],
-		},
-		{
-			title: "Associated Organisations",
-			links: [
-				{ label: "FIEC", href: "https://fiec.org.uk" },
-				{
-					label: "Christian Heritage London",
-					href: "https://christianheritagelondon.org",
-				},
-			],
-		},
+	{
+		title: "Connect",
+		links: [
+			{
+				label: "@vpcc.church",
+				href: "https://www.instagram.com/vpcc.church",
+				icon: "instagram",
+			},
+			{
+				label: "Facebook",
+				href: "https://www.facebook.com/p/Victoria-Park-Community-Church-100091737656153",
+				icon: "facebook",
+			},
+			{
+				label: "ben@vpcc.church",
+				href: "mailto:ben@vpcc.church",
+				icon: "mail",
+			},
+		],
+	},
+	{
+		title: "Legal",
+		links: [
+			{
+				label: "Safeguarding Policy",
+				href: "https://docs.google.com/document/d/101PolqYPxomDMh2NvkQrFp6m_RAvZvBWnlQN7ha0WgE/edit?usp=sharing",
+			},
+			{
+				label: "Complaint Policy",
+				href: "/assets/pdf/complaint-policy.pdf",
+			},
+			{
+				label: "Conflict of Interest Policy",
+				href: "/assets/pdf/conflict-of-interest-policy.pdf",
+			},
+			{
+				label: "Data Protection & Privacy Policy",
+				href: "/assets/pdf/data-protection-privacy-policy.pdf",
+			},
+			{
+				label: "Financial Management Policy",
+				href: "/assets/pdf/financial-management-policy.pdf",
+			},
+			{
+				label: "Serious Incident Reporting Policy",
+				href: "/assets/pdf/serious-incident-reporting-policy.pdf",
+			},
+		],
+	},
+	{
+		title: "Quick Links",
+		links: [
+			{ label: "Calendar", href: "https://calendar.vpcc.church" },
+			{ label: "Donate", href: "/donate" },
+		],
+	},
+	{
+		title: "Associated Organisations",
+		links: [
+			{ label: "FIEC", href: "https://fiec.org.uk" },
+			{
+				label: "Christian Heritage London",
+				href: "https://christianheritagelondon.org",
+			},
+		],
+	},
 ];
 
 export const siteConfig = {

@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 
-import { Button, Container, Heading, Section, Stack, Text } from "@/components/ui";
+import {
+	Button,
+	Container,
+	Heading,
+	Section,
+	Stack,
+	Text,
+} from "@/components/ui";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -20,8 +27,8 @@ export default function NotFound() {
 						We couldn’t find that page
 					</Heading>
 					<Text size="lg" tone="secondary" className="mt-6">
-						It may have moved, or the link may be out of date. You’re
-						still very welcome — here’s where to go next.
+						It may have moved, or the link may be out of date.
+						You’re still very welcome — here’s where to go next.
 					</Text>
 					<Stack direction="row" gap="sm" className="mt-10">
 						<Button href="/">Back to home</Button>

@@ -20,7 +20,8 @@ for (const [k, v] of Object.entries({ light: L, dark: D, primary: P })) {
 	);
 }
 
-const fmt = (c) => `oklch(${(c.l * 100).toFixed(2)}% ${c.c.toFixed(4)} ${(c.h ?? 0).toFixed(2)})`;
+const fmt = (c) =>
+	`oklch(${(c.l * 100).toFixed(2)}% ${c.c.toFixed(4)} ${(c.h ?? 0).toFixed(2)})`;
 const hex = (c) => formatHex(clampChroma(c, "oklch"));
 
 // ---- Neutral ramp -------------------------------------------------------
@@ -33,8 +34,17 @@ const NEUTRAL_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 // Perceptual lightness targets. Weighted toward the light end because that is
 // where the UI lives: surfaces, hairlines, muted text.
 const NEUTRAL_L = {
-	50: 1.0, 100: 0.965, 200: 0.9, 300: 0.8, 400: 0.66,
-	500: 0.52, 600: 0.4, 700: 0.29, 800: 0.19, 900: 0.1, 950: 0.0,
+	50: 1.0,
+	100: 0.965,
+	200: 0.9,
+	300: 0.8,
+	400: 0.66,
+	500: 0.52,
+	600: 0.4,
+	700: 0.29,
+	800: 0.19,
+	900: 0.1,
+	950: 0.0,
 };
 
 const neutral = {};
@@ -59,12 +69,28 @@ neutral[950] = D;
 // shades stay saturated rather than turning brown.
 const PRIMARY_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 const PRIMARY_L = {
-	50: 0.975, 100: 0.945, 200: 0.895, 300: 0.835, 400: 0.775,
-	500: P.l, 600: 0.645, 700: 0.555, 800: 0.455, 900: 0.35,
+	50: 0.975,
+	100: 0.945,
+	200: 0.895,
+	300: 0.835,
+	400: 0.775,
+	500: P.l,
+	600: 0.645,
+	700: 0.555,
+	800: 0.455,
+	900: 0.35,
 };
 const PRIMARY_C = {
-	50: 0.014, 100: 0.032, 200: 0.062, 300: 0.098, 400: 0.14,
-	500: P.c, 600: 0.165, 700: 0.15, 800: 0.125, 900: 0.098,
+	50: 0.014,
+	100: 0.032,
+	200: 0.062,
+	300: 0.098,
+	400: 0.14,
+	500: P.c,
+	600: 0.165,
+	700: 0.15,
+	800: 0.125,
+	900: 0.098,
 };
 
 const primary = {};

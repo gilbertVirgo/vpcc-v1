@@ -2,7 +2,14 @@ import { asImageSrc } from "@prismicio/client";
 import { SliceZone } from "@prismicio/react";
 import type { Metadata } from "next";
 
-import { Button, Container, Heading, Section, Stack, Text } from "@/components/ui";
+import {
+	Button,
+	Container,
+	Heading,
+	Section,
+	Stack,
+	Text,
+} from "@/components/ui";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import type { SliceContext } from "@/slices/context";
@@ -63,8 +70,8 @@ export default async function HomePage() {
 						</Heading>
 						<Text size="lg" tone="secondary" className="mt-6">
 							This site is connected to Prismic but the home page
-							document hasn’t been created yet. Add a Page with the
-							UID <code>home</code> and it will appear here.
+							document hasn’t been created yet. Add a Page with
+							the UID <code>home</code> and it will appear here.
 						</Text>
 						<Stack direction="row" gap="sm" className="mt-10">
 							<Button href="/connect">Get in touch</Button>

@@ -54,7 +54,10 @@ const EventList: FC<EventListProps> = ({ slice, context }) => {
 					{events.map((event, index) => {
 						const data = event.data;
 						if (!data) return null;
-						const when = formatEventDate(data.starts_at, data.ends_at);
+						const when = formatEventDate(
+							data.starts_at,
+							data.ends_at,
+						);
 
 						return (
 							<Card

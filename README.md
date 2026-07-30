@@ -16,14 +16,14 @@ npm run dev
 
 ## Scripts
 
-| Script | Does |
-|---|---|
-| `npm run dev` | Dev server |
-| `npm run build` | Production build |
-| `npm run check` | Typecheck + ESLint + design-token guard |
-| `npm run lint:tokens` | Design-token guard on its own |
+| Script                  | Does                                                   |
+| ----------------------- | ------------------------------------------------------ |
+| `npm run dev`           | Dev server                                             |
+| `npm run build`         | Production build                                       |
+| `npm run check`         | Typecheck + ESLint + design-token guard                |
+| `npm run lint:tokens`   | Design-token guard on its own                          |
 | `npm run tokens:colors` | Regenerate the colour ramps and print a contrast table |
-| `npm run format` | Prettier |
+| `npm run format`        | Prettier                                               |
 
 Run `npm run check` before committing.
 

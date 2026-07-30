@@ -16,7 +16,9 @@ export interface ContactFormValues {
 	message: string;
 }
 
-export type ContactFormErrors = Partial<Record<keyof ContactFormValues, string>>;
+export type ContactFormErrors = Partial<
+	Record<keyof ContactFormValues, string>
+>;
 
 export const EMPTY_CONTACT_FORM: ContactFormValues = {
 	firstName: "",
@@ -61,7 +63,8 @@ export function validateContactForm(
 	}
 
 	if (!values.message.trim()) {
-		errors.message = "Please tell us a little about why you’re getting in touch.";
+		errors.message =
+			"Please tell us a little about why you’re getting in touch.";
 	} else if (values.message.length > MAX.message) {
 		errors.message = `Please keep this under ${MAX.message} characters.`;
 	}
@@ -82,7 +85,9 @@ export function isValidVariant(value: unknown): value is ContactFormVariant {
  * Returns null rather than throwing when the payload isn't an object of
  * strings, so a malformed POST is a 400 rather than a 500.
  */
-export function parseContactFormValues(input: unknown): ContactFormValues | null {
+export function parseContactFormValues(
+	input: unknown,
+): ContactFormValues | null {
 	if (typeof input !== "object" || input === null) return null;
 
 	const record = input as Record<string, unknown>;

@@ -66,7 +66,11 @@ export function Footer({ name, sections, meeting }: FooterProps) {
 					</div>
 
 					<div className="mt-16 border-t border-line-inverse pt-8">
-						<Text size="caption" tone="inverse" className="opacity-60">
+						<Text
+							size="caption"
+							tone="inverse"
+							className="opacity-60"
+						>
 							© {year} {name}
 						</Text>
 					</div>

@@ -21,16 +21,16 @@ pixel values, and `var()` references to tokens that don't exist.
 
 ## Files
 
-| File | Holds |
-|---|---|
-| `src/styles/tokens.color.css` | Ramps + semantic colour |
-| `src/styles/tokens.typography.css` | Families, type scale, weights, measure |
-| `src/styles/tokens.layout.css` | Space, breakpoints, containers, radii, elevation, z-index |
-| `src/styles/tokens.motion.css` | Durations, easings, reveal, reduced-motion switch |
-| `src/styles/base.css` | Element defaults, focus, `.font-accent` |
-| `src/styles/utilities.css` | Custom utilities, dialog styling, reveal mechanics |
-| `src/components/ui/` | The primitives |
-| `src/lib/cn.ts` | Class merging, taught this system's scales |
+| File                               | Holds                                                     |
+| ---------------------------------- | --------------------------------------------------------- |
+| `src/styles/tokens.color.css`      | Ramps + semantic colour                                   |
+| `src/styles/tokens.typography.css` | Families, type scale, weights, measure                    |
+| `src/styles/tokens.layout.css`     | Space, breakpoints, containers, radii, elevation, z-index |
+| `src/styles/tokens.motion.css`     | Durations, easings, reveal, reduced-motion switch         |
+| `src/styles/base.css`              | Element defaults, focus, `.font-accent`                   |
+| `src/styles/utilities.css`         | Custom utilities, dialog styling, reveal mechanics        |
+| `src/components/ui/`               | The primitives                                            |
+| `src/lib/cn.ts`                    | Class merging, taught this system's scales                |
 
 `/design-system` renders every token and component state. It is the reference —
 keep it current when you add something.
@@ -57,12 +57,12 @@ taper is what keeps the mid-greys neutral.
 - Buttons lighten on hover rather than darken, so label contrast improves on
   interaction (9.20:1) instead of degrading.
 
-| Token | On surface |
-|---|---|
-| `ink` | 18.89:1 |
-| `ink-secondary` | 8.95:1 |
-| `ink-muted` | 6.05:1 — the floor for body text |
-| `ink-accent` | 4.83:1 |
+| Token           | On surface                       |
+| --------------- | -------------------------------- |
+| `ink`           | 18.89:1                          |
+| `ink-secondary` | 8.95:1                           |
+| `ink-muted`     | 6.05:1 — the floor for body text |
+| `ink-accent`    | 4.83:1                           |
 
 `ink-accent` is tuned for the light surface and does not travel: on
 `surface-inverse` it drops to **3.91:1** and fails AA. `ink-inverse` on
@@ -89,7 +89,9 @@ weight scale is restricted to `font-medium` (500) and `font-bold` (700) so
 weight 500 against the heading's 700 — same family, same size:
 
 ```tsx
-<Heading size="h1">April 3rd: <Accent>Hot Cross Buns</Accent></Heading>
+<Heading size="h1">
+	April 3rd: <Accent>Hot Cross Buns</Accent>
+</Heading>
 ```
 
 Heading **level** and heading **size** are separate props. Pick the level for
@@ -186,11 +188,11 @@ A shared weekday or month is said once — "Sundays 9 and 16 August", not
 and it is what pushes the line onto a second row. Anything the days don't share
 is still spelled out, so the short form never costs clarity:
 
-| Days | Reads |
-|---|---|
-| same weekday, same month | Sundays 9 and 16 August |
-| same month only | Sunday 9 and Monday 17 August |
-| neither | Sunday 9 August and Sunday 6 September |
+| Days                     | Reads                                  |
+| ------------------------ | -------------------------------------- |
+| same weekday, same month | Sundays 9 and 16 August                |
+| same month only          | Sunday 9 and Monday 17 August          |
+| neither                  | Sunday 9 August and Sunday 6 September |
 
 Days end at London midnight, not UTC — through the summer those are an hour
 apart. See `formatNoticeDates` in `src/lib/dates.ts`.

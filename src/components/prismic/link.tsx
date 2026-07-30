@@ -9,7 +9,9 @@ import { Button, type ButtonProps } from "@/components/ui/button";
  * with a URL already attached. Returns undefined for an empty field, which is
  * what callers use to decide whether to render anything at all.
  */
-export function linkHref(field: LinkField | null | undefined): string | undefined {
+export function linkHref(
+	field: LinkField | null | undefined,
+): string | undefined {
 	if (!field) return undefined;
 	return asLink(field) ?? undefined;
 }

@@ -31,7 +31,11 @@ function parse(value: string | null | undefined): Date | null {
 
 /** Formats a time, dropping ":00" so 7pm doesn't read as "7:00 pm". */
 function time(date: Date): string {
-	return timeFormat.format(date).replace(":00", "").replace(/\s/g, "").toLowerCase();
+	return timeFormat
+		.format(date)
+		.replace(":00", "")
+		.replace(/\s/g, "")
+		.toLowerCase();
 }
 
 /**

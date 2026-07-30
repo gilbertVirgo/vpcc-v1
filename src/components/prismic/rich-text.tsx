@@ -121,22 +121,46 @@ export function PrismicHeading({
 
 	const serializer: JSXMapSerializer = {
 		heading1: ({ children, key }) => (
-			<Heading key={key} as={as} size={size} tone={tone} className={className}>
+			<Heading
+				key={key}
+				as={as}
+				size={size}
+				tone={tone}
+				className={className}
+			>
 				{children}
 			</Heading>
 		),
 		heading2: ({ children, key }) => (
-			<Heading key={key} as={as} size={size} tone={tone} className={className}>
+			<Heading
+				key={key}
+				as={as}
+				size={size}
+				tone={tone}
+				className={className}
+			>
 				{children}
 			</Heading>
 		),
 		heading3: ({ children, key }) => (
-			<Heading key={key} as={as} size={size} tone={tone} className={className}>
+			<Heading
+				key={key}
+				as={as}
+				size={size}
+				tone={tone}
+				className={className}
+			>
 				{children}
 			</Heading>
 		),
 		paragraph: ({ children, key }) => (
-			<Heading key={key} as={as} size={size} tone={tone} className={className}>
+			<Heading
+				key={key}
+				as={as}
+				size={size}
+				tone={tone}
+				className={className}
+			>
 				{children}
 			</Heading>
 		),

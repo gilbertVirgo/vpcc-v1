@@ -20,7 +20,10 @@ declare global {
 	interface Window {
 		grecaptcha?: {
 			ready: (callback: () => void) => void;
-			execute: (siteKey: string, options: { action: string }) => Promise<string>;
+			execute: (
+				siteKey: string,
+				options: { action: string },
+			) => Promise<string>;
 		};
 	}
 }
@@ -84,7 +87,9 @@ export function ContactForm({
 	const update = useCallback(
 		(field: keyof ContactFormValues) =>
 			(
-				event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+				event: React.ChangeEvent<
+					HTMLInputElement | HTMLTextAreaElement
+				>,
 			) => {
 				const { value } = event.target;
 				setValues((previous) => ({ ...previous, [field]: value }));
@@ -138,9 +143,7 @@ export function ContactForm({
 			/* Move focus to the first problem so a keyboard or screen-reader
 			   user isn't left at the submit button wondering what happened. */
 			const first = Object.keys(nextErrors)[0];
-			document
-				.querySelector<HTMLElement>(`[name="${first}"]`)
-				?.focus();
+			document.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
 			return;
 		}
 
@@ -166,7 +169,8 @@ export function ContactForm({
 			if (!response.ok) {
 				if (result.errors) setErrors(result.errors);
 				setErrorMessage(
-					result.error ?? "Your message didn’t send. Please try again.",
+					result.error ??
+						"Your message didn’t send. Please try again.",
 				);
 				setStatus("error");
 				return;

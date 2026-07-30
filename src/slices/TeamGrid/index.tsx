@@ -25,8 +25,15 @@ const TeamGrid: FC<TeamGridProps> = ({ slice }) => {
 		<Section spacing="md">
 			<Container>
 				<div className="measure">
-					<PrismicHeading field={slice.primary.title} as="h2" size="h2" />
-					<PrismicProse field={slice.primary.intro} className="mt-5" />
+					<PrismicHeading
+						field={slice.primary.title}
+						as="h2"
+						size="h2"
+					/>
+					<PrismicProse
+						field={slice.primary.intro}
+						className="mt-5"
+					/>
 				</div>
 
 				{members.length > 0 ? (
@@ -59,7 +66,10 @@ const TeamGrid: FC<TeamGridProps> = ({ slice }) => {
 											{data.role}
 										</Text>
 									) : null}
-									<PrismicProse field={data.bio} className="mt-4" />
+									<PrismicProse
+										field={data.bio}
+										className="mt-4"
+									/>
 								</article>
 							);
 						})}

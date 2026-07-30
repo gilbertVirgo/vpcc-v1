@@ -25,5 +25,5 @@ export const components = {
 	map_embed: MapEmbed,
 	page_header: PageHeader,
 	rich_text: RichText,
-	team_grid: TeamGrid
+	team_grid: TeamGrid,
 };

@@ -3,11 +3,7 @@ import { asLink, isFilled, type RichTextField } from "@prismicio/client";
 import type { IconName } from "@/components/ui/icon";
 import { createClient } from "@/prismicio";
 
-import {
-	type FooterSection,
-	type NavLink,
-	siteConfig,
-} from "./site-config";
+import { type FooterSection, type NavLink, siteConfig } from "./site-config";
 
 /**
  * Site chrome, from Prismic where available.
@@ -169,7 +165,8 @@ export async function getSettings(): Promise<SiteSettings> {
 		},
 		seo: {
 			title: data.meta_title?.trim() || FALLBACK.seo.title,
-			description: data.meta_description?.trim() || FALLBACK.seo.description,
+			description:
+				data.meta_description?.trim() || FALLBACK.seo.description,
 			image: data.og_image?.url ?? undefined,
 		},
 	};

@@ -24,8 +24,7 @@ const container = cva("mx-auto w-full gutter", {
 	defaultVariants: { size: "default", flush: false },
 });
 
-export interface ContainerProps
-	extends VariantProps<typeof container> {
+export interface ContainerProps extends VariantProps<typeof container> {
 	as?: ElementType;
 	className?: string;
 	children?: ReactNode;
@@ -43,7 +42,9 @@ export function Container({
 	children,
 }: ContainerProps) {
 	return (
-		<Tag className={cn(container({ size, flush }), className)}>{children}</Tag>
+		<Tag className={cn(container({ size, flush }), className)}>
+			{children}
+		</Tag>
 	);
 }
 

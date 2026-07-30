@@ -44,7 +44,10 @@ export async function POST(request: Request) {
 	if (!limit.allowed) {
 		return Response.json(
 			{ error: "Too many messages. Please try again shortly." },
-			{ status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+			{
+				status: 429,
+				headers: { "Retry-After": String(limit.retryAfter) },
+			},
 		);
 	}
 
@@ -78,13 +81,18 @@ export async function POST(request: Request) {
 	   this is the one that counts. */
 	const errors = validateContactForm(values);
 	if (Object.keys(errors).length > 0) {
-		return Response.json({ error: "Invalid details.", errors }, { status: 422 });
+		return Response.json(
+			{ error: "Invalid details.", errors },
+			{ status: 422 },
+		);
 	}
 
 	const token = typeof payload.token === "string" ? payload.token : undefined;
 	const recaptcha = await verifyRecaptcha(token, `${variant}_form`);
 	if (!recaptcha.ok) {
-		console.warn(`reCAPTCHA rejected a ${variant} submission: ${recaptcha.reason}`);
+		console.warn(
+			`reCAPTCHA rejected a ${variant} submission: ${recaptcha.reason}`,
+		);
 		return Response.json(
 			{ error: "We couldn’t verify that request. Please try again." },
 			{ status: 403 },
@@ -96,11 +104,15 @@ export async function POST(request: Request) {
 	   logged above; without this, the accepted half is invisible and the
 	   threshold can only ever be guessed at. */
 	if (recaptcha.score !== null) {
-		console.info(`reCAPTCHA accepted a ${variant} submission: ${recaptcha.score}`);
+		console.info(
+			`reCAPTCHA accepted a ${variant} submission: ${recaptcha.score}`,
+		);
 	}
 
 	if (!isMailConfigured()) {
-		console.error("Mail is not configured; GMAIL_USER/GMAIL_PASS are unset.");
+		console.error(
+			"Mail is not configured; GMAIL_USER/GMAIL_PASS are unset.",
+		);
 		return Response.json(
 			{ error: "Sending is unavailable right now." },
 			{ status: 500 },

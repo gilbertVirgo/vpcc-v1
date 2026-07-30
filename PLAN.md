@@ -11,17 +11,17 @@ phase until the previous phase's "Exit criteria" are all ticked.
 
 ## Foundations (fixed decisions)
 
-| | |
-|---|---|
-| Framework | Next.js (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 (CSS-first `@theme`) over a CSS-custom-property token layer |
-| CMS | Prismic (Slice Machine) |
-| Host | Netlify (`@netlify/plugin-nextjs`) |
-| Font | **Area Inktrap** 500/700 only, via Adobe Fonts `https://use.typekit.net/ccy7tqi.css`. No second face. |
-| Primary | `#FF9035` |
-| Light | `#FCFCF5` |
-| Dark | `#0B0C17` |
+|           |                                                                                                       |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| Framework | Next.js (App Router)                                                                                  |
+| Language  | TypeScript                                                                                            |
+| Styling   | Tailwind CSS v4 (CSS-first `@theme`) over a CSS-custom-property token layer                           |
+| CMS       | Prismic (Slice Machine)                                                                               |
+| Host      | Netlify (`@netlify/plugin-nextjs`)                                                                    |
+| Font      | **Area Inktrap** 500/700 only, via Adobe Fonts `https://use.typekit.net/ccy7tqi.css`. No second face. |
+| Primary   | `#FF9035`                                                                                             |
+| Light     | `#FCFCF5`                                                                                             |
+| Dark      | `#0B0C17`                                                                                             |
 
 Assumptions made where the brief was silent — flagged in **Open Questions** at the end.
 Change them there before Phase 1 starts, not after.
@@ -58,11 +58,11 @@ Change them there before Phase 1 starts, not after.
 - [x] Interpolate a **neutral ramp** (`neutral-50 … neutral-950`) between Light and Dark in OKLCH, not sRGB, so the mid-tones stay clean rather than muddy
 - [x] Interpolate a **primary ramp** (`primary-50 … primary-900`) around `#FF9035` — tints toward Light, shades toward Dark
 - [x] Semantic layer (components only ever reference these):
-  - `surface`, `surface-raised`, `surface-sunken`, `surface-inverse`
-  - `ink`, `ink-secondary`, `ink-muted`, `ink-inverse`, `ink-accent` (named `ink` so utilities read `text-ink-muted`, not `text-text-muted`)
-  - `line`, `line-strong`, `line-inverse`
-  - `accent`, `accent-hover`, `accent-pressed`, `accent-contrast`
-  - `focus-ring`, `success`, `danger`
+    - `surface`, `surface-raised`, `surface-sunken`, `surface-inverse`
+    - `ink`, `ink-secondary`, `ink-muted`, `ink-inverse`, `ink-accent` (named `ink` so utilities read `text-ink-muted`, not `text-text-muted`)
+    - `line`, `line-strong`, `line-inverse`
+    - `accent`, `accent-hover`, `accent-pressed`, `accent-contrast`
+    - `focus-ring`, `success`, `danger`
 - [x] Contrast audit: every text/background pair ≥ WCAG AA (4.5:1 body, 3:1 large). `#FF9035` on `#FCFCF5` **fails** for body text — restrict primary to fills, borders, and large display type; use a darkened primary shade for accent text
 - [x] `#0B0C17` is **text and footer colour only** — no inverse theme, no dark mode toggle, no dark section variants. Keeps the component matrix small
 
@@ -126,9 +126,9 @@ Change them there before Phase 1 starts, not after.
 
 - [x] Root layout: `lang="en-GB"`, Typekit preconnect + stylesheet, `<SkipLink>`, nav/footer shell
 - [x] `Navigation` — Home / What's On / About / Beliefs / Connect + `Donate` button
-  - [x] Mobile drawer: native `<dialog>` (focus trap, `Esc`, inert background from the platform) + body scroll lock, right-pinned slide on the motion tokens
-  - [x] Active-route state (centre-out underline, `aria-current`); drawer closes on any navigation, including back/forward
-  - [ ] Scroll-aware background transition — built, but **unverified**: the preview pane runs backgrounded so `requestAnimationFrame` never fires
+    - [x] Mobile drawer: native `<dialog>` (focus trap, `Esc`, inert background from the platform) + body scroll lock, right-pinned slide on the motion tokens
+    - [x] Active-route state (centre-out underline, `aria-current`); drawer closes on any navigation, including back/forward
+    - [ ] Scroll-aware background transition — built, but **unverified**: the preview pane runs backgrounded so `requestAnimationFrame` never fires
 - [x] `Footer` — four link groups on `surface-inverse`; 5 policy PDFs copied into `public/assets/pdf` and serving
 - [x] `error.tsx`, `not-found.tsx`, `loading.tsx`
 - [ ] `Dialog` provider (replaces old `ModalContext`) — deferred to Phase 3. Forms now use inline `FormStatus`, so the only remaining consumer is the enlargeable feature image, which the Feature slice introduces
@@ -148,24 +148,24 @@ Change them there before Phase 1 starts, not after.
 - [x] Revalidation webhook (`/api/revalidate`) — constant-time secret check, fails closed when the secret is unset
 - [x] Model authored as `scripts/prismic-model.sh` — every `prismic` CLI call, re-runnable
 - [x] **Custom types** pushed: `settings`, `page`, `team_member`, `event`
-  - [x] `settings` (singleton) — site name, nav links, footer groups, socials, contact email, default SEO/OG
-  - [x] `page` (repeatable) — UID, SEO fields, slice zone
-  - [x] `team_member` (repeatable) — name, role, bio rich text, photo, order
-  - [x] Beliefs modelled as a repeatable group inside the `beliefs_list` slice, not a document type
-  - [x] `event` (repeatable) — title, date/time, location, body, image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events)
+    - [x] `settings` (singleton) — site name, nav links, footer groups, socials, contact email, default SEO/OG
+    - [x] `page` (repeatable) — UID, SEO fields, slice zone
+    - [x] `team_member` (repeatable) — name, role, bio rich text, photo, order
+    - [x] Beliefs modelled as a repeatable group inside the `beliefs_list` slice, not a document type
+    - [x] `event` (repeatable) — title, date/time, location, body, image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events)
 - [x] **Slice library** — 12 slices pushed and built as React components
-  - [x] `PageHeader` — title (with accent-styled span), intro rich text
-  - [x] `Feature` — image/slideshow + text + buttons, alternating alignment, optional enlargeable image
-  - [x] `ContentGrid` — heading + intro + N cells (title / subtitle / body)
-  - [x] `TeamGrid` — pulls `team_member` documents
-  - [x] `BeliefsList` — numbered statement list
-  - [x] `RichText`
-  - [x] `CallToAction`
-  - [x] `EventCard` — respects expiry
-  - [x] `InfoList` — labelled detail rows (When / Where / Cost / Length), as used on ESOL
-  - [x] `MapEmbed` — lazy-loaded Google Maps iframe, click-to-load placeholder
-  - [x] `ImagePoster` — full-bleed poster image
-  - [x] `ContactForm` — form embed slice
+    - [x] `PageHeader` — title (with accent-styled span), intro rich text
+    - [x] `Feature` — image/slideshow + text + buttons, alternating alignment, optional enlargeable image
+    - [x] `ContentGrid` — heading + intro + N cells (title / subtitle / body)
+    - [x] `TeamGrid` — pulls `team_member` documents
+    - [x] `BeliefsList` — numbered statement list
+    - [x] `RichText`
+    - [x] `CallToAction`
+    - [x] `EventCard` — respects expiry
+    - [x] `InfoList` — labelled detail rows (When / Where / Cost / Length), as used on ESOL
+    - [x] `MapEmbed` — lazy-loaded Google Maps iframe, click-to-load placeholder
+    - [x] `ImagePoster` — full-bleed poster image
+    - [x] `ContactForm` — form embed slice
 - [x] Every slice consumes Phase 1 primitives only — enforced by `lint:tokens`
 - [ ] Render each slice against sample content — **nothing has been seen rendered yet**; the repository has no documents
 
@@ -224,6 +224,7 @@ Change them there before Phase 1 starts, not after.
 ## Phase 7 — Assets, SEO, analytics, a11y, performance
 
 **Assets**
+
 - [x] Photography migrated into Prismic (11 images); PDFs and icons stay in `public/`
 - [ ] Re-export images at correct dimensions; AVIF/WebP via `next/image`
 - [ ] Decide whether the existing filtered/duotone photo treatment is retained, and if so make it a CSS layer rather than baked-into-file
@@ -232,6 +233,7 @@ Change them there before Phase 1 starts, not after.
 - [ ] Raster favicon fallback (`.ico`/PNG) for clients that don't take SVG
 
 **SEO**
+
 - [x] Metadata API defaults + per-page overrides; `metadataBase` so canonicals and OG URLs are absolute
 - [x] `sitemap.ts` (from published Prismic pages, via the route resolver) and `robots.ts` (deploy previews disallow everything)
 - [x] JSON-LD `Church`, driven by the settings document
@@ -241,11 +243,13 @@ Change them there before Phase 1 starts, not after.
 - [x] `/esol`, `/art-course`, `/art-course-exhibition` — retired, 301 to `/whats-on` in `netlify.toml`
 
 **Analytics**
+
 - [x] GA4 `G-6YS7D18ZT5` via `next/script` (`afterInteractive`), loaded only after consent
 - [x] Consent banner built. GA sets non-essential cookies, so under UK PECR it needs consent before loading — declining means the tag is never fetched
 - [ ] Have someone confirm the banner wording is acceptable to the church
 
 **Accessibility**
+
 - [ ] Keyboard pass on every page; visible focus throughout
 - [ ] Screen-reader pass on nav, forms, slideshow, dialog
 - [ ] Reduced-motion pass
@@ -253,6 +257,7 @@ Change them there before Phase 1 starts, not after.
 - [ ] Axe clean sitewide
 
 **Performance**
+
 - [x] Blur-up placeholders on every Prismic image, fetched from imgix at 16px and inlined as a data URI (`lib/image-placeholder.ts`); `priority` on the page's lead image only
 - [ ] Font-loading strategy verified (no FOIT, minimal CLS from the Typekit `<link>`)
 - [ ] Lighthouse ≥ 95 mobile on every route
@@ -310,10 +315,11 @@ Change them there before Phase 1 starts, not after.
 **Beliefs:** UCCF doctrinal basis + FIEC doctrinal basis & ethos statements framing, then 10 statements
 
 **Footer**
-- *Connect* — `@vpcc.church` (Instagram), Facebook, `ben@vpcc.church`
-- *Legal* — Safeguarding Policy (Google Doc), Complaint, Conflict of Interest, Data Protection & Privacy, Financial Management, Serious Incident Reporting (PDFs)
-- *Quick Links* — Calendar (`calendar.vpcc.church`), Donate
-- *Associated Organisations* — FIEC, Christian Heritage London
+
+- _Connect_ — `@vpcc.church` (Instagram), Facebook, `ben@vpcc.church`
+- _Legal_ — Safeguarding Policy (Google Doc), Complaint, Conflict of Interest, Data Protection & Privacy, Financial Management, Serious Incident Reporting (PDFs)
+- _Quick Links_ — Calendar (`calendar.vpcc.church`), Donate
+- _Associated Organisations_ — FIEC, Christian Heritage London
 
 **Key facts:** Sundays 3:00–4:30pm, Victoria Park Baptist Church, 186 Grove Road, London E3 5TG. Secondary venue: 17 Lark Row, London E2 9JA. Founded 2011.
 
@@ -334,10 +340,10 @@ Resolved 2026-07-24:
 
 ## Open Questions (non-blocking — answer before the phase that needs them)
 
-| # | Question | Needed by |
-|---|---|---|
-| ~~1~~ | ~~Kids page~~ — dropped | — |
-| 2 | **Photography** — reuse existing filtered/duotone images, or is new photography coming? If reusing, is the filter part of the brand or a legacy artefact? | Phase 7 |
-| ~~3~~ | ~~Analytics~~ — GA4, behind a consent banner | — |
-| 4 | **Content scope** — anything added or retired during the rebuild, or strictly a redesign of existing content? | Phase 8 |
-| 5 | **Launch date** — drives how much of Phases 6–7 is v1 vs. fast-follow. | Phase 9 |
+| #     | Question                                                                                                                                                  | Needed by |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| ~~1~~ | ~~Kids page~~ — dropped                                                                                                                                   | —         |
+| 2     | **Photography** — reuse existing filtered/duotone images, or is new photography coming? If reusing, is the filter part of the brand or a legacy artefact? | Phase 7   |
+| ~~3~~ | ~~Analytics~~ — GA4, behind a consent banner                                                                                                              | —         |
+| 4     | **Content scope** — anything added or retired during the rebuild, or strictly a redesign of existing content?                                             | Phase 8   |
+| 5     | **Launch date** — drives how much of Phases 6–7 is v1 vs. fast-follow.                                                                                    | Phase 9   |

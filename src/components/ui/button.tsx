@@ -57,8 +57,12 @@ interface CommonProps extends ButtonVariants {
 }
 
 interface ButtonAsButton
-	extends CommonProps,
-		Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className" | "children"> {
+	extends
+		CommonProps,
+		Omit<
+			ButtonHTMLAttributes<HTMLButtonElement>,
+			"className" | "children"
+		> {
 	href?: undefined;
 	loading?: boolean;
 }
@@ -104,7 +108,11 @@ export function Button(props: ButtonProps) {
 		}
 
 		return (
-			<NextLink href={href} className={classes} aria-label={rest["aria-label"]}>
+			<NextLink
+				href={href}
+				className={classes}
+				aria-label={rest["aria-label"]}
+			>
 				{children}
 			</NextLink>
 		);

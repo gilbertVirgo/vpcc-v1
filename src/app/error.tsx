@@ -2,7 +2,14 @@
 
 import { useEffect } from "react";
 
-import { Button, Container, Heading, Section, Stack, Text } from "@/components/ui";
+import {
+	Button,
+	Container,
+	Heading,
+	Section,
+	Stack,
+	Text,
+} from "@/components/ui";
 import { siteConfig } from "@/lib/site-config";
 
 /**
@@ -35,8 +42,8 @@ export default function Error({
 						This page didn’t load
 					</Heading>
 					<Text size="lg" tone="secondary" className="mt-6">
-						Sorry about that. Try again, and if it keeps happening do
-						let us know at {siteConfig.email}.
+						Sorry about that. Try again, and if it keeps happening
+						do let us know at {siteConfig.email}.
 					</Text>
 					<Stack direction="row" gap="sm" className="mt-10">
 						<Button onClick={reset}>Try again</Button>

@@ -182,7 +182,7 @@ export function Slideshow({
 				className={cn(
 					"pointer-events-none absolute inset-x-3 top-1/2 flex -translate-y-1/2",
 					"justify-between opacity-0 transition-opacity duration-base ease-standard",
-					"group-hover:opacity-100 group-focus-within:opacity-100",
+					"group-focus-within:opacity-100 group-hover:opacity-100",
 				)}
 			>
 				<CarouselButton label="Previous image" onClick={previous}>

@@ -229,7 +229,7 @@ function NavItem({
 				"after:ease-standard after:content-['']",
 				active
 					? "text-ink after:scale-x-100"
-					: "text-ink-secondary hover:text-ink after:scale-x-0 hover:after:scale-x-100",
+					: "text-ink-secondary after:scale-x-0 hover:text-ink hover:after:scale-x-100",
 			)}
 		>
 			{children}

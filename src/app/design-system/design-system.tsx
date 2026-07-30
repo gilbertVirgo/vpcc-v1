@@ -86,7 +86,7 @@ function Block({
 	tone?: "sunken";
 }) {
 	return (
-		<Section spacing="md" tone={tone} className="border-line border-t">
+		<Section spacing="md" tone={tone} className="border-t border-line">
 			<Container>
 				<Heading as="h2" size="h2">
 					{title}
@@ -151,11 +151,11 @@ function Ramp({
 	return (
 		<div>
 			<Subheading>{name} · contrast on surface</Subheading>
-			<div className="xs:grid-cols-4 grid grid-cols-3 gap-3 md:grid-cols-11">
+			<div className="grid grid-cols-3 gap-3 xs:grid-cols-4 md:grid-cols-11">
 				{steps.map((swatch) => (
 					<div key={swatch.step}>
 						<div
-							className={`border-line h-16 rounded-md border ${swatch.className}`}
+							className={`h-16 rounded-md border border-line ${swatch.className}`}
 						/>
 						<Text size="caption" tone="secondary" className="mt-2">
 							{swatch.step}
@@ -215,7 +215,7 @@ function Colour() {
 							<Text size="caption" tone="muted">
 								Accent fill
 							</Text>
-							<div className="bg-accent mt-3 rounded-md p-4">
+							<div className="mt-3 rounded-md bg-accent p-4">
 								<Text className="text-accent-contrast">
 									accent-contrast on accent · 8.61:1
 								</Text>
@@ -265,7 +265,7 @@ function Typography() {
 						{SCALE.map((step) => (
 							<div
 								key={step.name}
-								className="border-line flex flex-col gap-1 border-b pb-4 sm:flex-row sm:items-baseline sm:gap-6"
+								className="flex flex-col gap-1 border-b border-line pb-4 sm:flex-row sm:items-baseline sm:gap-6"
 							>
 								<Text
 									size="caption"
@@ -326,7 +326,7 @@ function Typography() {
 
 				<div>
 					<Subheading>Prose · inverse tone</Subheading>
-					<div className="bg-surface-inverse rounded-lg p-6">
+					<div className="rounded-lg bg-surface-inverse p-6">
 						<Prose tone="inverse">
 							<p>
 								Rich text on a dark band. Links take the
@@ -400,7 +400,7 @@ function SpaceAndLayout() {
 									{step}
 								</Text>
 								<div
-									className={`bg-accent h-3 rounded-sm ${SPACING_WIDTHS[step]}`}
+									className={`h-3 rounded-sm bg-accent ${SPACING_WIDTHS[step]}`}
 								/>
 							</div>
 						))}
@@ -414,10 +414,10 @@ function SpaceAndLayout() {
 							(size) => (
 								<div
 									key={size}
-									className="bg-surface-sunken rounded-md py-2"
+									className="rounded-md bg-surface-sunken py-2"
 								>
 									<Container size={size}>
-										<div className="bg-accent-subtle rounded-sm px-3 py-2">
+										<div className="rounded-sm bg-accent-subtle px-3 py-2">
 											<Text size="caption" tone="accent">
 												{size}
 											</Text>
@@ -503,7 +503,7 @@ function Motion() {
 					</div>
 					<Stagger
 						key={key}
-						className="xs:grid-cols-2 grid grid-cols-1 gap-4 md:grid-cols-4"
+						className="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-4"
 						itemClassName="h-full"
 					>
 						{[1, 2, 3, 4].map((n) => (
@@ -555,7 +555,7 @@ function Buttons() {
 					</Stack>
 				</div>
 
-				<div className="bg-surface-inverse rounded-lg p-6">
+				<div className="rounded-lg bg-surface-inverse p-6">
 					<Subheading>Inverse</Subheading>
 					<Stack direction="row" gap="sm" align="center">
 						<Button variant="primary">Donate</Button>
@@ -630,7 +630,7 @@ function Links() {
 						Muted
 					</Link>
 				</Stack>
-				<div className="bg-surface-inverse rounded-lg p-6">
+				<div className="rounded-lg bg-surface-inverse p-6">
 					<Link href="/design-system" variant="inverse">
 						Inverse
 					</Link>
@@ -710,7 +710,7 @@ function Surfaces() {
  */
 function Notices() {
 	return (
-		<Section spacing="md" className="border-line border-t">
+		<Section spacing="md" className="border-t border-line">
 			<Container>
 				<Heading as="h2" size="h2">
 					Notice
@@ -724,7 +724,10 @@ function Notices() {
 			</Container>
 
 			<Stack gap="lg" className="mt-10">
-				<Notice title="No Sunday service" when="Sundays 9 and 16 August">
+				<Notice
+					title="No Sunday service"
+					when="Sundays 9 and 16 August"
+				>
 					back as usual on 23 August
 				</Notice>
 
@@ -928,7 +931,7 @@ function MediaSample({
 	};
 	return (
 		<div
-			className={`border-line bg-surface-sunken rounded-lg border ${classes[ratio]}`}
+			className={`rounded-lg border border-line bg-surface-sunken ${classes[ratio]}`}
 		/>
 	);
 }
@@ -960,7 +963,7 @@ function Icons() {
 			title="Icon"
 			description="Drawn on a 24px grid at 1.75 stroke so they sit alongside Area Inktrap without reading heavier than the type."
 		>
-			<div className="xs:grid-cols-4 grid grid-cols-3 gap-4 md:grid-cols-7">
+			<div className="grid grid-cols-3 gap-4 xs:grid-cols-4 md:grid-cols-7">
 				{ICONS.map((name) => (
 					<Card key={name} padding="sm" className="text-center">
 						<Icon name={name} className="mx-auto" />

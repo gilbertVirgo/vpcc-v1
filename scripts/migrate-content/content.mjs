@@ -125,7 +125,12 @@ export const TEAM = [
 		bio: [
 			linked(
 				"Ben is married to Rachel and they have had seven children together, four of whom live with them at their council estate home in Bethnal Green. Ben also serves as a director at Christian Heritage London.",
-				[["Christian Heritage London", "https://christianheritagelondon.org"]],
+				[
+					[
+						"Christian Heritage London",
+						"https://christianheritagelondon.org",
+					],
+				],
 			),
 		],
 	},

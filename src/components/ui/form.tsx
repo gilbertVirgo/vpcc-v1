@@ -79,7 +79,15 @@ export function Field({
 
 	return (
 		<FieldContext.Provider
-			value={{ name, inputId, errorId, hintId, invalid, required, describedBy }}
+			value={{
+				name,
+				inputId,
+				errorId,
+				hintId,
+				invalid,
+				required,
+				describedBy,
+			}}
 		>
 			<div className={cn("flex flex-col gap-2", className)}>
 				<label
@@ -88,7 +96,7 @@ export function Field({
 				>
 					{label}
 					{required ? null : (
-						<span className="text-ink-muted font-medium">
+						<span className="font-medium text-ink-muted">
 							{" "}
 							(optional)
 						</span>
@@ -207,7 +215,11 @@ export function Select({ className, children, ...props }: SelectProps) {
 			required={field.required}
 			aria-invalid={field.invalid || undefined}
 			aria-describedby={field.describedBy}
-			className={cn(control({ invalid: field.invalid }), "pr-10", className)}
+			className={cn(
+				control({ invalid: field.invalid }),
+				"pr-10",
+				className,
+			)}
 			{...props}
 		>
 			{children}
@@ -219,8 +231,10 @@ export function Select({ className, children, ...props }: SelectProps) {
 /* Checkbox / Radio                                                            */
 /* -------------------------------------------------------------------------- */
 
-export interface ToggleProps
-	extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+export interface ToggleProps extends Omit<
+	InputHTMLAttributes<HTMLInputElement>,
+	"type"
+> {
 	label: ReactNode;
 	type?: "checkbox" | "radio";
 }

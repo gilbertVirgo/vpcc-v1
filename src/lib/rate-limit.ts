@@ -18,7 +18,10 @@ const MAX_REQUESTS = 5;
 
 const buckets = new Map<string, { count: number; expiresAt: number }>();
 
-export function rateLimit(key: string): { allowed: boolean; retryAfter: number } {
+export function rateLimit(key: string): {
+	allowed: boolean;
+	retryAfter: number;
+} {
 	const now = Date.now();
 	const bucket = buckets.get(key);
 

@@ -88,7 +88,9 @@ export function Dialog({
 					{hideTitle ? null : (
 						<h2 className="text-h3 text-ink">{title}</h2>
 					)}
-					<div className={cn(hideTitle ? "" : "mt-4")}>{children}</div>
+					<div className={cn(hideTitle ? "" : "mt-4")}>
+						{children}
+					</div>
 				</div>
 
 				<button

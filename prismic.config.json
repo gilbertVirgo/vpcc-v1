@@ -1,14 +1,14 @@
 {
-  "repositoryName": "de628675",
-  "routes": [
-    {
-      "type": "page",
-      "uid": "home",
-      "path": "/"
-    },
-    {
-      "type": "page",
-      "path": "/:uid"
-    }
-  ]
+	"repositoryName": "de628675",
+	"routes": [
+		{
+			"type": "page",
+			"uid": "home",
+			"path": "/"
+		},
+		{
+			"type": "page",
+			"path": "/:uid"
+		}
+	]
 }

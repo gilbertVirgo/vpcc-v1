@@ -18,7 +18,10 @@ const PageHeader: FC<PageHeaderProps> = ({ slice }) => (
 	<Section as="header" spacing="header">
 		<Container size="text">
 			<PrismicHeading field={slice.primary.title} as="h1" size="h1" />
-			<PrismicProse field={slice.primary.intro} className="mt-6 text-body-lg" />
+			<PrismicProse
+				field={slice.primary.intro}
+				className="mt-6 text-body-lg"
+			/>
 		</Container>
 	</Section>
 );
