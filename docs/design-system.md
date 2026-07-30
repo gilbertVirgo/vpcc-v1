@@ -64,6 +64,11 @@ taper is what keeps the mid-greys neutral.
 | `ink-muted` | 6.05:1 — the floor for body text |
 | `ink-accent` | 4.83:1 |
 
+`ink-accent` is tuned for the light surface and does not travel: on
+`surface-inverse` it drops to **3.91:1** and fails AA. `ink-inverse` on
+`surface-inverse` is **18.89:1** — the same pair as `ink` on `surface`, read the
+other way round. Anything that puts text on a dark band uses `ink-inverse`.
+
 There is **no dark mode**. `#0B0C17` is text and footer colour. `surface-inverse`
 exists for the occasional dark band, not a theme.
 
@@ -136,6 +141,50 @@ The hidden state is wrapped in `@media (scripting: enabled)`. Without
 JavaScript nothing can flip the state attribute, so the hidden rule must not
 apply — otherwise a no-JS visitor or a non-executing crawler gets a blank page.
 
+## Notices
+
+`Notice` is the one band loud enough to interrupt someone who came to the site
+for something else — a Sunday with no service, a venue moved at short notice.
+It is site-wide, set on the `settings` singleton, and rendered in the root
+layout below the nav.
+
+**The dates are the switch.** There is no publish toggle and no "hide after"
+field. `notice_dates` drives both the wording and the expiry: the band names
+only the days still ahead, drops each one as it passes, and disappears once the
+last has gone.
+
+```
+notice_title   "No Sunday service"
+notice_dates   2026-08-09, 2026-08-16
+notice_body    rich text — kept to a sentence or two
+```
+
+Two fields that could disagree about when a notice ends would eventually
+disagree, and the failure is silent in the worst direction: a warning that
+comes down while people are still deciding whether to set off. So expiry is
+derived, never stored.
+
+Days end at London midnight, not UTC — through the summer those are an hour
+apart. See `formatNoticeDates` in `src/lib/dates.ts`.
+
+Expiry is only as fresh as the cached page. The Prismic webhook busts the cache
+when an editor changes the notice, but nothing fires when a date merely passes,
+so the hourly `revalidate` on the page routes is what eventually takes it down.
+Same trade as `EventList`.
+
+`Prose` has an `accent` tone for the rich text inside it. It is not decoration:
+`ink-accent` is orange, so the default link colour would put orange on orange.
+On the band, links take `accent-contrast` and lean on the underline.
+
+`inverse` is the same fix at the other end of the ramp, for rich text on
+`surface-inverse` — `CallToAction` in its inverse tone. Links take `ink-inverse`
+(18.89:1, against 3.91:1 for `ink-accent` there) and the underline switches to
+`decoration-current`, because `line-strong` is a light-surface line.
+
+Pass the tone. A `text-ink-inverse` className on `Prose` recolours the container
+but not the descendant `[&_a]` rule, so the links stay orange — the bug the tone
+exists to make unexpressible.
+
 ## Accessibility
 
 - `:focus-visible` is styled globally. Don't remove an outline without
@@ -148,6 +197,10 @@ apply — otherwise a no-JS visitor or a non-executing crawler gets a blank page
   background come from the platform.
 - Inline links are underlined. Colour alone is not an affordance.
 - Every page needs `<main id="main">` for `SkipLink`.
+- `Notice` is a named landmark, not a live region. It sits above `<main>`, so
+  the skip link jumps past it; the name is how someone still finds it. It is
+  server-rendered and present at load, so there is nothing to announce — an
+  alert would interrupt for content the reader is about to reach anyway.
 
 ## Adding to the system
 

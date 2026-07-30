@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@/components/analytics/analytics";
 import { Footer } from "@/components/layout/footer";
 import { Navigation } from "@/components/layout/navigation";
+import { SiteNotice } from "@/components/layout/site-notice";
 import { ChurchJsonLd } from "@/components/seo/json-ld";
 import { SkipLink } from "@/components/ui/a11y";
 import { getSettings } from "@/lib/settings";
@@ -51,6 +52,15 @@ export const viewport: Viewport = {
 	initialScale: 1,
 };
 
+/*
+ * One timestamp for the whole render, read here in the layout's data layer
+ * rather than inside the notice — the same arrangement the pages use for
+ * slices. See src/slices/context.ts.
+ */
+function stampNow(): number {
+	return Date.now();
+}
+
 export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -70,6 +80,9 @@ export default async function RootLayout({
 			<body className="flex min-h-dvh flex-col">
 				<SkipLink />
 				<Navigation links={settings.navigation} cta={settings.navCta} />
+				{/* Below the sticky bar, above the page: it scrolls away like
+				    content rather than eating height on every screen. */}
+				<SiteNotice notice={settings.notice} now={stampNow()} />
 				{children}
 				<Footer
 					name={settings.name}

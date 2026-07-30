@@ -1,5 +1,6 @@
 "use client";
 
+import NextLink from "next/link";
 import { useState } from "react";
 
 import { Reveal, Stagger } from "@/components/motion/reveal";
@@ -19,6 +20,7 @@ import {
 	type IconName,
 	Input,
 	Link,
+	Notice,
 	Prose,
 	Section,
 	Select,
@@ -59,6 +61,7 @@ export function DesignSystem() {
 			<Buttons />
 			<Links />
 			<Surfaces />
+			<Notices />
 			<Forms />
 			<Overlays />
 			<Media />
@@ -83,7 +86,7 @@ function Block({
 	tone?: "sunken";
 }) {
 	return (
-		<Section spacing="md" tone={tone} className="border-t border-line">
+		<Section spacing="md" tone={tone} className="border-line border-t">
 			<Container>
 				<Heading as="h2" size="h2">
 					{title}
@@ -148,11 +151,11 @@ function Ramp({
 	return (
 		<div>
 			<Subheading>{name} · contrast on surface</Subheading>
-			<div className="grid grid-cols-3 gap-3 xs:grid-cols-4 md:grid-cols-11">
+			<div className="xs:grid-cols-4 grid grid-cols-3 gap-3 md:grid-cols-11">
 				{steps.map((swatch) => (
 					<div key={swatch.step}>
 						<div
-							className={`h-16 rounded-md border border-line ${swatch.className}`}
+							className={`border-line h-16 rounded-md border ${swatch.className}`}
 						/>
 						<Text size="caption" tone="secondary" className="mt-2">
 							{swatch.step}
@@ -195,7 +198,16 @@ function Colour() {
 								Inverse
 							</Text>
 							<Text tone="inverse" className="mt-2">
-								ink-inverse on surface-inverse
+								ink-inverse on surface-inverse · 18.89:1
+							</Text>
+							<Text
+								size="caption"
+								tone="inverse"
+								className="mt-3"
+							>
+								ink-accent is only 3.91:1 here, so rich text on
+								a dark band takes the inverse Prose tone
+								instead.
 							</Text>
 						</Card>
 
@@ -203,7 +215,7 @@ function Colour() {
 							<Text size="caption" tone="muted">
 								Accent fill
 							</Text>
-							<div className="mt-3 rounded-md bg-accent p-4">
+							<div className="bg-accent mt-3 rounded-md p-4">
 								<Text className="text-accent-contrast">
 									accent-contrast on accent · 8.61:1
 								</Text>
@@ -246,12 +258,14 @@ function Typography() {
 		>
 			<Stack gap="xl">
 				<div>
-					<Subheading>Scale · fluid between 375px and 1500px</Subheading>
+					<Subheading>
+						Scale · fluid between 375px and 1500px
+					</Subheading>
 					<Stack gap="md">
 						{SCALE.map((step) => (
 							<div
 								key={step.name}
-								className="flex flex-col gap-1 border-b border-line pb-4 sm:flex-row sm:items-baseline sm:gap-6"
+								className="border-line flex flex-col gap-1 border-b pb-4 sm:flex-row sm:items-baseline sm:gap-6"
 							>
 								<Text
 									size="caption"
@@ -269,7 +283,9 @@ function Typography() {
 				</div>
 
 				<div>
-					<Subheading>Accent fragment · weight 500 against 700</Subheading>
+					<Subheading>
+						Accent fragment · weight 500 against 700
+					</Subheading>
 					<Heading size="h1">
 						April 3rd: <Accent>Hot Cross Buns</Accent>
 					</Heading>
@@ -283,10 +299,11 @@ function Typography() {
 					<Card padding="md" tone="raised">
 						<Prose>
 							<p>
-								Victoria Park Community Church began in 2011, when
-								friends and family gathered in Pastor Ben&rsquo;s
-								living room with a shared vision: to enjoy and share
-								the hope of the gospel in Tower Hamlets.
+								Victoria Park Community Church began in 2011,
+								when friends and family gathered in Pastor
+								Ben&rsquo;s living room with a shared vision: to
+								enjoy and share the hope of the gospel in Tower
+								Hamlets.
 							</p>
 							<p>
 								We meet from 3:00pm&ndash;4:30pm at{" "}
@@ -306,6 +323,25 @@ function Typography() {
 						</Prose>
 					</Card>
 				</div>
+
+				<div>
+					<Subheading>Prose · inverse tone</Subheading>
+					<div className="bg-surface-inverse rounded-lg p-6">
+						<Prose tone="inverse">
+							<p>
+								Rich text on a dark band. Links take the
+								band&rsquo;s own ink at 18.89:1 —{" "}
+								<a href="https://maps.app.goo.gl/CQFsTYqZfuUAEvuP7">
+									find us
+								</a>{" "}
+								— and lean on the underline, because{" "}
+								<strong>ink-accent</strong> is an orange tuned
+								for light surfaces and only reaches 3.91:1 on
+								this fill.
+							</p>
+						</Prose>
+					</div>
+				</div>
 			</Stack>
 		</Block>
 	);
@@ -315,10 +351,33 @@ function Typography() {
 /* Space and layout                                                            */
 /* -------------------------------------------------------------------------- */
 
-const SPACING = ["1", "2", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24"];
+const SPACING = [
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"8",
+	"10",
+	"12",
+	"16",
+	"20",
+	"24",
+];
 const SPACING_WIDTHS: Record<string, string> = {
-	"1": "w-1", "2": "w-2", "3": "w-3", "4": "w-4", "5": "w-5", "6": "w-6",
-	"8": "w-8", "10": "w-10", "12": "w-12", "16": "w-16", "20": "w-20", "24": "w-24",
+	"1": "w-1",
+	"2": "w-2",
+	"3": "w-3",
+	"4": "w-4",
+	"5": "w-5",
+	"6": "w-6",
+	"8": "w-8",
+	"10": "w-10",
+	"12": "w-12",
+	"16": "w-16",
+	"20": "w-20",
+	"24": "w-24",
 };
 
 function SpaceAndLayout() {
@@ -341,7 +400,7 @@ function SpaceAndLayout() {
 									{step}
 								</Text>
 								<div
-									className={`h-3 rounded-sm bg-accent ${SPACING_WIDTHS[step]}`}
+									className={`bg-accent h-3 rounded-sm ${SPACING_WIDTHS[step]}`}
 								/>
 							</div>
 						))}
@@ -355,10 +414,10 @@ function SpaceAndLayout() {
 							(size) => (
 								<div
 									key={size}
-									className="rounded-md bg-surface-sunken py-2"
+									className="bg-surface-sunken rounded-md py-2"
 								>
 									<Container size={size}>
-										<div className="rounded-sm bg-accent-subtle px-3 py-2">
+										<div className="bg-accent-subtle rounded-sm px-3 py-2">
 											<Text size="caption" tone="accent">
 												{size}
 											</Text>
@@ -444,7 +503,7 @@ function Motion() {
 					</div>
 					<Stagger
 						key={key}
-						className="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-4"
+						className="xs:grid-cols-2 grid grid-cols-1 gap-4 md:grid-cols-4"
 						itemClassName="h-full"
 					>
 						{[1, 2, 3, 4].map((n) => (
@@ -453,7 +512,8 @@ function Motion() {
 									Item {n}
 								</Text>
 								<Text className="mt-1">
-									Fades and lifts {n === 1 ? "first" : `${n}th`}
+									Fades and lifts{" "}
+									{n === 1 ? "first" : `${n}th`}
 								</Text>
 							</Card>
 						))}
@@ -465,8 +525,8 @@ function Motion() {
 					<Reveal key={`single-${key}`}>
 						<Card padding="md" tone="raised">
 							<Text>
-								12px rise, 400ms, entrance easing. Nothing loops,
-								nothing overshoots.
+								12px rise, 400ms, entrance easing. Nothing
+								loops, nothing overshoots.
 							</Text>
 						</Card>
 					</Reveal>
@@ -495,7 +555,7 @@ function Buttons() {
 					</Stack>
 				</div>
 
-				<div className="rounded-lg bg-surface-inverse p-6">
+				<div className="bg-surface-inverse rounded-lg p-6">
 					<Subheading>Inverse</Subheading>
 					<Stack direction="row" gap="sm" align="center">
 						<Button variant="primary">Donate</Button>
@@ -520,7 +580,10 @@ function Buttons() {
 							loading={loading}
 							onClick={() => {
 								setLoading(true);
-								window.setTimeout(() => setLoading(false), 1600);
+								window.setTimeout(
+									() => setLoading(false),
+									1600,
+								);
 							}}
 						>
 							{loading ? "Sending" : "Send"}
@@ -553,8 +616,9 @@ function Links() {
 		<Block title="Link" tone="sunken">
 			<Stack gap="lg">
 				<Text measure>
-					An <Link href="/design-system">inline link</Link> is underlined
-					because colour alone is not an accessible affordance. An{" "}
+					An <Link href="/design-system">inline link</Link> is
+					underlined because colour alone is not an accessible
+					affordance. An{" "}
 					<Link href="https://fiec.org.uk">external link</Link> gets
 					target and rel applied automatically.
 				</Text>
@@ -566,7 +630,7 @@ function Links() {
 						Muted
 					</Link>
 				</Stack>
-				<div className="rounded-lg bg-surface-inverse p-6">
+				<div className="bg-surface-inverse rounded-lg p-6">
 					<Link href="/design-system" variant="inverse">
 						Inverse
 					</Link>
@@ -636,6 +700,47 @@ function Surfaces() {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Notice                                                                      */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Laid out by hand rather than through `Block`, because `Notice` is full-bleed
+ * and brings its own `Container`. Nesting it inside another one would double
+ * the gutter — the exact thing the gutter rule exists to prevent.
+ */
+function Notices() {
+	return (
+		<Section spacing="md" className="border-line border-t">
+			<Container>
+				<Heading as="h2" size="h2">
+					Notice
+				</Heading>
+				<Text tone="muted" measure className="mt-3">
+					A time-limited warning about a change to the ordinary run of
+					things. Site-wide, driven by the dates in Settings, and gone
+					on its own once the last of them has passed.
+				</Text>
+			</Container>
+
+			<div className="mt-10">
+				<Notice
+					title="No Sunday service"
+					when="Sunday 9 August and Sunday 16 August"
+				>
+					<Prose tone="accent">
+						<p>
+							We’re not meeting on those mornings. Midweek groups
+							run as normal —{" "}
+							<NextLink href="/whats-on">see what’s on</NextLink>.
+						</p>
+					</Prose>
+				</Notice>
+			</div>
+		</Section>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
 /* Forms                                                                       */
 /* -------------------------------------------------------------------------- */
 
@@ -659,7 +764,11 @@ function Forms() {
 						label="Email address"
 						required
 						hint="We will only use this to reply to you."
-						error={showError ? "Enter a valid email address." : undefined}
+						error={
+							showError
+								? "Enter a valid email address."
+								: undefined
+						}
 					>
 						<Input type="email" autoComplete="email" />
 					</Field>
@@ -669,7 +778,9 @@ function Forms() {
 							<option value="" disabled>
 								Choose one
 							</option>
-							<option value="visiting">Visiting on a Sunday</option>
+							<option value="visiting">
+								Visiting on a Sunday
+							</option>
 							<option value="kids">Kids and families</option>
 							<option value="other">Something else</option>
 						</Select>
@@ -697,13 +808,13 @@ function Forms() {
 					<Divider />
 
 					<FormStatus tone="success" title="Message sent">
-						Thank you for getting in touch. We will get back to you as
-						soon as possible.
+						Thank you for getting in touch. We will get back to you
+						as soon as possible.
 					</FormStatus>
 
 					<FormStatus tone="error" title="Something went wrong">
-						Your message has not been sent. Please try again, or email
-						us directly at ben@vpcc.church.
+						Your message has not been sent. Please try again, or
+						email us directly at ben@vpcc.church.
 					</FormStatus>
 				</Stack>
 			</div>
@@ -775,20 +886,20 @@ function Media() {
 				<div>
 					<Subheading>Ratios</Subheading>
 					<Grid cols={2} gap="sm">
-						{(["square", "portrait", "landscape", "wide"] as const).map(
-							(ratio) => (
-								<div key={ratio}>
-									<MediaSample ratio={ratio} />
-									<Text
-										size="caption"
-										tone="muted"
-										className="mt-2"
-									>
-										{ratio}
-									</Text>
-								</div>
-							),
-						)}
+						{(
+							["square", "portrait", "landscape", "wide"] as const
+						).map((ratio) => (
+							<div key={ratio}>
+								<MediaSample ratio={ratio} />
+								<Text
+									size="caption"
+									tone="muted"
+									className="mt-2"
+								>
+									{ratio}
+								</Text>
+							</div>
+						))}
 					</Grid>
 				</div>
 			</Grid>
@@ -809,7 +920,7 @@ function MediaSample({
 	};
 	return (
 		<div
-			className={`rounded-lg border border-line bg-surface-sunken ${classes[ratio]}`}
+			className={`border-line bg-surface-sunken rounded-lg border ${classes[ratio]}`}
 		/>
 	);
 }
@@ -841,7 +952,7 @@ function Icons() {
 			title="Icon"
 			description="Drawn on a 24px grid at 1.75 stroke so they sit alongside Area Inktrap without reading heavier than the type."
 		>
-			<div className="grid grid-cols-3 gap-4 xs:grid-cols-4 md:grid-cols-7">
+			<div className="xs:grid-cols-4 grid grid-cols-3 gap-4 md:grid-cols-7">
 				{ICONS.map((name) => (
 					<Card key={name} padding="sm" className="text-center">
 						<Icon name={name} className="mx-auto" />

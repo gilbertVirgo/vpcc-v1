@@ -50,6 +50,15 @@ p field add select footer_links.icon --to-type settings --label "Icon" \
 	--option none --option instagram --option facebook --option mail \
 	--default-value none
 
+# Site-wide notice. The dates are both the wording and the expiry: the notice
+# names only the days still ahead, and retires itself once the last one has
+# gone. No separate "hide after" field to fall out of step with the list.
+p field add text notice_title --to-type settings --label "Notice title"
+p field add rich-text notice_body --to-type settings --label "Notice detail" \
+	--allow paragraph,strong,em,hyperlink
+p field add group notice_dates --to-type settings --label "Notice dates"
+p field add date notice_dates.date --to-type settings --label "Date"
+
 p field add text meeting_when --to-type settings --label "Meeting time"
 p field add text meeting_venue --to-type settings --label "Venue"
 p field add text meeting_address --to-type settings --label "Address"

@@ -61,3 +61,89 @@ export function formatEventDate(
 
 	return `${day}, ${time(start)}–${time(end)}`;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Whole days                                                                  */
+/* -------------------------------------------------------------------------- */
+
+const DAY_MS = 86_400_000;
+
+const listFormat = new Intl.ListFormat(LOCALE, {
+	style: "long",
+	type: "conjunction",
+});
+
+const partsFormat = new Intl.DateTimeFormat(LOCALE, {
+	timeZone: TIME_ZONE,
+	hour12: false,
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit",
+	hour: "2-digit",
+	minute: "2-digit",
+	second: "2-digit",
+});
+
+/** London's offset from UTC, in milliseconds, at a given instant. */
+function offset(utcMs: number): number {
+	const parts = partsFormat.formatToParts(new Date(utcMs));
+	const part = (type: string) =>
+		Number(parts.find((piece) => piece.type === type)?.value);
+
+	/* `hour12: false` renders midnight as "24" in some ICU builds. */
+	const asIfUtc = Date.UTC(
+		part("year"),
+		part("month") - 1,
+		part("day"),
+		part("hour") % 24,
+		part("minute"),
+		part("second"),
+	);
+
+	return asIfUtc - utcMs;
+}
+
+/**
+ * The instant a London day runs out.
+ *
+ * Prismic Date fields are a bare "YYYY-MM-DD" — no time, no zone. A notice
+ * about Sunday the 16th has to survive that Sunday, so it expires at London
+ * midnight rather than UTC midnight: through the summer those are an hour
+ * apart, and taking the UTC one would pull a "we're not meeting" warning down
+ * while people were still deciding whether to set off.
+ */
+function endOfDay(iso: string): number {
+	const startUtc = Date.parse(`${iso}T00:00:00Z`);
+	if (Number.isNaN(startUtc)) return Number.NaN;
+
+	/* Midnight opening the next day, read as though London were UTC, then
+	   pushed back by whatever London's offset is at that point in the year. */
+	const nextMidnight = startUtc + DAY_MS;
+	return nextMidnight - offset(nextMidnight);
+}
+
+/**
+ * Formats the days a notice still applies to — "Sunday 9 August and
+ * Sunday 16 August".
+ *
+ * Days already behind us are dropped, so a notice covering two Sundays stops
+ * naming the first one once it has gone. An empty string means every day has
+ * passed, and that is what retires the notice: expiry is derived from the list
+ * rather than held in a separate "hide after" field that could fall out of
+ * step with it.
+ */
+export function formatNoticeDates(
+	dates: readonly (string | null | undefined)[],
+	now: number,
+): string {
+	const days = dates
+		.filter((date): date is string => Boolean(date))
+		.map((date) => ({ date, ends: endOfDay(date) }))
+		.filter(({ ends }) => !Number.isNaN(ends) && ends > now)
+		.sort((a, b) => a.ends - b.ends)
+		/* Formatted from midday so no offset can round the label back onto the
+		   day before. */
+		.map(({ date }) => dayFormat.format(new Date(`${date}T12:00:00Z`)));
+
+	return days.length > 0 ? listFormat.format(days) : "";
+}

@@ -1,4 +1,4 @@
-import { asLink, isFilled } from "@prismicio/client";
+import { asLink, isFilled, type RichTextField } from "@prismicio/client";
 
 import type { IconName } from "@/components/ui/icon";
 import { createClient } from "@/prismicio";
@@ -19,12 +19,26 @@ import {
  * one.
  */
 
+/**
+ * A time-limited warning shown site-wide.
+ *
+ * `dates` are the days it applies to, as bare "YYYY-MM-DD". They drive both
+ * the wording and the expiry — see formatNoticeDates in src/lib/dates.ts.
+ */
+export interface SiteNoticeContent {
+	title: string;
+	dates: string[];
+	body: RichTextField | null;
+}
+
 export interface SiteSettings {
 	name: string;
 	email: string;
 	navigation: NavLink[];
 	navCta: NavLink;
 	footer: FooterSection[];
+	/** Null whenever there is nothing to warn about, which is most of the time. */
+	notice: SiteNoticeContent | null;
 	meeting: {
 		when: string;
 		venue: string;
@@ -47,6 +61,9 @@ const FALLBACK: SiteSettings = {
 		title: section.title,
 		links: [...section.links],
 	})),
+	/* Deliberately not in site-config.ts: every other field here has a sensible
+	   standing value, and a notice by definition does not. */
+	notice: null,
 	meeting: { ...siteConfig.meeting },
 	seo: {
 		title: siteConfig.name,
@@ -99,6 +116,30 @@ export async function getSettings(): Promise<SiteSettings> {
 
 	const footer = [...sections.values()];
 
+	/*
+	 * A notice needs a title and at least one date before it will show.
+	 *
+	 * There is no "publish this notice" switch — the dates are the switch, and
+	 * the last of them retires it. Requiring both means a half-filled notice,
+	 * or one whose dates an editor has cleared out, stays off the site rather
+	 * than shipping a bare heading or a warning with no when.
+	 */
+	/*
+	 * `?? []` is load-bearing, not belt-and-braces.
+	 *
+	 * prismicio-types.d.ts describes the model in customtypes/, which is ahead
+	 * of the repository until someone runs `npx prismic push`. Until then the
+	 * API returns a settings document with no `notice_dates` at all, and the
+	 * generated type says otherwise — so reading it as an array throws and
+	 * takes down every page, the layout being where this is consumed. Any
+	 * field added here is unpopulated in Prismic before it is populated in
+	 * code, so it has to survive being absent.
+	 */
+	const noticeTitle = data.notice_title?.trim();
+	const noticeDates = (data.notice_dates ?? [])
+		.map((item) => item.date)
+		.filter((date): date is string => Boolean(date));
+
 	return {
 		name: data.site_name?.trim() || FALLBACK.name,
 		email: data.contact_email?.trim() || FALLBACK.email,
@@ -111,6 +152,14 @@ export async function getSettings(): Promise<SiteSettings> {
 					}
 				: FALLBACK.navCta,
 		footer: footer.length > 0 ? footer : FALLBACK.footer,
+		notice:
+			noticeTitle && noticeDates.length > 0
+				? {
+						title: noticeTitle,
+						dates: noticeDates,
+						body: data.notice_body,
+					}
+				: null,
 		meeting: {
 			when: data.meeting_when?.trim() || FALLBACK.meeting.when,
 			venue: data.meeting_venue?.trim() || FALLBACK.meeting.venue,

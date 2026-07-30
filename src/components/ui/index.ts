@@ -13,6 +13,7 @@ export { Icon, type IconName } from "./icon";
 export { Container, Grid, Section, Stack } from "./layout";
 export { Link } from "./link";
 export { Media, type AspectRatio } from "./media";
+export { Notice, type NoticeProps } from "./notice";
 export { Slideshow, type SlideshowImage } from "./slideshow";
 export { Badge, Card, Divider } from "./surface";
-export { Accent, Heading, Prose, Text } from "./typography";
+export { Accent, Heading, Prose, type ProseProps, Text } from "./typography";
