@@ -10,7 +10,8 @@
 		"lint:tokens": "node scripts/check-design-tokens.mjs",
 		"typecheck": "tsc --noEmit",
 		"format": "prettier --write .",
-		"check": "npm run typecheck && npm run lint && npm run lint:tokens",
+		"format:check": "prettier --check .",
+		"check": "npm run typecheck && npm run lint && npm run lint:tokens && npm run format:check",
 		"tokens:colors": "node scripts/generate-color-ramps.mjs"
 	},
 	"dependencies": {

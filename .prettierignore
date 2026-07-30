@@ -1,0 +1,21 @@
+# Build output
+.next/
+out/
+build/
+dist/
+.netlify/
+
+# Generated — reformatting these only churns against the next regeneration
+package-lock.json
+prismicio-types.d.ts
+customtypes/
+src/slices/*/model.json
+next-env.d.ts
+
+# Token tables. The trailing comments are aligned documentation — contrast
+# ratios, seed names — and Prettier wraps the longer declarations onto their own
+# lines at printWidth, which breaks the column the file exists to show.
+src/styles/tokens.color.css
+
+# Binary and unsupported
+public/
