@@ -717,25 +717,33 @@ function Notices() {
 				</Heading>
 				<Text tone="muted" measure className="mt-3">
 					A time-limited warning about a change to the ordinary run of
-					things. Site-wide, driven by the dates in Settings, and gone
-					on its own once the last of them has passed.
+					things. One centred sentence on a pale accent wash, between
+					hairlines. Site-wide, driven by the dates in Settings, and
+					gone on its own once the last of them has passed.
 				</Text>
 			</Container>
 
-			<div className="mt-10">
-				<Notice
-					title="No Sunday service"
-					when="Sunday 9 August and Sunday 16 August"
-				>
-					<Prose tone="accent">
-						<p>
-							We’re not meeting on those mornings. Midweek groups
-							run as normal —{" "}
-							<NextLink href="/whats-on">see what’s on</NextLink>.
-						</p>
-					</Prose>
+			<Stack gap="lg" className="mt-10">
+				<Notice title="No Sunday service" when="Sundays 9 and 16 August">
+					back as usual on 23 August
 				</Notice>
-			</div>
+
+				{/* With a link, and a date list the collapse cannot shorten. */}
+				<Notice
+					title="Meeting at Bethnal Green"
+					when="Sunday 6 September and Saturday 10 October"
+				>
+					<NextLink
+						href="/whats-on"
+						className="underline decoration-current underline-offset-4 hover:decoration-2"
+					>
+						see what’s on
+					</NextLink>
+				</Notice>
+
+				{/* Title alone — an editor who has filled in nothing else. */}
+				<Notice title="No Sunday service" when="Sunday 9 August" />
+			</Stack>
 		</Section>
 	);
 }

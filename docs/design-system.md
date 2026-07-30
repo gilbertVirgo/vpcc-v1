@@ -143,26 +143,54 @@ apply — otherwise a no-JS visitor or a non-executing crawler gets a blank page
 
 ## Notices
 
-`Notice` is the one band loud enough to interrupt someone who came to the site
-for something else — a Sunday with no service, a venue moved at short notice.
-It is site-wide, set on the `settings` singleton, and rendered in the root
-layout below the nav.
+`Notice` warns about a change to the ordinary run of things — a Sunday with no
+service, a venue moved at short notice. It is site-wide, set on the `settings`
+singleton, and rendered in the root layout below the nav.
 
-**The dates are the switch.** There is no publish toggle and no "hide after"
-field. `notice_dates` drives both the wording and the expiry: the band names
-only the days still ahead, drops each one as it passes, and disappears once the
-last has gone.
+**One centred sentence, on a pale wash, between hairlines.**
 
 ```
-notice_title   "No Sunday service"
+📅  No Sunday service on Sundays 9 and 16 August — back as usual on 23 August
+```
+
+The first cut of this was a full-strength `accent` field the width of the
+viewport, three stacked lines deep. It was the loudest thing on every page: it
+outweighed the h1 beneath it and collided with the logo and the nav button,
+which are the two places the brand orange is meant to land. `accent-subtle` is
+1.15:1 against the page — enough to read as a separate band, not enough to
+compete for the eye. The ranking is done by the words: `ink` bold for the
+title, `ink` for the days, `ink-secondary` for the rest.
+
+The band is ~50px. If a notice needs more room than one sentence, it wants a
+page, not a strip.
+
+The icon is inline, not a flex sibling. Beside a centred block it hangs alone in
+the left margin the moment the sentence wraps, which on a phone it always does.
+
+**The dates are the switch.** There is no publish toggle and no "hide after"
+field. `notice_dates` drives the wording, the expiry and the grammar.
+
+```
+notice_title   "No Sunday service"     reads before "on <dates>"
 notice_dates   2026-08-09, 2026-08-16
-notice_body    rich text — kept to a sentence or two
+notice_body    rich text, one sentence — follows an em dash
 ```
 
 Two fields that could disagree about when a notice ends would eventually
 disagree, and the failure is silent in the worst direction: a warning that
 comes down while people are still deciding whether to set off. So expiry is
 derived, never stored.
+
+A shared weekday or month is said once — "Sundays 9 and 16 August", not
+"Sunday 9 August and Sunday 16 August". The long form is the same fact twice
+and it is what pushes the line onto a second row. Anything the days don't share
+is still spelled out, so the short form never costs clarity:
+
+| Days | Reads |
+|---|---|
+| same weekday, same month | Sundays 9 and 16 August |
+| same month only | Sunday 9 and Monday 17 August |
+| neither | Sunday 9 August and Sunday 6 September |
 
 Days end at London midnight, not UTC — through the summer those are an hour
 apart. See `formatNoticeDates` in `src/lib/dates.ts`.
@@ -172,14 +200,17 @@ when an editor changes the notice, but nothing fires when a date merely passes,
 so the hourly `revalidate` on the page routes is what eventually takes it down.
 Same trade as `EventList`.
 
-`Prose` has an `accent` tone for the rich text inside it. It is not decoration:
-`ink-accent` is orange, so the default link colour would put orange on orange.
-On the band, links take `accent-contrast` and lean on the underline.
+Rich text in the band goes through `PrismicInline`, which flattens paragraphs to
+spans so the copy can sit mid-sentence. Its links underline in
+`decoration-current`, not `line-strong`: inline copy inherits its caller's
+colour, so a link has no colour of its own to be told apart by and the underline
+is the whole affordance — `line-strong` reaches 1.47:1 on this band, which is
+not an affordance at all.
 
-`inverse` is the same fix at the other end of the ramp, for rich text on
-`surface-inverse` — `CallToAction` in its inverse tone. Links take `ink-inverse`
-(18.89:1, against 3.91:1 for `ink-accent` there) and the underline switches to
-`decoration-current`, because `line-strong` is a light-surface line.
+`Prose` has an `inverse` tone for rich text on `surface-inverse` —
+`CallToAction` in its inverse tone. Links take `ink-inverse` (18.89:1, against
+3.91:1 for `ink-accent` there) and the underline switches to
+`decoration-current` for the same reason.
 
 Pass the tone. A `text-ink-inverse` className on `Prose` recolours the container
 but not the descendant `[&_a]` rule, so the links stay orange — the bug the tone

@@ -49,6 +49,52 @@ export function PrismicProse({ field, tone, className }: PrismicProseProps) {
 	);
 }
 
+/*
+ * Body copy with the block structure flattened away.
+ *
+ * Paragraphs become spans so the text can sit mid-sentence in a single line.
+ * The trailing space is what keeps two paragraphs from running together into
+ * one word — an editor writing a second one gets a sentence break rather than
+ * "…on 23 August.Midweek groups…". Whitespace collapses, so the one after the
+ * last paragraph costs nothing.
+ */
+const inlineSerializer: JSXMapSerializer = {
+	paragraph: ({ children, key }) => <span key={key}>{children} </span>,
+	/*
+	 * The underline takes the text's own colour, not `line-strong`.
+	 *
+	 * Inline copy sits in a sentence its caller has coloured, so a link here
+	 * has no colour of its own to be told apart by — the underline is the whole
+	 * affordance. `line-strong` is a light-surface line and reaches 1.47:1 on
+	 * the notice band, which is not an affordance at all. `decoration-current`
+	 * is always exactly as visible as the words it belongs to.
+	 */
+	hyperlink: ({ node, children, key }) => (
+		<PrismicNextLink
+			key={key}
+			field={node.data}
+			className="underline decoration-current underline-offset-4 hover:decoration-2"
+		>
+			{children}
+		</PrismicNextLink>
+	),
+};
+
+export interface PrismicInlineProps {
+	field: RichTextField | null | undefined;
+}
+
+/**
+ * Renders a rich text field as inline copy, for a caller that supplies its own
+ * sentence around it. Carries no colour of its own — it inherits from whatever
+ * it is dropped into.
+ */
+export function PrismicInline({ field }: PrismicInlineProps) {
+	if (!hasContent(field)) return null;
+
+	return <PrismicRichText field={field} components={inlineSerializer} />;
+}
+
 export interface PrismicHeadingProps {
 	field: RichTextField | null | undefined;
 	as?: HeadingProps["as"];

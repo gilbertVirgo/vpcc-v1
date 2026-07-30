@@ -1,4 +1,4 @@
-import { PrismicProse } from "@/components/prismic/rich-text";
+import { PrismicInline } from "@/components/prismic/rich-text";
 import { Notice } from "@/components/ui/notice";
 import { formatNoticeDates } from "@/lib/dates";
 import type { SiteNoticeContent } from "@/lib/settings";
@@ -31,7 +31,7 @@ export function SiteNotice({ notice, now }: SiteNoticeProps) {
 
 	return (
 		<Notice title={notice.title} when={when}>
-			<PrismicProse field={notice.body} tone="accent" />
+			<PrismicInline field={notice.body} />
 		</Notice>
 	);
 }

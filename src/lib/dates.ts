@@ -122,15 +122,39 @@ function endOfDay(iso: string): number {
 	return nextMidnight - offset(nextMidnight);
 }
 
+const weekdayFormat = new Intl.DateTimeFormat(LOCALE, {
+	weekday: "long",
+	timeZone: TIME_ZONE,
+});
+
+const dayNumberFormat = new Intl.DateTimeFormat(LOCALE, {
+	day: "numeric",
+	timeZone: TIME_ZONE,
+});
+
+const monthFormat = new Intl.DateTimeFormat(LOCALE, {
+	month: "long",
+	timeZone: TIME_ZONE,
+});
+
 /**
- * Formats the days a notice still applies to — "Sunday 9 August and
- * Sunday 16 August".
+ * Formats the days a notice still applies to — "Sundays 9 and 16 August".
  *
  * Days already behind us are dropped, so a notice covering two Sundays stops
  * naming the first one once it has gone. An empty string means every day has
  * passed, and that is what retires the notice: expiry is derived from the list
  * rather than held in a separate "hide after" field that could fall out of
  * step with it.
+ *
+ * A shared weekday or month is said once. "Sunday 9 August and Sunday 16
+ * August" is the same fact twice over and, in a notice that has to read as one
+ * line, the repetition is what pushes it onto two. Anything the days do not
+ * have in common is still spelled out per day, so the short form never costs
+ * clarity:
+ *
+ *   same weekday, same month   Sundays 9 and 16 August
+ *   same month only            Sunday 9 and Monday 17 August
+ *   neither                    Sunday 9 August and Sunday 6 September
  */
 export function formatNoticeDates(
 	dates: readonly (string | null | undefined)[],
@@ -141,9 +165,37 @@ export function formatNoticeDates(
 		.map((date) => ({ date, ends: endOfDay(date) }))
 		.filter(({ ends }) => !Number.isNaN(ends) && ends > now)
 		.sort((a, b) => a.ends - b.ends)
-		/* Formatted from midday so no offset can round the label back onto the
-		   day before. */
-		.map(({ date }) => dayFormat.format(new Date(`${date}T12:00:00Z`)));
+		/* Read from midday so no offset can round a label back onto the day
+		   before. */
+		.map(({ date }) => new Date(`${date}T12:00:00Z`))
+		.map((day) => ({
+			weekday: weekdayFormat.format(day),
+			number: dayNumberFormat.format(day),
+			month: monthFormat.format(day),
+		}));
 
-	return days.length > 0 ? listFormat.format(days) : "";
+	const first = days[0];
+	if (!first) return "";
+
+	if (days.length === 1) {
+		return `${first.weekday} ${first.number} ${first.month}`;
+	}
+
+	const sameMonth = days.every((day) => day.month === first.month);
+	const sameWeekday = days.every((day) => day.weekday === first.weekday);
+
+	/* English pluralises every weekday with a bare "s". */
+	if (sameMonth && sameWeekday) {
+		const numbers = listFormat.format(days.map((day) => day.number));
+		return `${first.weekday}s ${numbers} ${first.month}`;
+	}
+
+	if (sameMonth) {
+		const labels = days.map((day) => `${day.weekday} ${day.number}`);
+		return `${listFormat.format(labels)} ${first.month}`;
+	}
+
+	return listFormat.format(
+		days.map((day) => `${day.weekday} ${day.number} ${day.month}`),
+	);
 }

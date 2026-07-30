@@ -166,28 +166,14 @@ const prose = cva(
 					"[&_a]:text-ink-accent [&_a]:decoration-line-strong",
 				],
 				/*
-				 * For rich text sitting on the accent fill.
-				 *
-				 * `ink-accent` is orange, so the default link colour would be
-				 * orange on orange. Here links take the band's own ink and lean
-				 * on the underline alone — which is the affordance that has to
-				 * carry the link anyway.
-				 */
-				accent: [
-					"text-accent-contrast",
-					"[&_h2]:text-accent-contrast [&_h3]:text-accent-contrast",
-					"[&_strong]:text-accent-contrast",
-					"[&_a]:text-accent-contrast [&_a]:decoration-current",
-				],
-				/*
 				 * For rich text sitting on a dark band.
 				 *
-				 * Same failure as `accent`, at the other end of the ramp: orange
-				 * links on near-black. Links take the band's own ink —
-				 * `ink-inverse` is 18.89:1 on `surface-inverse` — and the
-				 * underline follows with `decoration-current`, since
-				 * `line-strong` is a light-surface line and all but disappears
-				 * here.
+				 * `ink-accent` is orange and tuned for the light surface: on
+				 * `surface-inverse` it is 3.91:1 and fails AA, so the default
+				 * link colour cannot travel here. Links take the band's own ink
+				 * — `ink-inverse` is 18.89:1 — and the underline follows with
+				 * `decoration-current`, since `line-strong` is a light-surface
+				 * line and all but disappears here.
 				 */
 				inverse: [
 					"text-ink-inverse",
