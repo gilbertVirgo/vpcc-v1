@@ -72,11 +72,6 @@ export function formatEventDate(
 
 const DAY_MS = 86_400_000;
 
-const listFormat = new Intl.ListFormat(LOCALE, {
-	style: "long",
-	type: "conjunction",
-});
-
 const partsFormat = new Intl.DateTimeFormat(LOCALE, {
 	timeZone: TIME_ZONE,
 	hour12: false,
@@ -108,98 +103,57 @@ function offset(utcMs: number): number {
 }
 
 /**
- * The instant a London day runs out.
+ * The instants a London day opens and closes.
  *
  * Prismic Date fields are a bare "YYYY-MM-DD" — no time, no zone. A notice
- * about Sunday the 16th has to survive that Sunday, so it expires at London
- * midnight rather than UTC midnight: through the summer those are an hour
- * apart, and taking the UTC one would pull a "we're not meeting" warning down
- * while people were still deciding whether to set off.
+ * running until Sunday the 16th has to survive that Sunday, so it closes at
+ * London midnight rather than UTC midnight: through the summer those are an
+ * hour apart, and taking the UTC one would pull a "we're not meeting" warning
+ * down while people were still deciding whether to set off.
  */
-function endOfDay(iso: string): number {
-	const startUtc = Date.parse(`${iso}T00:00:00Z`);
-	if (Number.isNaN(startUtc)) return Number.NaN;
+function startOfDay(iso: string): number {
+	const utc = Date.parse(`${iso}T00:00:00Z`);
+	if (Number.isNaN(utc)) return Number.NaN;
 
-	/* Midnight opening the next day, read as though London were UTC, then
-	   pushed back by whatever London's offset is at that point in the year. */
-	const nextMidnight = startUtc + DAY_MS;
-	return nextMidnight - offset(nextMidnight);
+	/* Midnight opening the day, read as though London were UTC, then pushed
+	   back by whatever London's offset is at that point in the year. */
+	return utc - offset(utc);
 }
 
-const weekdayFormat = new Intl.DateTimeFormat(LOCALE, {
-	weekday: "long",
-	timeZone: TIME_ZONE,
-});
+/** Midnight opening the following day — so the end day is itself included. */
+function endOfDay(iso: string): number {
+	const utc = Date.parse(`${iso}T00:00:00Z`);
+	if (Number.isNaN(utc)) return Number.NaN;
 
-const dayNumberFormat = new Intl.DateTimeFormat(LOCALE, {
-	day: "numeric",
-	timeZone: TIME_ZONE,
-});
-
-const monthFormat = new Intl.DateTimeFormat(LOCALE, {
-	month: "long",
-	timeZone: TIME_ZONE,
-});
+	const next = utc + DAY_MS;
+	return next - offset(next);
+}
 
 /**
- * Formats the days a notice still applies to — "Sundays 9 and 16 August".
+ * Whether `now` falls inside a window of whole days. Both ends are optional:
+ * no start means "from now", no end means "until someone takes it down".
  *
- * Days already behind us are dropped, so a notice covering two Sundays stops
- * naming the first one once it has gone. An empty string means every day has
- * passed, and that is what retires the notice: expiry is derived from the list
- * rather than held in a separate "hide after" field that could fall out of
- * step with it.
+ * Both days are inclusive — a window of 1 to 16 August covers all of the 1st
+ * and all of the 16th.
  *
- * A shared weekday or month is said once. "Sunday 9 August and Sunday 16
- * August" is the same fact twice over and, in a notice that has to read as one
- * line, the repetition is what pushes it onto two. Anything the days do not
- * have in common is still spelled out per day, so the short form never costs
- * clarity:
- *
- *   same weekday, same month   Sundays 9 and 16 August
- *   same month only            Sunday 9 and Monday 17 August
- *   neither                    Sunday 9 August and Sunday 6 September
+ * An unparseable bound is ignored rather than treated as closed. A notice
+ * whose end date is somehow malformed staying up too long is recoverable; one
+ * that silently refuses to appear is the failure nobody notices.
  */
-export function formatNoticeDates(
-	dates: readonly (string | null | undefined)[],
+export function isWithinWindow(
+	startsAt: string | null | undefined,
+	endsAt: string | null | undefined,
 	now: number,
-): string {
-	const days = dates
-		.filter((date): date is string => Boolean(date))
-		.map((date) => ({ date, ends: endOfDay(date) }))
-		.filter(({ ends }) => !Number.isNaN(ends) && ends > now)
-		.sort((a, b) => a.ends - b.ends)
-		/* Read from midday so no offset can round a label back onto the day
-		   before. */
-		.map(({ date }) => new Date(`${date}T12:00:00Z`))
-		.map((day) => ({
-			weekday: weekdayFormat.format(day),
-			number: dayNumberFormat.format(day),
-			month: monthFormat.format(day),
-		}));
-
-	const first = days[0];
-	if (!first) return "";
-
-	if (days.length === 1) {
-		return `${first.weekday} ${first.number} ${first.month}`;
+): boolean {
+	if (startsAt) {
+		const opens = startOfDay(startsAt);
+		if (!Number.isNaN(opens) && now < opens) return false;
 	}
 
-	const sameMonth = days.every((day) => day.month === first.month);
-	const sameWeekday = days.every((day) => day.weekday === first.weekday);
-
-	/* English pluralises every weekday with a bare "s". */
-	if (sameMonth && sameWeekday) {
-		const numbers = listFormat.format(days.map((day) => day.number));
-		return `${first.weekday}s ${numbers} ${first.month}`;
+	if (endsAt) {
+		const closes = endOfDay(endsAt);
+		if (!Number.isNaN(closes) && now >= closes) return false;
 	}
 
-	if (sameMonth) {
-		const labels = days.map((day) => `${day.weekday} ${day.number}`);
-		return `${listFormat.format(labels)} ${first.month}`;
-	}
-
-	return listFormat.format(
-		days.map((day) => `${day.weekday} ${day.number} ${day.month}`),
-	);
+	return true;
 }

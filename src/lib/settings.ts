@@ -23,8 +23,14 @@ import { type FooterSection, type NavLink, siteConfig } from "./site-config";
  */
 export interface SiteNoticeContent {
 	title: string;
-	dates: string[];
-	body: RichTextField | null;
+	description: RichTextField | null;
+	/**
+	 * The window the notice shows in, as bare "YYYY-MM-DD". Both ends are
+	 * optional and both days are inclusive. These control visibility only —
+	 * they are never rendered, so nothing can contradict the description.
+	 */
+	startsAt: string | null;
+	endsAt: string | null;
 }
 
 export interface SiteSettings {
@@ -113,28 +119,21 @@ export async function getSettings(): Promise<SiteSettings> {
 	const footer = [...sections.values()];
 
 	/*
-	 * A notice needs a title and at least one date before it will show.
+	 * The title is the notice's on switch.
 	 *
-	 * There is no "publish this notice" switch — the dates are the switch, and
-	 * the last of them retires it. Requiring both means a half-filled notice,
-	 * or one whose dates an editor has cleared out, stays off the site rather
-	 * than shipping a bare heading or a warning with no when.
-	 */
-	/*
-	 * `?? []` is load-bearing, not belt-and-braces.
+	 * Both dates are optional — no start means "from now", no end means "until
+	 * someone takes it down" — so there is nothing else that could stand for
+	 * intent. Clearing the title is how an editor pulls a notice early.
 	 *
-	 * prismicio-types.d.ts describes the model in customtypes/, which is ahead
-	 * of the repository until someone runs `npx prismic push`. Until then the
-	 * API returns a settings document with no `notice_dates` at all, and the
-	 * generated type says otherwise — so reading it as an array throws and
-	 * takes down every page, the layout being where this is consumed. Any
-	 * field added here is unpopulated in Prismic before it is populated in
-	 * code, so it has to survive being absent.
+	 * Every field here is read defensively, and not as belt-and-braces:
+	 * prismicio-types.d.ts describes the model in customtypes/, which runs
+	 * ahead of the repository until someone pushes. Between a deploy and that
+	 * push the API returns a document with none of these fields on it while
+	 * the generated types promise them, so anything that assumes their shape
+	 * throws — and the layout is where this is consumed, which takes down
+	 * every page.
 	 */
 	const noticeTitle = data.notice_title?.trim();
-	const noticeDates = (data.notice_dates ?? [])
-		.map((item) => item.date)
-		.filter((date): date is string => Boolean(date));
 
 	return {
 		name: data.site_name?.trim() || FALLBACK.name,
@@ -148,14 +147,14 @@ export async function getSettings(): Promise<SiteSettings> {
 					}
 				: FALLBACK.navCta,
 		footer: footer.length > 0 ? footer : FALLBACK.footer,
-		notice:
-			noticeTitle && noticeDates.length > 0
-				? {
-						title: noticeTitle,
-						dates: noticeDates,
-						body: data.notice_body,
-					}
-				: null,
+		notice: noticeTitle
+			? {
+					title: noticeTitle,
+					description: data.notice_description ?? null,
+					startsAt: data.notice_starts_at ?? null,
+					endsAt: data.notice_ends_at ?? null,
+				}
+			: null,
 		meeting: {
 			when: data.meeting_when?.trim() || FALLBACK.meeting.when,
 			venue: data.meeting_venue?.trim() || FALLBACK.meeting.venue,

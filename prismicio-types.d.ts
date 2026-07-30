@@ -247,21 +247,6 @@ export interface SettingsDocumentDataNavItem {
 }
 
 /**
- * Item in *Settings → Notice dates*
- */
-export interface SettingsDocumentDataNoticeDatesItem {
-	/**
-	 * Date field in *Settings → Notice dates*
-	 *
-	 * - **Field Type**: Date
-	 * - **Placeholder**: *None*
-	 * - **API ID Path**: settings.notice_dates[].date
-	 * - **Documentation**: https://prismic.io/docs/fields/date
-	 */
-	date: prismic.DateField;
-}
-
-/**
  * Item in *Settings → Footer links*
  */
 export interface SettingsDocumentDataFooterLinksItem {
@@ -389,26 +374,37 @@ interface SettingsDocumentData {
 	notice_title: prismic.KeyTextField;
 
 	/**
-	 * Notice detail field in *Settings*
+	 * Notice description field in *Settings*
 	 *
 	 * - **Field Type**: Rich Text
 	 * - **Placeholder**: *None*
-	 * - **API ID Path**: settings.notice_body
+	 * - **API ID Path**: settings.notice_description
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
 	 */
-	notice_body: prismic.RichTextField;
+	notice_description: prismic.RichTextField;
 
 	/**
-	 * Notice dates field in *Settings*
+	 * Notice shows from field in *Settings*
 	 *
-	 * - **Field Type**: Group
+	 * - **Field Type**: Date
 	 * - **Placeholder**: *None*
-	 * - **API ID Path**: settings.notice_dates[]
+	 * - **API ID Path**: settings.notice_starts_at
 	 * - **Tab**: Main
-	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 * - **Documentation**: https://prismic.io/docs/fields/date
 	 */
-	notice_dates: prismic.GroupField<Simplify<SettingsDocumentDataNoticeDatesItem>>;
+	notice_starts_at: prismic.DateField;
+
+	/**
+	 * Notice shows until field in *Settings*
+	 *
+	 * - **Field Type**: Date
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: settings.notice_ends_at
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/date
+	 */
+	notice_ends_at: prismic.DateField;
 
 	/**
 	 * Meeting time field in *Settings*
@@ -1464,7 +1460,6 @@ declare module "@prismicio/client" {
 			SettingsDocument,
 			SettingsDocumentData,
 			SettingsDocumentDataNavItem,
-			SettingsDocumentDataNoticeDatesItem,
 			SettingsDocumentDataFooterLinksItem,
 			TeamMemberDocument,
 			TeamMemberDocumentData,

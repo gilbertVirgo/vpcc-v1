@@ -718,24 +718,20 @@ function Notices() {
 				<Text tone="muted" measure className="mt-3">
 					A time-limited warning about a change to the ordinary run of
 					things. One centred sentence on a pale accent wash, between
-					hairlines. Site-wide, driven by the dates in Settings, and
-					gone on its own once the last of them has passed.
+					hairlines. Site-wide, and shown only inside the window set
+					in Settings — those dates never appear in the words.
 				</Text>
 			</Container>
 
 			<Stack gap="lg" className="mt-10">
-				<Notice
-					title="No Sunday service"
-					when="Sundays 9 and 16 August"
-				>
-					back as usual on 23 August
+				<Notice title="No Sunday service">
+					on Sundays 9 and 16 August — we’re back as usual on 23
+					August
 				</Notice>
 
-				{/* With a link, and a date list the collapse cannot shorten. */}
-				<Notice
-					title="Meeting at Bethnal Green"
-					when="Sunday 6 September and Saturday 10 October"
-				>
+				{/* With a link in the description. */}
+				<Notice title="Meeting at Bethnal Green">
+					for the rest of the month —{" "}
 					<NextLink
 						href="/whats-on"
 						className="underline decoration-current underline-offset-4 hover:decoration-2"
@@ -745,7 +741,7 @@ function Notices() {
 				</Notice>
 
 				{/* Title alone — an editor who has filled in nothing else. */}
-				<Notice title="No Sunday service" when="Sunday 9 August" />
+				<Notice title="No Sunday service this week" />
 			</Stack>
 		</Section>
 	);

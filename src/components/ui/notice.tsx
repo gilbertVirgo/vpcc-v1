@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
 
-import { Icon } from "./icon";
 import { Container } from "./layout";
 import { Text } from "./typography";
 
@@ -17,20 +16,21 @@ import { Text } from "./typography";
  * meant to land. `accent-subtle` separates the band from the page; the weight
  * and colour of the words inside it do the ranking.
  *
- * Presentational and time-agnostic. Deciding whether a notice still applies is
- * the caller's job — see src/components/layout/site-notice.tsx.
+ * Presentational and time-agnostic. Deciding whether a notice is currently
+ * showing is the caller's job — see src/components/layout/site-notice.tsx.
  */
 export interface NoticeProps {
-	/** Short. It leads the sentence and names the landmark. */
+	/** Short. It opens the sentence and names the landmark. */
 	title: string;
-	/** The days this applies to, already formatted. Reads after "on". */
-	when?: string;
-	/** Inline detail, following an em dash. Keep it to a clause. */
+	/**
+	 * The rest of the sentence, following the title after a single space.
+	 * It carries its own punctuation — nothing is inserted between the two.
+	 */
 	children?: ReactNode;
 	className?: string;
 }
 
-export function Notice({ title, when, children, className }: NoticeProps) {
+export function Notice({ title, children, className }: NoticeProps) {
 	return (
 		/*
 		 * A landmark with a name, so a screen reader user who takes the skip
@@ -45,24 +45,8 @@ export function Notice({ title, when, children, className }: NoticeProps) {
 		>
 			<Container>
 				<Text size="sm" tone="secondary" className="py-3 text-center">
-					{/*
-					 * Inline rather than a flex sibling. Beside a centred block
-					 * it would hang on its own in the left margin as soon as
-					 * the sentence wrapped, which on a phone it always does.
-					 * In the flow it travels with the first word.
-					 */}
-					<Icon
-						name="calendar"
-						className="mr-2 inline size-4 align-middle text-ink"
-					/>
 					<strong className="font-bold text-ink">{title}</strong>
-					{when ? (
-						<>
-							{" "}
-							on <span className="text-ink">{when}</span>
-						</>
-					) : null}
-					{children ? <> — {children}</> : null}
+					{children ? <> {children}</> : null}
 				</Text>
 			</Container>
 		</aside>

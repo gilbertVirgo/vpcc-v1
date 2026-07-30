@@ -1,6 +1,6 @@
 import { PrismicInline } from "@/components/prismic/rich-text";
 import { Notice } from "@/components/ui/notice";
-import { formatNoticeDates } from "@/lib/dates";
+import { isWithinWindow } from "@/lib/dates";
 import type { SiteNoticeContent } from "@/lib/settings";
 
 export interface SiteNoticeProps {
@@ -10,28 +10,25 @@ export interface SiteNoticeProps {
 }
 
 /**
- * The site-wide notice, if there is one that still applies.
+ * The site-wide notice, if one is currently showing.
  *
  * `now` arrives as a prop rather than being read here, for the same reason
  * slices take it from context: the component stays a pure function of its
  * props, and the whole render agrees on what "now" is.
  *
- * The filter runs on the server, so it is only as fresh as the cached page.
- * The Prismic webhook busts the cache when an editor changes the notice, but
- * nothing busts it when a date simply passes — the hourly `revalidate` on the
- * page routes is what eventually takes an expired notice down. Same trade as
- * the EventList slice; see src/app/[uid]/page.tsx.
+ * The window is checked on the server, so it is only as fresh as the cached
+ * page. The Prismic webhook busts the cache when an editor changes the notice,
+ * but nothing busts it when a date simply passes — the hourly `revalidate` on
+ * the page routes is what eventually brings a notice up or takes it down. Same
+ * trade as the EventList slice; see src/app/[uid]/page.tsx.
  */
 export function SiteNotice({ notice, now }: SiteNoticeProps) {
 	if (!notice) return null;
-
-	/* Empty once every date is behind us — that is the expiry. */
-	const when = formatNoticeDates(notice.dates, now);
-	if (!when) return null;
+	if (!isWithinWindow(notice.startsAt, notice.endsAt, now)) return null;
 
 	return (
-		<Notice title={notice.title} when={when}>
-			<PrismicInline field={notice.body} />
+		<Notice title={notice.title}>
+			<PrismicInline field={notice.description} />
 		</Notice>
 	);
 }

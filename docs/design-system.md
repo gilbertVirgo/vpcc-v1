@@ -152,55 +152,59 @@ singleton, and rendered in the root layout below the nav.
 **One centred sentence, on a pale wash, between hairlines.**
 
 ```
-📅  No Sunday service on Sundays 9 and 16 August — back as usual on 23 August
+No Sunday service on Sundays 9 and 16 August — back as usual on 23 August
+└── title ──────┘ └────────────── description ──────────────────────────┘
 ```
 
-The first cut of this was a full-strength `accent` field the width of the
-viewport, three stacked lines deep. It was the loudest thing on every page: it
-outweighed the h1 beneath it and collided with the logo and the nav button,
-which are the two places the brand orange is meant to land. `accent-subtle` is
-1.15:1 against the page — enough to read as a separate band, not enough to
-compete for the eye. The ranking is done by the words: `ink` bold for the
-title, `ink` for the days, `ink-secondary` for the rest.
+The first cut was a full-strength `accent` field the width of the viewport,
+three stacked lines deep, with a calendar icon. It was the loudest thing on
+every page: it outweighed the h1 beneath it and collided with the logo and the
+nav button, which are the two places the brand orange is meant to land.
+`accent-subtle` is 1.15:1 against the page — enough to read as a separate band,
+not enough to compete for the eye. The ranking is done by the words: `ink` bold
+for the title, `ink-secondary` for the rest.
 
 The band is ~50px. If a notice needs more room than one sentence, it wants a
 page, not a strip.
 
-The icon is inline, not a flex sibling. Beside a centred block it hangs alone in
-the left margin the moment the sentence wraps, which on a phone it always does.
+**The description continues the title's sentence.** Nothing is inserted between
+them but a single space, so the description supplies its own opening word and
+its own punctuation. That is what lets one model serve "No Sunday service **on
+Sundays 9 and 16 August**" and "Car park closed **— use the Grove Road
+entrance**" without the component guessing at grammar it cannot see.
 
-**The dates are the switch.** There is no publish toggle and no "hide after"
-field. `notice_dates` drives the wording, the expiry and the grammar.
+**The dates are a display window, and are never rendered.**
 
 ```
-notice_title   "No Sunday service"     reads before "on <dates>"
-notice_dates   2026-08-09, 2026-08-16
-notice_body    rich text, one sentence — follows an em dash
+notice_title        "No Sunday service"          the on switch
+notice_description  rich text, one sentence      continues the title
+notice_starts_at    2026-08-01                   optional — omit for "from now"
+notice_ends_at      2026-08-16                   optional — omit for "until pulled"
 ```
 
-Two fields that could disagree about when a notice ends would eventually
-disagree, and the failure is silent in the worst direction: a warning that
-comes down while people are still deciding whether to set off. So expiry is
-derived, never stored.
+Both days are inclusive: 1 to 16 August covers all of the 1st and all of the
+16th. An earlier model derived the window from the days the notice was _about_
+and printed them in the sentence. It could not express two Sundays with a
+normal week between them without claiming the whole run, and it left an editor
+no way to stage a notice ahead of time. Keeping the dates out of the words
+means nothing in the model can contradict the wording — the editor writes the
+dates they mean, in the words they mean them.
 
-A shared weekday or month is said once — "Sundays 9 and 16 August", not
-"Sunday 9 August and Sunday 16 August". The long form is the same fact twice
-and it is what pushes the line onto a second row. Anything the days don't share
-is still spelled out, so the short form never costs clarity:
-
-| Days                     | Reads                                  |
-| ------------------------ | -------------------------------------- |
-| same weekday, same month | Sundays 9 and 16 August                |
-| same month only          | Sunday 9 and Monday 17 August          |
-| neither                  | Sunday 9 August and Sunday 6 September |
+The title is the on switch. Both dates being optional leaves nothing else that
+could stand for intent, so clearing the title is how a notice is pulled early.
+A notice with no end runs until someone does that.
 
 Days end at London midnight, not UTC — through the summer those are an hour
-apart. See `formatNoticeDates` in `src/lib/dates.ts`.
+apart, so a UTC boundary would take a Sunday notice down an hour early. See
+`isWithinWindow` in `src/lib/dates.ts`. A malformed bound is ignored rather
+than treated as closed: a notice that overstays is recoverable, one that
+silently never appears is the failure nobody notices.
 
-Expiry is only as fresh as the cached page. The Prismic webhook busts the cache
-when an editor changes the notice, but nothing fires when a date merely passes,
-so the hourly `revalidate` on the page routes is what eventually takes it down.
-Same trade as `EventList`.
+The window is checked on the server, so it is only as fresh as the cached page.
+The Prismic webhook busts the cache when an editor changes the notice, but
+nothing fires when a date merely passes, so the hourly `revalidate` on the page
+routes is what eventually brings a notice up or takes it down. Same trade as
+`EventList`.
 
 Rich text in the band goes through `PrismicInline`, which flattens paragraphs to
 spans so the copy can sit mid-sentence. Its links underline in
