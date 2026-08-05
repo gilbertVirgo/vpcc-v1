@@ -1,12 +1,13 @@
 import type { Content } from "@prismicio/client";
 
+import { EventTitle } from "@/components/events/event-title";
 import { Reveal } from "@/components/motion/reveal";
 import { linkHref } from "@/components/prismic/link";
 import { PrismicMedia } from "@/components/prismic/media";
 import { PrismicProse } from "@/components/prismic/rich-text";
 import { Button } from "@/components/ui/button";
 import { Container, Section } from "@/components/ui/layout";
-import { Accent, Heading, Text } from "@/components/ui/typography";
+import { Heading, Text } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { formatEventDate } from "@/lib/dates";
 
@@ -14,23 +15,16 @@ export interface EventDetailProps {
 	event: Content.EventDocument;
 	/** Milliseconds since the epoch, stamped by the page. See slices/context.ts. */
 	now: number;
-	/**
-	 * `h1` on the event's own page, `h2` where the events index stacks several.
-	 * Level and size move together here — an event heading is the biggest thing
-	 * in its block either way.
-	 */
-	as?: "h1" | "h2";
-	/** Set on the first event on the page only. See slices/context.ts. */
+	/** Set on the page's lead image only. See slices/context.ts. */
 	priority?: boolean;
 }
 
 /**
- * One event, in full.
+ * One event, in full, at `/whats-on/:uid`.
  *
- * Shared by `/events` and `/events/[uid]` so the two can't drift: the index is
- * the page people are sent to, the per-event URL is the one they share, and an
- * event that reads differently depending on which link you followed is a bug
- * nobody would think to look for.
+ * This is the page the link goes to — from the block on What's On, from a QR
+ * code on a leaflet, from whoever forwards it — so it carries everything the
+ * short version leaves out and nothing is held back for a second click.
  *
  * Everything the poster says is repeated here as real text. That is not
  * duplication for its own sake — the poster is an image, so its wording reaches
@@ -40,7 +34,6 @@ export interface EventDetailProps {
 export function EventDetail({
 	event,
 	now,
-	as = "h2",
 	priority = false,
 }: EventDetailProps) {
 	const data = event.data;
@@ -116,8 +109,8 @@ export function EventDetail({
 							) : null}
 
 							<Heading
-								as={as}
-								size={as === "h1" ? "h1" : "h2"}
+								as="h1"
+								size="h1"
 								className={when ? "mt-3" : ""}
 							>
 								<EventTitle title={data.title} />
@@ -194,27 +187,4 @@ function isCtaOpen(closesAt: string | null | undefined, now: number): boolean {
 
 	const at = new Date(closesAt).getTime();
 	return Number.isNaN(at) ? true : at > now;
-}
-
-/**
- * "Photo Competition: Hope in East London" — the part after the colon set apart
- * at weight 500 against the heading's 700.
- *
- * The previous site's two-tone headings, reproduced without a second typeface;
- * see `Accent`. A title with no colon is left alone, so this is a bonus for
- * titles shaped to take it rather than a rule editors have to know about.
- */
-function EventTitle({ title }: { title: string | null }) {
-	const text = title?.trim();
-	if (!text) return null;
-
-	const colon = text.indexOf(":");
-	if (colon === -1 || colon === text.length - 1) return <>{text}</>;
-
-	return (
-		<>
-			{text.slice(0, colon + 1)}{" "}
-			<Accent>{text.slice(colon + 1).trim()}</Accent>
-		</>
-	);
 }

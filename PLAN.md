@@ -180,7 +180,7 @@ Change them there before Phase 1 starts, not after.
 - [x] `/about` — "Our story (in brief)" + team grid
 - [x] `/beliefs` — UCCF / FIEC framing + 10 statements
 - [x] `[uid]` catch-all driven by the `page` type, so new pages need no code
-- [x] `/events` and `/events/:uid` — driven by the `event` type, and present only while an event is live. See [`docs/events.md`](docs/events.md)
+- [x] `/whats-on/:uid` — driven by the `event` type, with a summary block on `/whats-on` itself, both present only while an event is live. See [`docs/events.md`](docs/events.md)
 - [x] Per-page metadata from Prismic (`generateMetadata`)
 - [x] All copy pulled verbatim from the CRA source, including typographic apostrophes
 
@@ -238,10 +238,11 @@ Change them there before Phase 1 starts, not after.
 - [x] Metadata API defaults + per-page overrides; `metadataBase` so canonicals and OG URLs are absolute
 - [x] `sitemap.ts` (from published Prismic pages, via the route resolver) and `robots.ts` (deploy previews disallow everything)
 - [x] JSON-LD `Church`, driven by the settings document
-- [x] JSON-LD `Event` on each event page, plus `/events` and `/events/:uid` in the sitemap while an event is live
+- [x] JSON-LD `Event` on each event page, plus `/whats-on/:uid` in the sitemap while an event is live
 - [ ] New OG + Twitter images matching the redesign
 - [x] Paths for `/whats-on`, `/about`, `/beliefs`, `/connect`, `/donate` are unchanged, so no redirect is needed
 - [x] `/esol`, `/art-course`, `/art-course-exhibition` — retired, 301 to `/whats-on` in `netlify.toml`
+- [x] `/events` and `/events/*` — 301 to `/whats-on` and `/whats-on/:splat`, because a printed QR code points at one of them
 
 **Analytics**
 

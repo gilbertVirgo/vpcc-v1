@@ -2,16 +2,25 @@ import type { Content } from "@prismicio/client";
 
 import { createClient } from "@/prismicio";
 
-import type { NavLink } from "./site-config";
-
 /**
  * Events, and the single rule for whether one is still worth showing.
  *
- * The rule lives here rather than in a page or a slice because three surfaces
- * have to agree on it — the `/events` route, the `EventList` slice, and the nav
- * link that appears only while something is on. A page that 404s while the nav
- * still links to it is the failure this module exists to make impossible.
+ * The rule lives here rather than in a page or a slice because several surfaces
+ * have to agree on it — the What's On page, each event's own page, the
+ * `EventList` slice and the sitemap. A page linking to an event that has
+ * already 404'd itself is the failure this module exists to make impossible.
  */
+
+/**
+ * The page live events appear on.
+ *
+ * What's On is the site's one activities page, so an event belongs on it rather
+ * than on a second page of its own that spends most of the year empty. The UID
+ * is named here rather than read from a setting because the events themselves
+ * are served from `/whats-on/:uid` — the page and its children have to agree,
+ * and a route path is not something an editor can change anyway.
+ */
+export const EVENTS_PAGE_UID = "whats-on";
 
 /**
  * The fields the live check reads.
@@ -59,10 +68,9 @@ export function isEventLive(event: EventTiming, now: number): boolean {
  * it when a date simply passes — which is why every route that depends on this
  * sets a time-based `revalidate`.
  *
- * A failed query yields no events rather than an error. That degrades to the
- * events page 404ing and the nav link going away, which is the same state as
- * having nothing on — and is a great deal better than taking down the layout,
- * and with it every page on the site.
+ * A failed query yields no events rather than an error. That degrades to What's
+ * On carrying no event block, which is the same state as having nothing on —
+ * and is a great deal better than taking the page down.
  */
 export async function getLiveEvents(
 	now: number,
@@ -102,29 +110,16 @@ export async function getLiveEvent(
 	return isEventLive(event.data, now) ? event : null;
 }
 
-/** Where `/events` sits in the nav while it exists. */
-export const EVENTS_NAV_LINK: NavLink = { label: "Events", href: "/events" };
-
 /**
- * The navigation with an Events link in it.
+ * The URL for an event.
  *
- * Injected in code rather than typed into the `settings` document, which is
- * where the rest of the nav comes from. Everything else in that document is a
- * standing choice an editor makes once; this link has to appear the day an
- * event is published and go the day it finishes, and a link the editor has to
- * remember to remove is one that will still be there in November pointing at a
- * 404.
- *
- * Second, directly after Home: an event is the timeliest thing on the site
- * while it is on, and burying it at the end of a six-item nav would waste it.
- * An editor who has added their own `/events` link keeps theirs, wherever they
- * put it — no duplicate, and their ordering wins.
+ * `url` comes from the route resolver, so it can never disagree with what the
+ * site serves. The fallback covers a document fetched without routes — a
+ * hand-built path is still better than a card that links nowhere.
  */
-export function withEventsLink(links: NavLink[]): NavLink[] {
-	if (links.some((link) => link.href === EVENTS_NAV_LINK.href)) return links;
-
-	const [first, ...rest] = links;
-	if (!first) return [EVENTS_NAV_LINK];
-
-	return [first, EVENTS_NAV_LINK, ...rest];
+export function eventHref(event: {
+	uid?: string | null;
+	url?: string | null;
+}): string {
+	return event.url ?? `/${EVENTS_PAGE_UID}/${event.uid ?? ""}`;
 }
