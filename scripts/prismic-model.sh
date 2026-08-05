@@ -91,7 +91,7 @@ p field add number sort_order --to-type team_member --label "Sort order"
 #
 # `details` is the labelled-rows model the info_list slice uses, on the document
 # rather than a slice: a competition's entry fee, categories and closing date
-# are facts about the event, and they have to travel with it to /events, to the
+# are facts about the event, and they have to travel with it to What's On, to the
 # EventList slice and to whatever comes next. Free-form prose in `body` would
 # read the same on one page and be unusable on the others.
 #

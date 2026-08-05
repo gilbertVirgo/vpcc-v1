@@ -8,7 +8,7 @@ import { Link } from "@/components/ui/link";
 import { getLiveEvent, getLiveEvents } from "@/lib/events";
 import { getSettings } from "@/lib/settings";
 
-/** See the note in ../page.tsx — this covers time-based expiry. */
+/** See the note in app/[uid]/page.tsx — this covers time-based expiry. */
 export const revalidate = 3600;
 
 /* One timestamp for the whole render, read in the page's data layer rather than
@@ -18,11 +18,11 @@ function stampNow(): number {
 }
 
 /**
- * One event, at its own URL.
+ * One event, at its own URL, under What's On.
  *
- * This is the link that gets shared, so it is the one that carries the event's
- * own share card and its `Event` structured data. `/events` is the page people
- * are pointed at; this is the page they forward.
+ * This is the link that gets shared and the link a printed QR code points at,
+ * so it carries the event's own share card and its `Event` structured data.
+ * What's On is where people are pointed; this is the page they forward.
  */
 export async function generateStaticParams() {
 	const events = await getLiveEvents(stampNow());
@@ -55,12 +55,12 @@ export async function generateMetadata({
 	return {
 		title,
 		description,
-		alternates: { canonical: `/events/${uid}` },
+		alternates: { canonical: `/whats-on/${uid}` },
 		openGraph: {
 			type: "article",
 			title,
 			description,
-			url: `/events/${uid}`,
+			url: `/whats-on/${uid}`,
 			images: image ? [{ url: image }] : undefined,
 		},
 	};
@@ -87,11 +87,11 @@ export default async function EventPage({
 	return (
 		<main id="main">
 			<EventJsonLd event={event} settings={settings} />
-			<EventDetail event={event} now={now} as="h1" priority />
+			<EventDetail event={event} now={now} priority />
 
 			<Section spacing="sm">
 				<Container>
-					<Link href="/events">All events</Link>
+					<Link href="/whats-on">What&rsquo;s on</Link>
 				</Container>
 			</Section>
 		</main>

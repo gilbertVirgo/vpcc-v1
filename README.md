@@ -47,7 +47,7 @@ docs/             design-system.md, events.md
   questions
 - [`docs/design-system.md`](docs/design-system.md) — how to use and extend the
   design system
-- [`docs/events.md`](docs/events.md) — how `/events` puts itself up and takes
+- [`docs/events.md`](docs/events.md) — how an event puts itself on What's On and takes
   itself down
 
 ## Notes

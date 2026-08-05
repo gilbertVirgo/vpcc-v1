@@ -3,7 +3,7 @@
 	"routes": [
 		{
 			"type": "event",
-			"path": "/events/:uid"
+			"path": "/whats-on/:uid"
 		},
 		{
 			"type": "page",

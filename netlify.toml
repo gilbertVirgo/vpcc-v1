@@ -34,3 +34,24 @@
 	to = "/whats-on"
 	status = 301
 	force = true
+
+# Events moved under What's On.
+#
+# They were briefly served from /events and /events/:uid, and a printed QR code
+# points at one of those URLs — paper cannot be redeployed, so this redirect is
+# permanent regardless of how short-lived the original route was.
+#
+# The splat keeps each event's own UID, so the QR code lands on the event rather
+# than on the index.
+
+[[redirects]]
+	from = "/events"
+	to = "/whats-on"
+	status = 301
+	force = true
+
+[[redirects]]
+	from = "/events/*"
+	to = "/whats-on/:splat"
+	status = 301
+	force = true

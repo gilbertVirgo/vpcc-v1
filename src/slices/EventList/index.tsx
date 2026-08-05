@@ -6,10 +6,11 @@ import { Stagger } from "@/components/motion/reveal";
 import { PrismicMedia } from "@/components/prismic/media";
 import { PrismicHeading, PrismicProse } from "@/components/prismic/rich-text";
 import { Container, Section } from "@/components/ui/layout";
+import { Link } from "@/components/ui/link";
 import { Card } from "@/components/ui/surface";
 import { Heading, Text } from "@/components/ui/typography";
 import { formatEventDate } from "@/lib/dates";
-import { isEventLive } from "@/lib/events";
+import { eventHref, isEventLive } from "@/lib/events";
 import type { SliceContext } from "@/slices/context";
 
 export type EventListProps = SliceComponentProps<
@@ -21,7 +22,13 @@ export type EventListProps = SliceComponentProps<
  * Dated events, with finished ones dropped.
  *
  * What counts as finished is `isEventLive` in src/lib/events.ts, shared with
- * the `/events` route and the nav link, so the three cannot drift apart.
+ * the event pages themselves and with the automatic block on What's On, so
+ * they cannot drift apart.
+ *
+ * This slice is the override, not the usual route: What's On carries live
+ * events on its own, and adding this slice to it turns that off — see
+ * `liveEventsFor` in src/app/[uid]/page.tsx. Reach for it to place events
+ * somewhere else, or to show a chosen few in a chosen order.
  *
  * The filter runs on the server, so it is only as fresh as the cached page.
  * The Prismic webhook busts the cache when content changes, but nothing busts
@@ -96,6 +103,16 @@ const EventList: FC<EventListProps> = ({ slice, context }) => {
 										field={data.body}
 										className="mt-4"
 									/>
+
+									{/* Pushed to the bottom so the link sits on
+									    the same line across a row of cards of
+									    different heights. */}
+									<Link
+										href={eventHref(event)}
+										className="mt-auto self-start pt-6"
+									>
+										Full details
+									</Link>
 								</div>
 							</Card>
 						);

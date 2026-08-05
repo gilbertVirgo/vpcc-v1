@@ -20,8 +20,9 @@
  * The Migration API only creates documents; it never updates or deletes. Run
  * this twice and you get two events, so the dry run is the default.
  *
- * The document is created as a **draft**. Nothing appears on the site — and the
- * site itself stays at 404 with no Events link — until someone publishes it.
+ * The document is created as a **draft**. Nothing appears on the site — What's
+ * On carries no event block and the event's own URL 404s — until someone
+ * publishes it.
  */
 
 import { createMigration, createWriteClient } from "@prismicio/client";
@@ -182,7 +183,13 @@ migration.createDocument(
 				{
 					label: "Categories",
 					value: [
-						p("Primary (5–11), Secondary (12–17), Adult (18+)"),
+						/* "Adults (18 and over)", not "Adult (18+)". On a
+						   photo competition the singular reads as a content
+						   rating rather than an age group, and "18+" sitting
+						   next to it doubles the effect. */
+						p(
+							"Primary (5–11), Secondary (12–17), Adults (18 and over)",
+						),
 					],
 				},
 				{ label: "Prize", value: [p("Cash prizes to be won")] },
@@ -237,6 +244,6 @@ await client.migrate(migration, {
 });
 
 console.log(
-	"\nCreated as a draft. Nothing is on the site — and /events still 404s\n" +
-		"with no nav link — until it is published in Prismic.\n",
+	"\nCreated as a draft. Nothing is on the site — What's On carries no\n" +
+		"event block and /whats-on/:uid 404s — until it is published in Prismic.\n",
 );
