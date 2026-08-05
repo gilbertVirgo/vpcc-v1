@@ -826,7 +826,7 @@ function Forms() {
 
 					<FormStatus tone="error" title="Something went wrong">
 						Your message has not been sent. Please try again, or
-						email us directly at ben@vpcc.church.
+						email us directly at hello@vpcc.church.
 					</FormStatus>
 				</Stack>
 			</div>
@@ -883,7 +883,7 @@ function Media() {
 	return (
 		<Block
 			title="Media & Slideshow"
-			description="Aspect ratio is reserved before the image loads, so a slow photo shifts nothing. The carousel pauses on hover and focus, and does not autoplay under reduced motion."
+			description="Aspect ratio is reserved before the image loads, so a slow photo shifts nothing. Every ratio below crops to fill; a poster carries its wording at its edges, so it takes the extra “auto” ratio and keeps its own shape. The carousel pauses on hover and focus, and does not autoplay under reduced motion."
 			tone="sunken"
 		>
 			<Grid cols={2} gap="lg">

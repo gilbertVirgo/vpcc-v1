@@ -413,7 +413,7 @@ page(
 			title: "Connect with us",
 			body: [
 				linked(
-					"Contact us via email at ben@vpcc.church or using Facebook or Instagram.",
+					"Contact us via email at hello@vpcc.church or using Facebook or Instagram.",
 					[
 						[
 							"Facebook",
@@ -439,7 +439,7 @@ migration.createDocument(
 		lang: LANG,
 		data: {
 			site_name: "Victoria Park Community Church",
-			contact_email: "ben@vpcc.church",
+			contact_email: "hello@vpcc.church",
 			nav: NAV.map((item) => ({
 				label: item.label,
 				link: pages[item.uid],

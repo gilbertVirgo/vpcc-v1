@@ -47,6 +47,31 @@ type ContentRelationshipFieldWithData<
 }[Exclude<TCustomType[number], string>["id"]];
 
 /**
+ * Item in *Event → Details*
+ */
+export interface EventDocumentDataDetailsItem {
+	/**
+	 * Label field in *Event → Details*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: Photos due
+	 * - **API ID Path**: event.details[].label
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	label: prismic.KeyTextField;
+	
+	/**
+	 * Value field in *Event → Details*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: Wednesday 26 August
+	 * - **API ID Path**: event.details[].value
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	value: prismic.RichTextField;
+}
+
+/**
  * Content for Event documents
  */
 interface EventDocumentData {
@@ -60,6 +85,17 @@ interface EventDocumentData {
 	 * - **Documentation**: https://prismic.io/docs/fields/text
 	 */
 	title: prismic.KeyTextField;
+	
+	/**
+	 * Summary field in *Event*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: One line, used on cards and as the share description
+	 * - **API ID Path**: event.summary
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	summary: prismic.KeyTextField;
 	
 	/**
 	 * Starts field in *Event*
@@ -95,6 +131,17 @@ interface EventDocumentData {
 	location: prismic.KeyTextField;
 	
 	/**
+	 * Details field in *Event*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: event.details[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+	 */
+	details: prismic.GroupField<Simplify<EventDocumentDataDetailsItem>>;
+	
+	/**
 	 * Description field in *Event*
 	 *
 	 * - **Field Type**: Rich Text
@@ -115,6 +162,17 @@ interface EventDocumentData {
 	 * - **Documentation**: https://prismic.io/docs/fields/image
 	 */
 	image: prismic.ImageField<never>;
+	
+	/**
+	 * Share image field in *Event*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: event.share_image
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/image
+	 */
+	share_image: prismic.ImageField<never>;
 	
 	/**
 	 * Hide after field in *Event*
@@ -148,6 +206,17 @@ interface EventDocumentData {
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
 	cta_link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	
+	/**
+	 * Hide button after field in *Event*
+	 *
+	 * - **Field Type**: Timestamp
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: event.cta_expires_at
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/fields/timestamp
+	 */
+	cta_expires_at: prismic.TimestampField;
 }
 
 /**
@@ -1443,6 +1512,7 @@ declare module "@prismicio/client" {
 		export type {
 			EventDocument,
 			EventDocumentData,
+			EventDocumentDataDetailsItem,
 			PageDocument,
 			PageDocumentData,
 			PageDocumentDataSlicesSlice,
