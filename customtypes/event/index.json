@@ -1,72 +1,114 @@
 {
+  "format": "page",
   "id": "event",
-  "label": "Event",
-  "repeatable": true,
-  "status": true,
-  "format": "custom",
   "json": {
     "Main": {
       "uid": {
-        "type": "UID",
         "config": {
           "label": "UID"
-        }
+        },
+        "type": "UID"
       },
       "title": {
-        "type": "Text",
         "config": {
           "label": "Title"
-        }
+        },
+        "type": "Text"
+      },
+      "summary": {
+        "config": {
+          "label": "Summary",
+          "placeholder": "One line, used on cards and as the share description"
+        },
+        "type": "Text"
       },
       "starts_at": {
-        "type": "Timestamp",
         "config": {
           "label": "Starts"
-        }
+        },
+        "type": "Timestamp"
       },
       "ends_at": {
-        "type": "Timestamp",
         "config": {
           "label": "Ends"
-        }
+        },
+        "type": "Timestamp"
       },
       "location": {
-        "type": "Text",
         "config": {
           "label": "Location"
-        }
+        },
+        "type": "Text"
+      },
+      "details": {
+        "config": {
+          "fields": {
+            "label": {
+              "config": {
+                "label": "Label",
+                "placeholder": "Photos due"
+              },
+              "type": "Text"
+            },
+            "value": {
+              "config": {
+                "label": "Value",
+                "multi": "paragraph,strong,em,hyperlink",
+                "placeholder": "Wednesday 26 August"
+              },
+              "type": "StructuredText"
+            }
+          },
+          "label": "Details"
+        },
+        "type": "Group"
       },
       "body": {
-        "type": "StructuredText",
         "config": {
           "label": "Description",
           "multi": "paragraph,strong,em,hyperlink"
-        }
+        },
+        "type": "StructuredText"
       },
       "image": {
-        "type": "Image",
         "config": {
           "label": "Image"
-        }
+        },
+        "type": "Image"
+      },
+      "share_image": {
+        "config": {
+          "label": "Share image"
+        },
+        "type": "Image"
       },
       "expires_at": {
-        "type": "Timestamp",
         "config": {
           "label": "Hide after"
-        }
+        },
+        "type": "Timestamp"
       },
       "cta_label": {
-        "type": "Text",
         "config": {
           "label": "Button label"
-        }
+        },
+        "type": "Text"
       },
       "cta_link": {
-        "type": "Link",
         "config": {
           "label": "Button link"
-        }
+        },
+        "type": "Link"
+      },
+      "cta_expires_at": {
+        "config": {
+          "label": "Hide button after"
+        },
+        "type": "Timestamp"
       }
     }
-  }
+  },
+  "label": "Event",
+  "repeatable": true,
+  "status": true
 }

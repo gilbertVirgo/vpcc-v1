@@ -2,9 +2,13 @@
 	"repositoryName": "de628675",
 	"routes": [
 		{
+			"type": "event",
+			"path": "/events/:uid"
+		},
+		{
 			"type": "page",
-			"uid": "home",
-			"path": "/"
+			"path": "/",
+			"uid": "home"
 		},
 		{
 			"type": "page",

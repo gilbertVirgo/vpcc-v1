@@ -152,7 +152,7 @@ Change them there before Phase 1 starts, not after.
     - [x] `page` (repeatable) — UID, SEO fields, slice zone
     - [x] `team_member` (repeatable) — name, role, bio rich text, photo, order
     - [x] Beliefs modelled as a repeatable group inside the `beliefs_list` slice, not a document type
-    - [x] `event` (repeatable) — title, date/time, location, body, image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events)
+    - [x] `event` (repeatable) — title, summary, date/time, location, labelled detail rows, body, poster + share image, **expiry datetime** (ports the old `timeout` behaviour that auto-hides past events), CTA
 - [x] **Slice library** — 12 slices pushed and built as React components
     - [x] `PageHeader` — title (with accent-styled span), intro rich text
     - [x] `Feature` — image/slideshow + text + buttons, alternating alignment, optional enlargeable image
@@ -180,6 +180,7 @@ Change them there before Phase 1 starts, not after.
 - [x] `/about` — "Our story (in brief)" + team grid
 - [x] `/beliefs` — UCCF / FIEC framing + 10 statements
 - [x] `[uid]` catch-all driven by the `page` type, so new pages need no code
+- [x] `/events` and `/events/:uid` — driven by the `event` type, and present only while an event is live. See [`docs/events.md`](docs/events.md)
 - [x] Per-page metadata from Prismic (`generateMetadata`)
 - [x] All copy pulled verbatim from the CRA source, including typographic apostrophes
 
@@ -237,7 +238,7 @@ Change them there before Phase 1 starts, not after.
 - [x] Metadata API defaults + per-page overrides; `metadataBase` so canonicals and OG URLs are absolute
 - [x] `sitemap.ts` (from published Prismic pages, via the route resolver) and `robots.ts` (deploy previews disallow everything)
 - [x] JSON-LD `Church`, driven by the settings document
-- [ ] JSON-LD `Event` for dated events — add when the first event document exists
+- [x] JSON-LD `Event` on each event page, plus `/events` and `/events/:uid` in the sitemap while an event is live
 - [ ] New OG + Twitter images matching the redesign
 - [x] Paths for `/whats-on`, `/about`, `/beliefs`, `/connect`, `/donate` are unchanged, so no redirect is needed
 - [x] `/esol`, `/art-course`, `/art-course-exhibition` — retired, 301 to `/whats-on` in `netlify.toml`
@@ -316,7 +317,7 @@ Change them there before Phase 1 starts, not after.
 
 **Footer**
 
-- _Connect_ — `@vpcc.church` (Instagram), Facebook, `ben@vpcc.church`
+- _Connect_ — `@vpcc.church` (Instagram), Facebook, `hello@vpcc.church`
 - _Legal_ — Safeguarding Policy (Google Doc), Complaint, Conflict of Interest, Data Protection & Privacy, Financial Management, Serious Incident Reporting (PDFs)
 - _Quick Links_ — Calendar (`calendar.vpcc.church`), Donate
 - _Associated Organisations_ — FIEC, Christian Heritage London

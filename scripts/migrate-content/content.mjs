@@ -219,8 +219,8 @@ export const FOOTER_LINKS = [
 	},
 	{
 		section: "Connect",
-		label: "ben@vpcc.church",
-		url: "mailto:ben@vpcc.church",
+		label: "hello@vpcc.church",
+		url: "mailto:hello@vpcc.church",
 		icon: "mail",
 	},
 	{

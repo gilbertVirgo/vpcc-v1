@@ -55,8 +55,8 @@ const footer: FooterSection[] = [
 				icon: "facebook",
 			},
 			{
-				label: "ben@vpcc.church",
-				href: "mailto:ben@vpcc.church",
+				label: "hello@vpcc.church",
+				href: "mailto:hello@vpcc.church",
 				icon: "mail",
 			},
 		],
@@ -114,7 +114,7 @@ export const siteConfig = {
 	shortName: "VPCC",
 	description:
 		"A welcoming community rooted in the gospel near Victoria Park, Tower Hamlets.",
-	email: "ben@vpcc.church",
+	email: "hello@vpcc.church",
 
 	navigation,
 	navCta,

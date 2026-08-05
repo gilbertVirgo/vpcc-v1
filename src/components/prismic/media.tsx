@@ -13,7 +13,8 @@ const RATIOS = {
 
 export interface PrismicMediaProps {
 	field: ImageField | null | undefined;
-	ratio?: keyof typeof RATIOS;
+	/** `auto` keeps the image's own shape and crops nothing. */
+	ratio?: keyof typeof RATIOS | "auto";
 	sizes?: string;
 	priority?: boolean;
 	rounded?: boolean;
@@ -27,6 +28,12 @@ export interface PrismicMediaProps {
  * `PrismicNextImage` carries the alt text the editor set — an empty alt in
  * Prismic is a deliberate "decorative", so it is passed through rather than
  * substituted with a filename.
+ *
+ * `ratio="auto"` renders the image at its own shape instead. Every other ratio
+ * crops with `object-cover`, which is right for a photograph and wrong for a
+ * poster: an event flyer carries its wording at its edges, and a box it does
+ * not happen to fit takes the date off it. Nothing shifts there either — the
+ * intrinsic dimensions come from the field, so the space is still reserved.
  *
  * Async because the blur-up placeholder is fetched from Prismic's imgix
  * renderer at render time and inlined; it is cached, so this costs one request
@@ -44,6 +51,26 @@ export async function PrismicMedia({
 
 	const blurDataURL = await getBlurDataURL(field.url);
 
+	const placeholder = blurDataURL
+		? ({ placeholder: "blur" as const, blurDataURL } as const)
+		: ({} as const);
+
+	if (ratio === "auto") {
+		return (
+			<PrismicNextImage
+				field={field}
+				sizes={sizes}
+				priority={priority}
+				{...placeholder}
+				className={cn(
+					"h-auto w-full bg-surface-sunken",
+					rounded && "rounded-lg",
+					className,
+				)}
+			/>
+		);
+	}
+
 	return (
 		<div
 			className={cn(
@@ -58,9 +85,7 @@ export async function PrismicMedia({
 				fill
 				sizes={sizes}
 				priority={priority}
-				{...(blurDataURL
-					? { placeholder: "blur" as const, blurDataURL }
-					: {})}
+				{...placeholder}
 				className="object-cover"
 			/>
 		</div>

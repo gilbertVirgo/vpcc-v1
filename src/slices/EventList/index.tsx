@@ -9,6 +9,7 @@ import { Container, Section } from "@/components/ui/layout";
 import { Card } from "@/components/ui/surface";
 import { Heading, Text } from "@/components/ui/typography";
 import { formatEventDate } from "@/lib/dates";
+import { isEventLive } from "@/lib/events";
 import type { SliceContext } from "@/slices/context";
 
 export type EventListProps = SliceComponentProps<
@@ -17,10 +18,10 @@ export type EventListProps = SliceComponentProps<
 >;
 
 /**
- * Dated events, with past ones dropped.
+ * Dated events, with finished ones dropped.
  *
- * `expires_at` ports the previous site's `timeout` field, which is how the
- * Hot Cross Buns feature removed itself once the morning was over.
+ * What counts as finished is `isEventLive` in src/lib/events.ts, shared with
+ * the `/events` route and the nav link, so the three cannot drift apart.
  *
  * The filter runs on the server, so it is only as fresh as the cached page.
  * The Prismic webhook busts the cache when content changes, but nothing busts
@@ -34,11 +35,7 @@ const EventList: FC<EventListProps> = ({ slice, context }) => {
 	const events = slice.primary.events
 		.map((item) => item.event)
 		.filter(isFilled.contentRelationship)
-		.filter((event) => {
-			const expires = event.data?.expires_at;
-			if (!expires) return true;
-			return new Date(expires).getTime() > now;
-		});
+		.filter((event) => event.data && isEventLive(event.data, now));
 
 	if (events.length === 0) return null;
 

@@ -53,12 +53,20 @@ export async function generateStaticParams() {
 		return [];
 	});
 
-	/* The home page is served by app/page.tsx, so it must not also be
-	   prerendered here as /home. */
 	return pages
-		.filter((page) => page.uid !== "home")
+		.filter((page) => !RESERVED_UIDS.has(page.uid))
 		.map((page) => ({ uid: page.uid }));
 }
+
+/**
+ * UIDs this route must not claim, because a real route already serves them.
+ *
+ * `home` is served by app/page.tsx and `events` by app/events/page.tsx.
+ * Prerendering either here would produce two builds of one URL, and nothing
+ * stops an editor from creating a page with one of these UIDs — the model has
+ * no idea these paths are spoken for.
+ */
+const RESERVED_UIDS = new Set(["home", "events"]);
 
 type RouteParams = { uid: string };
 
@@ -94,8 +102,8 @@ export default async function Page({
 	const { uid } = await params;
 
 	/* `/home` would otherwise render the same document as `/`, giving two URLs
-	   for one page. */
-	if (uid === "home") notFound();
+	   for one page. See RESERVED_UIDS. */
+	if (RESERVED_UIDS.has(uid)) notFound();
 
 	const client = createClient();
 	const page = await client.getByUID("page", uid).catch(() => null);

@@ -88,19 +88,48 @@ p field add number sort_order --to-type team_member --label "Sort order"
 # ---------------------------------------------------------------------------
 # event — dated things. `expires_at` ports the old site's `timeout`, which
 # auto-hid a feature once it was in the past.
+#
+# `details` is the labelled-rows model the info_list slice uses, on the document
+# rather than a slice: a competition's entry fee, categories and closing date
+# are facts about the event, and they have to travel with it to /events, to the
+# EventList slice and to whatever comes next. Free-form prose in `body` would
+# read the same on one page and be unusable on the others.
+#
+# `--format page` because an event has its own URL. It is not cosmetic: the CLI
+# rewrites prismic.config.json on every `field` command and regenerates `routes`
+# from the page-format types, so a custom-format event silently loses its route
+# entry the next time anyone touches a field — taking previews, `event.url`, the
+# sitemap and the Event JSON-LD with it. As a page type the CLI writes the route
+# itself and leaves an edited path alone. It also gets editors the Page Builder
+# and working previews, which a document with a URL should have anyway.
 # ---------------------------------------------------------------------------
-p type create "Event" --id event
+p type create "Event" --format page --id event
 
 p field add text title --to-type event --label "Title"
+p field add text summary --to-type event --label "Summary" \
+	--placeholder "One line, used on cards and as the share description"
 p field add timestamp starts_at --to-type event --label "Starts"
 p field add timestamp ends_at --to-type event --label "Ends"
 p field add text location --to-type event --label "Location"
+p field add group details --to-type event --label "Details"
+p field add text details.label --to-type event --label "Label" \
+	--placeholder "Photos due"
+p field add rich-text details.value --to-type event --label "Value" \
+	--allow paragraph,strong,em,hyperlink --placeholder "Wednesday 26 August"
 p field add rich-text body --to-type event --label "Description" \
 	--allow paragraph,strong,em,hyperlink
 p field add image image --to-type event --label "Image"
+# A poster is portrait and its words live at its edges, so it survives no
+# social crop at all. `share_image` is the landscape cut; `image` is the
+# fallback when there isn't one.
+p field add image share_image --to-type event --label "Share image"
 p field add timestamp expires_at --to-type event --label "Hide after"
 p field add text cta_label --to-type event --label "Button label"
 p field add link cta_link --to-type event --label "Button link"
+# The sign-up closes before the event does — a competition takes entries until
+# August and hands out prizes in September. Without this the page would keep
+# offering a live entry form for the fortnight in between.
+p field add timestamp cta_expires_at --to-type event --label "Hide button after"
 
 echo "==> Slices"
 

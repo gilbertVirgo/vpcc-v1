@@ -6,6 +6,7 @@ import { Navigation } from "@/components/layout/navigation";
 import { SiteNotice } from "@/components/layout/site-notice";
 import { ChurchJsonLd } from "@/components/seo/json-ld";
 import { SkipLink } from "@/components/ui/a11y";
+import { getLiveEvents, withEventsLink } from "@/lib/events";
 import { getSettings } from "@/lib/settings";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -66,9 +67,26 @@ function stampNow(): number {
 export default async function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
+	const now = stampNow();
+
 	/* Chrome comes from the Prismic `settings` document, falling back to
 	   src/lib/site-config.ts while that document is unpublished or incomplete. */
-	const settings = await getSettings();
+	const [settings, events] = await Promise.all([
+		getSettings(),
+		getLiveEvents(now),
+	]);
+
+	/*
+	 * The Events link and the `/events` route come off the same query, so the
+	 * nav can never point at a page that has 404'd itself. Checked on the
+	 * server, so it is only as fresh as the cached page — the hourly
+	 * `revalidate` on the routes is what eventually brings the link up or takes
+	 * it down. Same trade as the notice below.
+	 */
+	const navigation =
+		events.length > 0
+			? withEventsLink(settings.navigation)
+			: settings.navigation;
 
 	return (
 		<html lang="en-GB">
@@ -92,10 +110,10 @@ export default async function RootLayout({
 			</head>
 			<body className="flex min-h-dvh flex-col">
 				<SkipLink />
-				<Navigation links={settings.navigation} cta={settings.navCta} />
+				<Navigation links={navigation} cta={settings.navCta} />
 				{/* Below the sticky bar, above the page: it scrolls away like
 				    content rather than eating height on every screen. */}
-				<SiteNotice notice={settings.notice} now={stampNow()} />
+				<SiteNotice notice={settings.notice} now={now} />
 				{children}
 				<Footer
 					name={settings.name}

@@ -35,10 +35,10 @@ src/
   components/
     ui/           design-system primitives
     motion/       reveal / in-view
-  lib/            cn(), link helpers
+  lib/            cn(), link helpers, the live-event query
   styles/         design tokens, base layer, custom utilities
 scripts/          colour-ramp generator, design-token guard
-docs/             design-system.md
+docs/             design-system.md, events.md
 ```
 
 ## Documentation
@@ -47,6 +47,8 @@ docs/             design-system.md
   questions
 - [`docs/design-system.md`](docs/design-system.md) — how to use and extend the
   design system
+- [`docs/events.md`](docs/events.md) — how `/events` puts itself up and takes
+  itself down
 
 ## Notes
 
