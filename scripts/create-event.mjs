@@ -139,7 +139,7 @@ const IMAGES = {
 	share: {
 		flag: "--share",
 		field: "share_image",
-		alt: "Photo Competition: Hope in East London, 26 August to 12 September 2026",
+		alt: "Photo Competition: Hope in East London, 2 to 12 September 2026",
 	},
 };
 
