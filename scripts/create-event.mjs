@@ -120,9 +120,14 @@ function linked(text, links) {
 const STARTS_AT = "2026-09-12T17:00:00+0000";
 const ENDS_AT = "2026-09-12T18:30:00+0000";
 
-/* Entries close at the end of the 26th, prizes are handed out on the 12th.
-   The button goes at the first, the whole page at the second. */
-const ENTRIES_CLOSE = "2026-08-26T22:59:00+0000";
+/* Entries close at the end of the 2nd, prizes are handed out on the 12th.
+   The button goes at the first, the whole page at the second.
+
+   The deadline moved out a week from the 26th of August after this was first
+   run; scripts/update-event.mjs carried that change to the live document. It
+   is repeated here so re-seeding — into a Prismic environment, say — does not
+   quietly bring the old date back. */
+const ENTRIES_CLOSE = "2026-09-02T22:59:00+0000";
 const HIDE_AFTER = "2026-09-12T20:00:00+0000";
 
 const IMAGES = {
@@ -134,7 +139,7 @@ const IMAGES = {
 	share: {
 		flag: "--share",
 		field: "share_image",
-		alt: "Photo Competition: Hope in East London, 26 August to 12 September 2026",
+		alt: "Photo Competition: Hope in East London, 2 to 12 September 2026",
 	},
 };
 
@@ -170,7 +175,7 @@ migration.createDocument(
 			details: [
 				{
 					label: "Photos due",
-					value: [p("11:59pm, Wednesday 26 August")],
+					value: [p("11:59pm, Wednesday 2 September")],
 				},
 				{
 					label: "Entry",
