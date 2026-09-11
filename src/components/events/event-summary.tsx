@@ -33,6 +33,8 @@ export function EventSummary({ event }: EventSummaryProps) {
 
 	const when = formatEventDate(data.starts_at, data.ends_at);
 	const hasPoster = Boolean(data.image?.url);
+	const { width = 0, height = 0 } = data.image?.dimensions ?? {};
+	const portrait = height > width;
 
 	return (
 		<Section spacing="md">
@@ -46,12 +48,14 @@ export function EventSummary({ event }: EventSummaryProps) {
 					>
 						{hasPoster ? (
 							/*
-							 * Capped rather than filling its column. The poster
-							 * is portrait and the Feature images beside it are
+							 * A portrait poster is capped rather than filling
+							 * its column. The Feature images beside it are
 							 * landscape, so at full column width it would stand
 							 * roughly twice as tall as anything else on the
 							 * page and turn a summary into the loudest thing
-							 * here.
+							 * here. A landscape image is already their shape,
+							 * so it fills the column like they do — capped, it
+							 * sat at half their size.
 							 *
 							 * `auto` and a hairline for the same reasons as the
 							 * event's own page — a flyer carries its wording at
@@ -63,11 +67,20 @@ export function EventSummary({ event }: EventSummaryProps) {
 							 * tokens.layout.css, so those classes emit nothing
 							 * at all and the cap silently does not happen.
 							 */
-							<div className="mx-auto w-full max-w-96">
+							<div
+								className={cn(
+									"mx-auto w-full",
+									portrait && "max-w-96",
+								)}
+							>
 								<PrismicMedia
 									field={data.image}
 									ratio="auto"
-									sizes="(min-width: 750px) 24rem, 100vw"
+									sizes={
+										portrait
+											? "(min-width: 750px) 24rem, 100vw"
+											: "(min-width: 750px) 50vw, 100vw"
+									}
 									className="border border-line"
 								/>
 							</div>
