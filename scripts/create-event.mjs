@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Creates the "Hope in East London" photo competition event in Prismic.
+ * Creates the ESOL course event in Prismic, served at /whats-on/esol.
  *
  * A one-shot seed, in the same spirit as scripts/migrate-content: the details
  * were agreed over a conversation rather than typed into the Page Builder, and
- * five labelled rows plus two paragraphs are more error-prone to retype than to
- * write down once. Everything here is editable in Prismic afterwards — this
- * only saves the first pass.
+ * seven labelled rows are more error-prone to retype than to write down once.
+ * Everything here is editable in Prismic afterwards — this only saves the first
+ * pass.
  *
  * Prerequisites:
  *   - PRISMIC_WRITE_TOKEN in the environment or in .env.local at the repo root
@@ -14,15 +14,14 @@
  *
  * Usage:
  *   node scripts/create-event.mjs
- *   node scripts/create-event.mjs --run
- *   node scripts/create-event.mjs --run --poster ./poster.png --share ./share.png
+ *   node scripts/create-event.mjs --run --image ~/Downloads/esol.jpg
  *
- * The Migration API only creates documents; it never updates or deletes. Run
- * this twice and you get two events, so the dry run is the default.
+ * The Migration API only creates and updates; it never deletes. Run this twice
+ * and you get two events, so the dry run is the default.
  *
- * The document is created as a **draft**. Nothing appears on the site — What's
- * On carries no event block and the event's own URL 404s — until someone
- * publishes it.
+ * The document is staged in the repository's **migration release**. Nothing
+ * appears on the site — What's On carries no ESOL block and /whats-on/esol
+ * 404s — until that release is published in Prismic.
  */
 
 import { createMigration, createWriteClient } from "@prismicio/client";
@@ -63,12 +62,12 @@ if (!writeToken && !DRY_RUN) {
 		"PRISMIC_WRITE_TOKEN is not set. Add it to .env.local at the repo\n" +
 			"root, or export it before running. In a git worktree the file\n" +
 			"lives in the main checkout and is not shared — source it first:\n" +
-			"  set -a; source ../../.env.local; set +a",
+			"  set -a; source ../../../.env.local; set +a",
 	);
 	process.exit(1);
 }
 
-/** A path passed as `--poster ./file.png`, or undefined. */
+/** A path passed as `--image ./file.jpg`, or undefined. */
 function flagPath(flag) {
 	const index = process.argv.indexOf(flag);
 	if (index === -1) return undefined;
@@ -112,126 +111,120 @@ function linked(text, links) {
 }
 
 /**
- * Times are given as a UTC offset because that is what Prismic stores. Check
- * the published page reads 6pm–7:30pm; if it reads an hour later, the Page
- * Builder and the API disagree about the zone and these want winding back.
- * See docs/events.md.
+ * Times are given as UTC because that is what Prismic stores. See
+ * docs/events.md.
+ *
+ * `starts_at`/`ends_at` are the **first session**, not the whole course, so the
+ * date line reads "Friday 18 September, 11am–2pm". Spanning the ten weeks
+ * would read "Friday 18 September, 11am – Friday 20 November, 2pm", which
+ * sounds like one very long class. The "When" row says it is weekly.
+ *
+ * 11am on the 18th is in British Summer Time, an hour ahead, so 10:00 UTC.
  */
-const STARTS_AT = "2026-09-12T17:00:00+0000";
-const ENDS_AT = "2026-09-12T18:30:00+0000";
+const FIRST_STARTS = "2026-09-18T10:00:00+0000";
+const FIRST_ENDS = "2026-09-18T13:00:00+0000";
 
-/* Entries close at the end of the 2nd, prizes are handed out on the 12th.
-   The button goes at the first, the whole page at the second.
+/* The tenth Friday is 20 November, after the clocks go back, so 2pm is 14:00
+   UTC. The page comes down when the last session finishes. No button cutoff:
+   someone a week or two late is still welcome, so booking stays open as long
+   as the page does. */
+const LAST_ENDS = "2026-11-20T14:00:00+0000";
 
-   The deadline moved out a week from the 26th of August after this was first
-   run; scripts/update-event.mjs carried that change to the live document. It
-   is repeated here so re-seeding — into a Prismic environment, say — does not
-   quietly bring the old date back. */
-const ENTRIES_CLOSE = "2026-09-02T22:59:00+0000";
-const HIDE_AFTER = "2026-09-12T20:00:00+0000";
+const SELT_URL =
+	"https://www.gov.uk/guidance/prove-your-english-language-abilities-with-a-secure-english-language-test-selt";
 
-const IMAGES = {
-	poster: {
-		flag: "--poster",
-		field: "image",
-		alt: "Two hands holding up a phone, photographing trees and a lake in a park",
-	},
-	share: {
-		flag: "--share",
-		field: "share_image",
-		alt: "Photo Competition: Hope in East London, 2 to 12 September 2026",
-	},
-};
+/* A landscape photo, so it does for the share card too — 3:2 cropped to the
+   card's 1.91:1 keeps "SCHOOL" in the middle. */
+const ALT =
+	"Letter tiles scattered across a wooden table, with SCHOOL spelled out in the middle";
 
-const assets = {};
-
-for (const [key, config] of Object.entries(IMAGES)) {
-	const path = flagPath(config.flag);
-	if (!path) continue;
-
+let image;
+const imagePath = flagPath("--image");
+if (imagePath) {
 	try {
-		const file = readFileSync(resolve(path));
-		assets[config.field] = migration.createAsset(file, basename(path), {
-			alt: config.alt,
-		});
+		const file = readFileSync(resolve(imagePath));
+		image = migration.createAsset(file, basename(imagePath), { alt: ALT });
 	} catch {
-		console.warn(`  ! could not read ${key} at ${path}, skipping`);
+		console.warn(`  ! could not read image at ${imagePath}, skipping`);
 	}
 }
 
 migration.createDocument(
 	{
 		type: "event",
-		uid: "hope-in-east-london",
+		uid: "esol",
 		lang: LANG,
 		data: {
-			title: "Photo Competition: Hope in East London",
+			title: "ESOL: English Through Stories",
 			summary:
-				"Show us what hope looks like through your lens. £1 a photo, three age categories, cash prizes, and an exhibition in September.",
-			starts_at: STARTS_AT,
-			ends_at: ENDS_AT,
-			location:
-				"Canal Club Community Centre, Waterloo Gardens, London E2 9HP",
+				"A free ten-week English course built on stories, old and new — with conversation, cooking and lunch every Friday.",
+			starts_at: FIRST_STARTS,
+			ends_at: FIRST_ENDS,
+			location: "17 Lark Row, London E2 9JA",
 			details: [
 				{
-					label: "Photos due",
-					value: [p("11:59pm, Wednesday 2 September")],
-				},
-				{
-					label: "Entry",
+					label: "When",
 					value: [
 						p(
-							"£1 per photo, cash or card when you hand your photos in",
+							"Fridays, 11am–2pm, for 10 weeks: 18 September to 20 November",
 						),
 					],
 				},
 				{
-					label: "Categories",
+					label: "Each week",
 					value: [
-						/* "Adults (18 and over)", not "Adult (18+)". On a
-						   photo competition the singular reads as a content
-						   rating rather than an age group, and "18+" sitting
-						   next to it doubles the effect. */
 						p(
-							"Primary (5–11), Secondary (12–17), Adults (18 and over)",
+							"Conversation and cooking, then the main lesson, then lunch together and more conversation",
 						),
 					],
 				},
-				{ label: "Prize", value: [p("Cash prizes to be won")] },
-				{ label: "Theme", value: [p("Hope in East London")] },
+				{ label: "Studying", value: [p("Stories, old and new")] },
+				{
+					label: "Working towards",
+					value: [
+						linked(
+							"A B2-level Secure English Language Test (SELT), the English test the Home Office accepts for visa applications",
+							[["Secure English Language Test (SELT)", SELT_URL]],
+						),
+					],
+				},
+				{
+					label: "Homework",
+					value: [p("Writing, set every week")],
+				},
+				{
+					label: "Attendance",
+					value: [
+						p(
+							"In person. Try to come every week, as each session builds on the last — but if you miss one, you are still welcome back",
+						),
+					],
+				},
+				{ label: "Cost", value: [p("Free, lunch included")] },
 			],
 			body: [
 				p(
-					"Every entry fee goes straight into the prize pot. The exhibition and prize ceremony is open to everyone, whether you entered or not.",
+					"The course is run by Rachel Virgo, a qualified teacher who has helped many students with their English.",
 				),
-				linked("Questions? Email hello@vpcc.church.", [
-					["hello@vpcc.church", "mailto:hello@vpcc.church"],
-				]),
 			],
-			image: assets.image,
-			share_image: assets.share_image,
-			expires_at: HIDE_AFTER,
-			cta_label: "Enter the competition",
-			cta_link: {
-				link_type: "Web",
-				url: "https://forms.gle/iUSAbJdZdZ59qWVL6",
-				target: "_blank",
-			},
-			cta_expires_at: ENTRIES_CLOSE,
+			image,
+			share_image: image,
+			expires_at: LAST_ENDS,
+			cta_label: "Call Rachel to book: 07906 875505",
+			cta_link: { link_type: "Web", url: "tel:+447906875505" },
 		},
 	},
-	"Photo Competition: Hope in East London",
+	"ESOL: English Through Stories",
 );
 
 /* -------------------------------------------------------------------------- */
 /* Write                                                                       */
 /* -------------------------------------------------------------------------- */
 
-const supplied = Object.keys(assets);
 console.log(
 	`\nRepository: ${repositoryName}\n` +
-		`  1 event: hope-in-east-london\n` +
-		`  images: ${supplied.length > 0 ? supplied.join(", ") : "none — add the poster and share image in Prismic"}\n`,
+		`  1 event: esol\n` +
+		`  image: ${image ? imagePath : "none — pass --image, or add it in Prismic"}\n`,
 );
 
 if (DRY_RUN) {
@@ -249,6 +242,6 @@ await client.migrate(migration, {
 });
 
 console.log(
-	"\nCreated as a draft. Nothing is on the site — What's On carries no\n" +
-		"event block and /whats-on/:uid 404s — until it is published in Prismic.\n",
+	"\nStaged in the migration release. Nothing is on the site until that\n" +
+		"release is published in Prismic.\n",
 );
