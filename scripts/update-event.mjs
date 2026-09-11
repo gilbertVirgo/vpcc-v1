@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 /**
- * Moves the "Hope in East London" photo deadline to Wednesday 2 September.
+ * Takes the "Hope in East London" photo competition off the site.
  *
- * Two fields carry that deadline and they have to move together: the "Photos
- * due" row people read, and `cta_expires_at`, which drops the entry button
- * once sign-up closes. Change one by hand and forget the other and the page
- * either turns entrants away a week early or takes entries after the cut-off.
- * See docs/events.md.
+ * The Migration API cannot delete or unpublish, so this sets the event's
+ * `expires_at` ("Hide after") to a moment already gone. `getLiveEvents` then
+ * drops it from What's On, its own page 404s, and it leaves the sitemap — the
+ * same thing that would have happened on its own once the prize evening was
+ * over. See docs/events.md.
  *
- * The edit is staged in the repository's **migration release**. The Migration
- * API patches the document there; the live page keeps the old date until that
- * release is published in Prismic. Unlike scripts/create-event.mjs, which
- * creates and so duplicates if it is run twice, this only ever updates the one
- * document — a second run finds both fields already right and writes nothing.
+ * The edit is staged in the repository's **migration release**. The event stays
+ * up until that release is published in Prismic. Publishing it is also what
+ * fires the webhook that clears the cache. It only ever updates the one
+ * document, so a second run finds it already expired and writes nothing.
  *
  * Prerequisites:
  *   - PRISMIC_WRITE_TOKEN in the environment or in .env.local at the repo root
@@ -26,7 +25,6 @@
 
 import {
 	NotFoundError,
-	asText,
 	createClient,
 	createMigration,
 	createWriteClient,
@@ -37,23 +35,12 @@ const UID = "hope-in-east-london";
 const LANG = "en-gb";
 const DRY_RUN = !process.argv.includes("--run");
 
-/* -------------------------------------------------------------------------- */
-/* The change                                                                  */
-/* -------------------------------------------------------------------------- */
-
-/** The row is found by its label, so reordering the details cannot misfire. */
-const PHOTOS_DUE_LABEL = "Photos due";
-const PHOTOS_DUE = "11:59pm, Wednesday 2 September";
-
 /**
- * The same moment as a timestamp, which is what hides the entry button.
- *
- * Written as the UTC Prismic stores rather than as local time: 11:59pm falls
- * in British Summer Time, an hour ahead, so the stored value is 22:59. The
- * report below prints it back in Europe/London — the number to check is the
- * one on the right.
+ * Hide after midnight opening 11 September — already past, so the event is
+ * finished the moment the release is published. Fixed rather than "now", so
+ * the dry run and the real run agree and a second run is a no-op.
  */
-const ENTRIES_CLOSE = "2026-09-02T22:59:00+0000";
+const HIDE_AFTER = "2026-09-10T23:00:00+0000";
 
 /* -------------------------------------------------------------------------- */
 /* Setup                                                                       */
@@ -86,7 +73,7 @@ if (!writeToken && !DRY_RUN) {
 		"PRISMIC_WRITE_TOKEN is not set. Add it to .env.local at the repo\n" +
 			"root, or export it before running. In a git worktree the file\n" +
 			"lives in the main checkout and is not shared — source it first:\n" +
-			"  set -a; source ../../.env.local; set +a",
+			"  set -a; source ../../../.env.local; set +a",
 	);
 	process.exit(1);
 }
@@ -96,13 +83,9 @@ if (!writeToken && !DRY_RUN) {
 /* -------------------------------------------------------------------------- */
 
 /**
- * The document as it stands, which is what gets patched and sent back.
- *
- * An update needs the whole document, not the two fields being changed: the
- * Migration API replaces a document's content with what it is given. Fetching
- * first is also what makes the run checkable — the report says what each field
- * reads now, so a value that has already been edited in Prismic shows up
- * instead of being quietly overwritten with an assumption.
+ * The document as it stands, which is what gets patched and sent back: the
+ * Migration API replaces a document's content with what it is given, so an
+ * update needs the whole thing, not the one field being changed.
  */
 const client = createClient(repositoryName, {
 	accessToken: process.env.PRISMIC_ACCESS_TOKEN,
@@ -113,16 +96,11 @@ try {
 	event = await client.getByUID("event", UID, { lang: LANG });
 } catch (error) {
 	/* Anything other than "not there" — no network, a private repository
-	   without PRISMIC_ACCESS_TOKEN — is left to report itself, because
-	   flattening it into the draft message below sends the next person
-	   looking in the Page Builder for a document that is already there. */
+	   without PRISMIC_ACCESS_TOKEN — is left to report itself. */
 	if (!(error instanceof NotFoundError)) throw error;
 
 	console.error(
-		`No published event "${UID}" in ${repositoryName}.\n\n` +
-			"Only published documents can be read back, so an event still\n" +
-			"sitting as a draft cannot be patched this way — open it in the\n" +
-			"Page Builder and change the two fields there instead.",
+		`No published event "${UID}" in ${repositoryName} — nothing to take down.`,
 	);
 	process.exit(1);
 }
@@ -131,69 +109,22 @@ try {
 /* Patch                                                                       */
 /* -------------------------------------------------------------------------- */
 
-/** A timestamp as Prismic stores it, alongside the time it means in London. */
-function readable(timestamp) {
-	if (!timestamp) return "not set";
+console.log(`\nRepository: ${repositoryName}\n  event: ${UID}\n`);
 
-	const local = new Date(timestamp).toLocaleString("en-GB", {
-		timeZone: "Europe/London",
-		weekday: "long",
-		day: "numeric",
-		month: "long",
-		hour: "numeric",
-		minute: "2-digit",
-	});
-
-	return `${timestamp} (${local} in London)`;
+const current = event.data.expires_at;
+if (current && Date.parse(current) <= Date.parse(HIDE_AFTER)) {
+	console.log(`Already hidden after ${current} — nothing to do.\n`);
+	process.exit(0);
 }
 
-const changes = [];
-
-const row = event.data.details.find(
-	(detail) => detail.label === PHOTOS_DUE_LABEL,
+console.log(
+	`  Hide after\n    now:  ${current ?? "not set"}\n    next: ${HIDE_AFTER}\n`,
 );
-if (!row) {
-	const labels = event.data.details.map((detail) => detail.label).join(", ");
-	console.error(
-		`The event has no "${PHOTOS_DUE_LABEL}" row — its details are: ${labels}.\n` +
-			"Renaming the row is fine, but this script has to be told about it.",
-	);
-	process.exit(1);
-}
-
-const stated = asText(row.value);
-if (stated !== PHOTOS_DUE) {
-	changes.push([`${PHOTOS_DUE_LABEL} (details)`, stated, PHOTOS_DUE]);
-	/* Replaces the row outright rather than editing the text in place: the
-	   value is one plain sentence, and rewriting it as one keeps a stray bold
-	   or link from surviving into a date it was never applied to. */
-	row.value = [{ type: "paragraph", text: PHOTOS_DUE, spans: [] }];
-}
-
-const closes = event.data.cta_expires_at;
-if (!closes || Date.parse(closes) !== Date.parse(ENTRIES_CLOSE)) {
-	changes.push([
-		"Entry button hidden after",
-		readable(closes),
-		readable(ENTRIES_CLOSE),
-	]);
-	event.data.cta_expires_at = ENTRIES_CLOSE;
-}
+event.data.expires_at = HIDE_AFTER;
 
 /* -------------------------------------------------------------------------- */
 /* Write                                                                       */
 /* -------------------------------------------------------------------------- */
-
-console.log(`\nRepository: ${repositoryName}\n  event: ${UID}\n`);
-
-if (changes.length === 0) {
-	console.log("Both fields already read the new deadline — nothing to do.\n");
-	process.exit(0);
-}
-
-for (const [field, before, after] of changes) {
-	console.log(`  ${field}\n    now:  ${before}\n    next: ${after}\n`);
-}
 
 if (DRY_RUN) {
 	console.log("Dry run — nothing written. Re-run with --run to stage it.\n");
@@ -213,7 +144,6 @@ await writeClient.migrate(migration, {
 });
 
 console.log(
-	"\nStaged in the migration release. The site still shows the old date\n" +
-		"until that release is published in Prismic — publishing it is also\n" +
-		"what fires the webhook that clears the cache.\n",
+	"\nStaged in the migration release. The competition stays on the site\n" +
+		"until that release is published in Prismic.\n",
 );
