@@ -317,7 +317,10 @@ page(
 			title: "Sundays",
 			body: [
 				p(
-					"We meet from 3:00pm–4:30pm at Victoria Park Baptist Church, 186 Grove Road, London E3 5TG.",
+					"Our service runs from 3:15pm–4:30pm at Victoria Park Baptist Church, 186 Grove Road, London E3 5TG.",
+				),
+				p(
+					"Come along from 3:00pm for a warm welcome and refreshments before we begin.",
 				),
 			],
 			images: [
@@ -367,7 +370,10 @@ page(
 			body: [
 				p("We are Victoria Park Community Church."),
 				p(
-					"We meet from 3:00pm–4:30pm at Victoria Park Baptist Church, 186 Grove Road, London E3 5TG.",
+					"Our service runs from 3:15pm–4:30pm at Victoria Park Baptist Church, 186 Grove Road, London E3 5TG.",
+				),
+				p(
+					"Come along from 3:00pm for a warm welcome and refreshments before we begin.",
 				),
 			],
 			images: [
@@ -456,7 +462,7 @@ migration.createDocument(
 						: web(link.url),
 				icon: link.icon,
 			})),
-			meeting_when: "Sundays, 3:00–4:30pm",
+			meeting_when: "Sundays, 3:15–4:30pm (refreshments from 3:00pm)",
 			meeting_venue: "Victoria Park Baptist Church",
 			meeting_address: "186 Grove Road, London E3 5TG",
 			meeting_directions: external(DIRECTIONS_URL),

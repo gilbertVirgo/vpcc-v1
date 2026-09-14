@@ -10,7 +10,7 @@ import { getSiteUrl } from "@/lib/site-url";
  * a change of address or social account updates the markup too. Nothing is
  * inferred: the address is emitted as the single text field the CMS actually
  * holds rather than being split into a PostalAddress by guesswork, and no
- * opening hours are claimed from prose like "Sundays, 3:00–4:30pm".
+ * opening hours are claimed from prose like "Sundays, 3:15–4:30pm".
  */
 export function ChurchJsonLd({ settings }: { settings: SiteSettings }) {
 	const base = getSiteUrl();
