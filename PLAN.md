@@ -323,7 +323,7 @@ Change them there before Phase 1 starts, not after.
 - _Quick Links_ — Calendar (`calendar.vpcc.church`), Donate
 - _Associated Organisations_ — FIEC, Christian Heritage London
 
-**Key facts:** Sundays 3:00–4:30pm, Victoria Park Baptist Church, 186 Grove Road, London E3 5TG. Secondary venue: 17 Lark Row, London E2 9JA. Founded 2011.
+**Key facts:** Sundays, service 3:15–4:30pm with welcome and refreshments from 3:00pm, Victoria Park Baptist Church, 186 Grove Road, London E3 5TG. Secondary venue: 17 Lark Row, London E2 9JA. Founded 2011.
 
 ---
 

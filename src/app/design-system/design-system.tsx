@@ -306,11 +306,13 @@ function Typography() {
 								Hamlets.
 							</p>
 							<p>
-								We meet from 3:00pm&ndash;4:30pm at{" "}
+								Our service runs from 3:15pm&ndash;4:30pm at{" "}
 								<a href="https://maps.app.goo.gl/CQFsTYqZfuUAEvuP7">
 									Victoria Park Baptist Church
 								</a>
-								, 186 Grove Road, London E3 5TG.
+								, 186 Grove Road, London E3 5TG. Come along from
+								3:00pm for a warm welcome and refreshments
+								before we begin.
 							</p>
 							<h3>What to expect</h3>
 							<ul>
@@ -853,8 +855,10 @@ function Overlays() {
 				title="Sunday reminder"
 			>
 				<Text tone="secondary">
-					We meet from 3:00pm&ndash;4:30pm at Victoria Park Baptist
-					Church, 186 Grove Road, London E3 5TG.
+					Our service runs from 3:15pm&ndash;4:30pm at Victoria Park
+					Baptist Church, 186 Grove Road, London E3 5TG. Come along
+					from 3:00pm for a warm welcome and refreshments before we
+					begin.
 				</Text>
 				<Stack direction="row" gap="sm" className="mt-6">
 					<Button href="https://maps.app.goo.gl/CQFsTYqZfuUAEvuP7">

@@ -121,7 +121,7 @@ export const siteConfig = {
 	footer,
 
 	meeting: {
-		when: "Sundays, 3:00–4:30pm",
+		when: "Sundays, 3:15–4:30pm (refreshments from 3:00pm)",
 		venue: "Victoria Park Baptist Church",
 		address: "186 Grove Road, London E3 5TG",
 		directions: "https://maps.app.goo.gl/CQFsTYqZfuUAEvuP7",
