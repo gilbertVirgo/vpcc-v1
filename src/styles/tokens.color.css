@@ -93,4 +93,11 @@
 	--color-success-surface: var(--color-success-100);
 	--color-danger: var(--color-danger-500);
 	--color-danger-surface: var(--color-danger-100);
+
+	/* ---- Semantic: loading ----------------------------------------------- */
+	/* The placeholder sits at the same depth as a sunken card so it reads as
+	   "content goes here", not as an element in its own right. The sheen is
+	   translucent white so it lightens whatever surface it sweeps across. */
+	--color-skeleton: var(--color-surface-sunken);
+	--color-skeleton-sheen: oklch(100% 0 0 / 0.6);
 }

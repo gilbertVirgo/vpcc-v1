@@ -8,7 +8,9 @@
  *   2. Movement is small. A reveal rises 12px, not 60px.
  *   3. Reduced motion is handled once, in base.css, at the token level. No
  *      component implements its own matchMedia check.
- *   4. Nothing loops. Nothing bounces. Nothing overshoots.
+ *   4. Nothing loops — except progress indicators (the button spinner and the
+ *      skeleton shimmer), which have to loop to mean anything. Nothing
+ *      bounces. Nothing overshoots.
  */
 
 @theme {
@@ -20,6 +22,7 @@
 	--duration-base: 240ms; /* the default */
 	--duration-slow: 400ms; /* reveals, drawers */
 	--duration-slower: 640ms; /* full-page transitions */
+	--duration-shimmer: 1600ms; /* one skeleton sweep — slow reads as calm */
 
 	/* ---- Easing ---------------------------------------------------------- */
 	--ease-standard: cubic-bezier(0.2, 0, 0, 1); /* moves in and settles */

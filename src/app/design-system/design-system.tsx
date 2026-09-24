@@ -24,11 +24,14 @@ import {
 	Prose,
 	Section,
 	Select,
+	Skeleton,
+	SkeletonText,
 	Slideshow,
 	Stack,
 	Text,
 	Textarea,
 	Toggle,
+	VisuallyHidden,
 } from "@/components/ui";
 
 /* -------------------------------------------------------------------------- */
@@ -61,6 +64,7 @@ export function DesignSystem() {
 			<Buttons />
 			<Links />
 			<Surfaces />
+			<Skeletons />
 			<Notices />
 			<Forms />
 			<Overlays />
@@ -697,6 +701,33 @@ function Surfaces() {
 					<Divider />
 				</div>
 			</Stack>
+		</Block>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Skeleton                                                                    */
+/* -------------------------------------------------------------------------- */
+
+function Skeletons() {
+	return (
+		<Block
+			title="Skeleton"
+			description="Stands in for content that is still loading. Mirror the final layout so nothing shifts when it lands. The skeleton itself is hidden from assistive tech — the loading region carries aria-busy and a visually hidden status instead. Under reduced motion the shimmer stops and a static block remains."
+		>
+			<Grid cols={3} gap="md">
+				<Card tone="raised">
+					<div aria-busy="true">
+						<VisuallyHidden>Loading event…</VisuallyHidden>
+						<Stack direction="row" gap="sm" align="center">
+							<Skeleton shape="circle" className="size-12" />
+							<Skeleton className="w-1/2 text-h4" />
+						</Stack>
+						<SkeletonText className="mt-6" />
+						<Skeleton shape="pill" className="mt-8 h-11 w-32" />
+					</div>
+				</Card>
+			</Grid>
 		</Block>
 	);
 }

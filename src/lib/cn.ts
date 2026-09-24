@@ -50,6 +50,8 @@ const COLORS = [
 	"success-surface",
 	"danger",
 	"danger-surface",
+	"skeleton",
+	"skeleton-sheen",
 	// ramps
 	...[
 		"50",
