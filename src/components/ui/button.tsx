@@ -148,8 +148,9 @@ export function Button(props: ButtonProps) {
 }
 
 /**
- * The one place a looping animation is allowed: a progress indicator has to
- * loop to mean anything. `motion-safe:` keeps it out of reduced-motion.
+ * One of the two places a looping animation is allowed (the other is the
+ * skeleton shimmer): a progress indicator has to loop to mean anything.
+ * `motion-safe:` keeps it out of reduced-motion.
  */
 function Spinner() {
 	return (

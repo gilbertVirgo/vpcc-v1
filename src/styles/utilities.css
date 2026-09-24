@@ -151,6 +151,60 @@
 }
 
 /*
+ * Skeleton
+ * -----------------------------------------------------------------------------
+ * Loading placeholder, applied by <Skeleton>. A sheen sweeps across the block
+ * on a pseudo-element so the element's own box never changes, and the sweep
+ * animates `translate` only, per the motion rules.
+ *
+ * `color: transparent` means any fallback text inside still sizes the block
+ * without showing through.
+ *
+ * Reduced motion: the token-level kill switch doesn't reach this, since
+ * --duration-shimmer is deliberately left out of it — an infinite loop
+ * collapsed to 0.01ms would strobe. Instead the sheen is removed outright,
+ * leaving a static block. This media query sits after the base rule in the
+ * same layer with the same specificity, so it wins.
+ */
+@keyframes skeleton-shimmer {
+	to {
+		translate: 100% 0;
+	}
+}
+
+@utility skeleton {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--color-skeleton);
+	border-radius: var(--radius-sm);
+	color: transparent;
+	user-select: none;
+	pointer-events: none;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		translate: -100% 0;
+		background-image: linear-gradient(
+			90deg,
+			transparent,
+			var(--color-skeleton-sheen),
+			transparent
+		);
+		animation: skeleton-shimmer var(--duration-shimmer) var(--ease-standard)
+			infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		&::after {
+			animation: none;
+			display: none;
+		}
+	}
+}
+
+/*
  * Native dialog
  * -----------------------------------------------------------------------------
  * `transition-behavior: allow-discrete` plus `@starting-style` lets the
