@@ -1,660 +1,815 @@
-# VPCC design system — agent reference
+# Victoria Park Community Church — design system
 
-A precise, rules-first spec for coding agents (and humans in a hurry) working on
-this repo. It says **what to write**. For **why** each rule exists, see
-[`docs/design-system.md`](docs/design-system.md).
+**A self-contained brand and design spec for AI agents and designers making
+anything for VPCC: web pages, emails, slides, social graphics, print.**
 
-**Visual language:** neutral, minimal, clean. **Motion:** smooth, subtle,
-restrained. If a choice makes the page louder, it's probably wrong.
+You don't need the website's code to use this. Every value here is final: hex
+colours, pixel sizes, CSS you can paste. Where a rule exists for a reason, the
+reason is given in one line so you can apply it to cases this document doesn't
+cover.
 
-**Sources of truth, in order:** `src/styles/tokens.*.css` → `src/components/ui/*`
-→ this file. If they disagree, the code wins. Fix this file in the same change.
+|                  |                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| Organisation     | Victoria Park Community Church (**VPCC**)                                                                 |
+| Description      | A welcoming community rooted in the gospel near Victoria Park, Tower Hamlets.                             |
+| Website          | <https://vpcc.church>                                                                                     |
+| Contact          | hello@vpcc.church · Instagram [@vpcc.church](https://www.instagram.com/vpcc.church)                       |
+| Visual character | **Neutral, minimal, clean.** Motion: **smooth, subtle, restrained.**                                      |
+| Source of truth  | The `vpcc-v1` repository (`src/styles/tokens.*.css`). If it disagrees with this file, the repository wins |
+| Last updated     | 13 November 2026                                                                                          |
 
----
+**Contents:**
 
-## 1. Hard rules
-
-Breaking a **MUST** is a bug. `npm run check` catches some of them; review
-catches the rest.
-
-### MUST
-
-1. Use **semantic colour tokens** only: `bg-surface`, `text-ink-muted`,
-   `border-line`.
-2. Build with the **primitives** in `src/components/ui/` before you write raw
-   markup. Add a variant before you add a component.
-3. Put every page band in `<Section>` and every page-width frame in
-   `<Container>`. `Container` owns the horizontal gutter.
-4. Choose the heading **level** (`as`) for the document outline. Choose the
-   **size** for the layout. The two are independent.
-5. Use one `h1` per page. On CMS pages the `PageHeader` slice renders it, and
-   every other slice heading is an `h2`.
-6. Underline inline links (`<Link variant="inline">` or `Prose` does this).
-7. Wrap every form control in `<Field>`. `Toggle` is the one exception because
-   it labels itself.
-8. Give every page `<main id="main">`. `SkipLink` targets it.
-9. Animate only `transform`/`translate`/`scale`, `opacity`, `filter` and
-   colours. Use the duration and easing utilities from the motion tokens.
-10. Run `npm run check` before committing: typecheck, ESLint, token guard and
-    Prettier.
-
-### MUST NOT
-
-1. Use **raw ramp steps** in components: `bg-neutral-100`, `text-primary-600`.
-   The ramps exist only for the semantic layer to point at.
-2. Use **raw colour literals**: `#fff`, `rgb()`, `hsl()`. The guard fails the
-   build.
-3. Use **arbitrary pixel values** like `mt-[13px]` or `w-[320px]`. The guard
-   fails the build. Use the spacing scale or add a token.
-4. Write `var(--token)` references to tokens that don't exist. The guard fails
-   the build because CSS would fall back silently.
-5. Use orange as text, except `text-ink-accent`. `accent` (`#FF9035`) is a
-   **fill** and fails contrast as text (2.19:1).
-6. Use `text-ink-accent` on a dark band. It drops to 3.91:1 there, which fails
-   AA. Use `text-ink-inverse`.
-7. Use font weights other than `font-medium` (500) and `font-bold` (700). The
-   others don't exist (`font-light`, `font-semibold`, `font-black`). Area
-   Inktrap ships no other weights, and synthesis is off.
-8. Add a second typeface, a dark mode, or shadows for depth. Depth is a hairline
-   `border-line`.
-9. Set page-level `px-*` / `padding-inline` anywhere except `Container`. It
-   doubles the gutter.
-10. Write your own `prefers-reduced-motion` media query or `matchMedia` call.
-    Reduced motion is handled once, at the token layer. `Slideshow` is the only
-    exception.
-11. Add loops, bounces or overshoot easing. The button spinner is the only
-    exception.
-12. Add a route-level `loading.tsx`. It silently kills hydration of all page
-    content (see `docs/decisions.md`).
-13. Fake a link with an `onClick`, or fake a button with an `<a>`. `<Button>`
-    renders the right element from `href`.
-
-Genuine one-offs can escape the guard with a `design-tokens-ignore` comment on
-the same line. Treat that as a last resort and justify it in the comment.
+1. The rules
+2. Colour
+3. Typography
+4. Space, shape and depth
+5. Components
+6. Iconography
+7. Logo
+8. Imagery
+9. Motion
+10. Accessibility
+11. Voice and copy
+12. Applying the system to other media
+13. Appendix A: CSS tokens
+14. Appendix B: JSON tokens
+15. Appendix C: Logo SVG
 
 ---
 
-## 2. Stack and files
+## 1. The rules
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (CSS-first
-`@theme`) · Prismic (slices) · Netlify. Code style: tabs and double quotes.
-Prettier sorts the Tailwind classes. Use the `@/` path alias.
+If you only read one section, read this one.
 
-| File                               | Holds                                                                       |
-| ---------------------------------- | --------------------------------------------------------------------------- |
-| `src/styles/tokens.color.css`      | Ramps + semantic colours                                                    |
-| `src/styles/tokens.typography.css` | Font family, type scale, weights, measure                                   |
-| `src/styles/tokens.layout.css`     | Spacing, sections, gutter, breakpoints, containers, radii, shadows, z-index |
-| `src/styles/tokens.motion.css`     | Durations, easings, reveal, reduced-motion switch                           |
-| `src/styles/base.css`              | Element defaults, focus ring, `.font-accent`                                |
-| `src/styles/utilities.css`         | Custom utilities, `<dialog>` styling, reveal mechanics                      |
-| `src/components/ui/`               | Primitives (barrel: `@/components/ui`)                                      |
-| `src/components/motion/reveal.tsx` | `Reveal`, `Stagger`                                                         |
-| `src/components/prismic/`          | Rich-text and link bridges from Prismic to the primitives                   |
-| `src/slices/`                      | CMS slices (each has `model.json` + `index.tsx`)                            |
-| `src/lib/cn.ts`                    | `cn()`, which is `clsx` + `tailwind-merge` taught this system's scales      |
-| `scripts/check-design-tokens.mjs`  | Token guard (`npm run lint:tokens`)                                         |
-| `scripts/generate-color-ramps.mjs` | Ramp generator (`npm run tokens:colors`)                                    |
-
-The live reference for every token and component state is **`/design-system`**
-(`npm run dev`, then <http://localhost:3000/design-system>). It 404s in
-production unless `NEXT_PUBLIC_SHOW_DESIGN_SYSTEM=true`.
-
-Tailwind's default palette, type scale, font weights, radii, shadows,
-breakpoints, containers and easings are **all removed** (`--*: initial`). A
-stock class like `text-lg`, `bg-gray-100`, `rounded-xl`, `shadow-md` or
-`ease-in-out` either emits nothing or fails. Use only the names below.
+1. **Warm paper, dark ink, one orange.** The page is `#FCFCF5`, text is
+   `#0B0C17`, and the brand orange `#FF9035` is used sparingly as a **fill**.
+2. **Orange is never text.** `#FF9035` on paper is 2.19:1 and fails every
+   contrast standard. When text must be orange, use `#AE5900` (4.84:1).
+3. **On orange fills, text is dark ink `#0B0C17`** (8.61:1), never white
+   (2.19:1).
+4. **On dark backgrounds, text is paper `#FCFCF5`.** The text orange `#AE5900`
+   drops to 3.91:1 on dark and fails, so links on dark are paper and
+   underlined.
+5. **One typeface: Area Inktrap, weights 500 and 700 only.** There is no
+   second face, no light weight and no semibold. Emphasis comes from weight,
+   size and colour.
+6. **Depth is a hairline, not a shadow.** Cards and panels get a 1px `#E0E0DB`
+   border. Shadows are only for things that genuinely float, such as a dialog.
+7. **Radii stay tight:** 4, 8 or 14px, or a full pill. Nothing softer.
+8. **There is no dark mode.** Dark (`#0B0C17`) is used for the footer and the
+   occasional contrast band, never as a whole theme.
+9. **The brand orange lands in a few places only:** the logo, the primary
+   button, and small accents. If orange is the loudest thing on a page that
+   isn't the main call to action, tone it down. Use the pale wash `#FFE8D9`
+   instead.
+10. **Motion is small and calm.** Fade and rise by 12px at most. Nothing
+    loops, bounces or overshoots. Respect reduced-motion settings.
+11. **Text links are underlined.** Colour alone is not an affordance.
 
 ---
 
-## 3. Colour
+## 2. Colour
 
-Brand seeds: primary `#FF9035`, light `#FCFCF5`, dark `#0B0C17`. Never type
-these into a component.
+### Core palette (roles)
 
-### Semantic tokens (use these)
+Use these by role. The names are the system's token names, and Appendices A and
+B give them as CSS and JSON.
 
-Each token works as `bg-*`, `text-*`, `border-*`, `decoration-*` and so on.
+| Role              | Hex                                          | Use                                                                                |
+| ----------------- | -------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `surface`         | `#FCFCF5`                                    | Page background: warm paper. **Brand light**                                       |
+| `surface-raised`  | `#FFFFFF`                                    | Cards that lift off the page, form fields                                          |
+| `surface-sunken`  | `#F2F2EC`                                    | Quiet bands, hover fills, image placeholders                                       |
+| `surface-inverse` | `#0B0C17`                                    | Dark bands, footer. **Brand dark**                                                 |
+| `ink`             | `#0B0C17`                                    | Headings, primary text                                                             |
+| `ink-secondary`   | `#47474B`                                    | Body copy, secondary text                                                          |
+| `ink-muted`       | `#606162`                                    | Captions, hints, metadata. The lightest grey allowed for text                      |
+| `ink-inverse`     | `#FCFCF5`                                    | All text on dark                                                                   |
+| `ink-accent`      | `#AE5900`                                    | The only orange allowed as text: links, eyebrows                                   |
+| `line`            | `#E0E0DB`                                    | Default 1px hairline: cards, dividers                                              |
+| `line-strong`     | `#C5C5C2`                                    | Form field borders, link underlines, hover borders                                 |
+| `line-inverse`    | `rgba(255,255,255,0.16)` ≈ `#32333C` on dark | Hairlines on dark                                                                  |
+| `accent`          | `#FF9035`                                    | **Fill only**: primary button, active indicator, text selection. **Brand primary** |
+| `accent-hover`    | `#F99C57`                                    | Hover fill. It's lighter, so the dark label gains contrast                         |
+| `accent-pressed`  | `#D56E00`                                    | Pressed fill                                                                       |
+| `accent-contrast` | `#0B0C17`                                    | Text on an orange fill                                                             |
+| `accent-subtle`   | `#FFE8D9`                                    | Pale orange wash: notice bands, soft highlights                                    |
+| `focus-ring`      | `#D56E00`                                    | Keyboard focus outline                                                             |
+| `success`         | `#298646`                                    | Success borders and icons. **Not for small text** (4.44:1)                         |
+| `success-surface` | `#E1F5E4`                                    | Success message background                                                         |
+| `danger`          | `#BE2323`                                    | Error text and borders (5.90:1 on paper)                                           |
+| `danger-surface`  | `#FFE6E2`                                    | Error message background                                                           |
 
-| Token                         | Value              | Use                                                    | Contrast on `surface`   |
-| ----------------------------- | ------------------ | ------------------------------------------------------ | ----------------------- |
-| `surface`                     | neutral-50         | Page background (warm paper)                           | —                       |
-| `surface-raised`              | pure white         | Cards that lift, form controls                         | —                       |
-| `surface-sunken`              | neutral-100        | Quiet bands, hover fills, image placeholders           | —                       |
-| `surface-inverse`             | neutral-950        | Dark bands, footer. Not a theme                        | —                       |
-| `ink`                         | neutral-950        | Headings, primary text                                 | 18.89:1                 |
-| `ink-secondary`               | neutral-700        | Body copy in `Prose`, secondary text                   | 8.95:1                  |
-| `ink-muted`                   | neutral-600        | Meta, hints, captions. **The floor for body text**     | 6.05:1                  |
-| `ink-inverse`                 | neutral-50         | All text on `surface-inverse`                          | 18.89:1 on inverse      |
-| `ink-accent`                  | primary-700        | **The only orange allowed as text** (links, overlines) | 4.83:1                  |
-| `line`                        | neutral-200        | Default hairline: cards, dividers                      | —                       |
-| `line-strong`                 | neutral-300        | Control borders, link underlines, hover borders        | —                       |
-| `line-inverse`                | white @ 16%        | Hairlines on dark bands                                | —                       |
-| `accent`                      | primary-500        | **Fill only**: primary button, active dot, selection   | 2.19:1 (as text, fails) |
-| `accent-hover`                | primary-400        | Hover fill (lighter, so the label's contrast improves) | —                       |
-| `accent-pressed`              | primary-600        | Active/pressed fill                                    | —                       |
-| `accent-contrast`             | neutral-950        | Label on an `accent` fill                              | 8.61:1 on accent        |
-| `accent-subtle`               | primary-100        | Pale wash: `Notice`, accent `Badge`                    | —                       |
-| `focus-ring`                  | primary-600        | Focus outline (set globally)                           | —                       |
-| `success` / `success-surface` | green / pale green | Success border / fill                                  | —                       |
-| `danger` / `danger-surface`   | red / pale red     | Error text and border / fill                           | —                       |
+### Text on background: what's allowed
 
-Plus `transparent` and `current`. Opacity modifiers are fine on semantic
-tokens, for example `hover:bg-ink-inverse/10` or `bg-surface-raised/90`.
+WCAG AA needs **4.5:1** for normal text and **3:1** for large text (24px and
+up, or 18.7px and up in bold).
 
-### Allowed text-on-surface pairs
+| Text                     | On                     | Contrast | Verdict                                                                 |
+| ------------------------ | ---------------------- | -------- | ----------------------------------------------------------------------- |
+| `#0B0C17` ink            | `#FCFCF5` paper        | 18.89:1  | ✅ Everything                                                           |
+| `#47474B`                | `#FCFCF5` paper        | 8.95:1   | ✅ Body copy                                                            |
+| `#606162`                | `#FCFCF5` paper        | 6.05:1   | ✅ Captions and metadata (the floor)                                    |
+| `#606162`                | `#F2F2EC` sunken       | 5.55:1   | ✅                                                                      |
+| `#AE5900`                | `#FCFCF5` paper        | 4.84:1   | ✅ Links, eyebrows                                                      |
+| `#AE5900`                | `#FFFFFF` white        | 4.98:1   | ✅                                                                      |
+| `#0B0C17` ink            | `#FF9035` orange       | 8.61:1   | ✅ Button labels                                                        |
+| `#0B0C17` ink            | `#F99C57` orange hover | 9.20:1   | ✅                                                                      |
+| `#0B0C17` ink            | `#FFE8D9` wash         | 16.46:1  | ✅                                                                      |
+| `#47474B`                | `#FFE8D9` wash         | 7.80:1   | ✅                                                                      |
+| `#FCFCF5` paper          | `#0B0C17` dark         | 18.89:1  | ✅ All text on dark                                                     |
+| `#FCFCF5` at 70% opacity | `#0B0C17` dark         | 9.37:1   | ✅ Secondary text on dark                                               |
+| `#FCFCF5` at 60% opacity | `#0B0C17` dark         | 7.08:1   | ✅ Metadata on dark. Go no lower                                        |
+| `#BE2323`                | `#FCFCF5` paper        | 5.90:1   | ✅ Error text                                                           |
+| `#AE5900`                | `#FFE8D9` wash         | 4.21:1   | ⚠️ Large or bold text ≥ 18.7px only. Use ink on the wash for small text |
+| `#298646`                | `#FCFCF5` paper        | 4.44:1   | ⚠️ Large text and icons only                                            |
+| `#AE5900`                | `#0B0C17` dark         | 3.91:1   | ❌ Never. Use paper on dark                                             |
+| `#FF9035`                | `#FCFCF5` paper        | 2.19:1   | ❌ Never as text, at any size                                           |
+| `#FCFCF5` / white        | `#FF9035` orange       | 2.19:1   | ❌ Never. Orange fills take dark ink                                    |
 
-| Surface                                                        | Text tokens                                                                             |
-| -------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `surface`, `surface-raised`, `surface-sunken`, `accent-subtle` | `ink`, `ink-secondary`, `ink-muted`, `ink-accent`                                       |
-| `surface-inverse`                                              | `ink-inverse` only. Footer meta text may use `opacity-60`/`opacity-70` on `ink-inverse` |
-| `accent`                                                       | `accent-contrast` only                                                                  |
-| `success-surface` / `danger-surface`                           | `ink`, `ink-secondary`                                                                  |
+### Full ramps
 
-There is **no dark mode**. Don't add `dark:` variants.
+The ramps were generated in OKLCH from the three brand seeds. Use the role
+colours above. The ramps are listed only so tints in charts and illustrations
+stay on-palette.
 
-### Changing colours
+| Step | Neutral                 | Primary                   |
+| ---- | ----------------------- | ------------------------- |
+| 50   | `#FCFCF5` (seed: light) | `#FFF5EE`                 |
+| 100  | `#F2F2EC`               | `#FFE8D9`                 |
+| 200  | `#E0E0DB`               | `#FED2B6`                 |
+| 300  | `#C5C5C2`               | `#FBB88B`                 |
+| 400  | `#A1A19F`               | `#F99C57`                 |
+| 500  | `#7D7D7D`               | `#FF9035` (seed: primary) |
+| 600  | `#606162`               | `#D56E00`                 |
+| 700  | `#47474B`               | `#AE5900`                 |
+| 800  | `#313238`               | `#854200`                 |
+| 900  | `#1E1F28`               | `#5C2C00`                 |
+| 950  | `#0B0C17` (seed: dark)  | —                         |
 
-Don't hand-edit ramp values. Edit `scripts/generate-color-ramps.mjs` and run
-`npm run tokens:colors`, which prints the CSS and a contrast table. To add a
-semantic token, add it to `tokens.color.css` **and** to `COLORS` in
-`src/lib/cn.ts`.
+The neutral ramp is warm at the light end and cool at the dark end, with no
+tint in the middle (`#7D7D7D`). Don't mix in other greys: Tailwind's `gray`,
+`#333` and `#999` all read as foreign next to it.
 
----
-
-## 4. Typography
-
-**Area Inktrap**, weights 500 and 700, roman and italic. It is the only family
-(`font-sans`). It loads from Adobe Fonts kit `ccy7tqi`. Emphasis comes from
-weight, size and colour, never from a second face.
-
-### Scale (fluid between 375px and 1500px viewports)
-
-| Class           | Size (min → max) | Line height | Weight | Tracking | Use                                             |
-| --------------- | ---------------- | ----------- | ------ | -------- | ----------------------------------------------- |
-| `text-display`  | 44 → 96px        | 0.95        | 700    | −0.03em  | Home hero only                                  |
-| `text-h1`       | 36 → 64px        | 1.02        | 700    | −0.025em | Page title                                      |
-| `text-h2`       | 28 → 44px        | 1.08        | 700    | −0.02em  | Section titles                                  |
-| `text-h3`       | 22 → 30px        | 1.2         | 700    | −0.015em | Sub-sections, dialog title, `h2` in `Prose`     |
-| `text-h4`       | 18 → 22px        | 1.3         | 700    | −0.01em  | Card titles, `h3` in `Prose`                    |
-| `text-body-lg`  | 18 → 21px        | 1.6         | 500    | −0.005em | Intros, lead paragraphs                         |
-| `text-body`     | 16 → 18px        | 1.65        | 500    | 0        | Default body                                    |
-| `text-body-sm`  | 15 → 16px        | 1.6         | 500    | 0        | Buttons, labels, nav, notices                   |
-| `text-caption`  | 13 → 14px        | 1.5         | 500    | 0.005em  | Hints, errors, meta                             |
-| `text-overline` | 12 → 13px        | 1.4         | 700    | 0.09em   | Eyebrows and badges. **Always add `uppercase`** |
-
-Each `text-*` class sets size, line height, tracking **and** weight together.
-
-**Weights:** only `font-medium` (500) and `font-bold` (700). Body defaults to 500. Headings default to 700.
-
-**Measure:** `measure` (68ch, body), `measure-tight` (44ch), `measure-wide`
-(82ch). `Prose` applies `measure` itself.
-
-**Accent fragment:** use `<Accent>` inside a heading. It drops the fragment to
-weight 500 against the heading's 700. In Prismic heading fields, italic (`em`)
-maps to the same thing. Use it on a fragment only, never on a whole heading or
-on body copy.
-
-```tsx
-<Heading as="h1" size="h1">
-	Our story <Accent>(in brief)</Accent>
-</Heading>
-```
-
-`h1`–`h6` get `text-wrap: balance` and `p` gets `text-wrap: pretty` from the
-base layer.
+Avoid introducing new hues. If a chart needs several series, use orange
+`#FF9035`, ink `#0B0C17`, then neutral steps (`#7D7D7D`, `#C5C5C2`) and
+primary tints (`#FBB88B`, `#854200`).
 
 ---
 
-## 5. Space, layout and shape
+## 3. Typography
+
+### Typeface
+
+**Area Inktrap** (by Blaze Type), in **Medium 500** and **Bold 700**, roman and
+italic. It is the only typeface.
+
+- **Web:** Adobe Fonts kit `ccy7tqi`
+  (`<link rel="stylesheet" href="https://use.typekit.net/ccy7tqi.css">`),
+  `font-family: "area-inktrap"`. The kit is **locked to approved domains**
+  (vpcc.church and its previews). On any other domain the font silently falls
+  back, so a new site needs its domain added to the kit by the kit owner.
+- **Desktop (slides, print, graphics):** activate it through Adobe Fonts with
+  a Creative Cloud licence.
+- **Fallback** when Area Inktrap isn't available, for example in email:
+  `ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`.
+  Don't substitute another characterful display face. A plain system sans is
+  closer in spirit than a lookalike.
+- **Never fake weights.** The font has nothing below 500 and nothing between
+  500 and 700, so don't ask for 300, 400 or 600. On the web, set
+  `font-synthesis: none`.
+
+### Scale
+
+Web sizes are fluid. They interpolate between a 375px and a 1500px viewport;
+the exact `clamp()` values are in Appendix A. For a fixed canvas, use the
+**Desktop** column, or **Mobile** for small canvases.
+
+| Style      | Mobile | Desktop | Weight | Line height | Tracking | Case      | Use                                |
+| ---------- | ------ | ------- | ------ | ----------- | -------- | --------- | ---------------------------------- |
+| Display    | 44px   | 96px    | 700    | 0.95        | −0.03em  | Sentence  | Home hero only                     |
+| H1         | 36px   | 64px    | 700    | 1.02        | −0.025em | Sentence  | Page title, one per page           |
+| H2         | 28px   | 44px    | 700    | 1.08        | −0.02em  | Sentence  | Section titles                     |
+| H3         | 22px   | 30px    | 700    | 1.2         | −0.015em | Sentence  | Sub-sections, dialog titles        |
+| H4         | 18px   | 22px    | 700    | 1.3         | −0.01em  | Sentence  | Card titles                        |
+| Body large | 18px   | 21px    | 500    | 1.6         | −0.005em | —         | Intros, lead paragraphs            |
+| Body       | 16px   | 18px    | 500    | 1.65        | 0        | —         | Default text                       |
+| Body small | 15px   | 16px    | 500    | 1.6         | 0        | —         | Buttons, form labels, nav, notices |
+| Caption    | 13px   | 14px    | 500    | 1.5         | 0.005em  | —         | Hints, errors, metadata            |
+| Overline   | 12px   | 13px    | 700    | 1.4         | 0.09em   | UPPERCASE | Eyebrows above titles, badges      |
+
+- **Body text weight is 500**, not 400. Bold (700) is for headings and
+  emphasis.
+- **Line length:** about 68 characters for body text (`max-width: 68ch`). Use
+  44ch for short columns and 82ch at most.
+- Balance heading lines (`text-wrap: balance`) and avoid orphans in paragraphs
+  (`text-wrap: pretty`).
+- Headings are ink `#0B0C17`. Body copy is `#47474B`, with bold runs in ink.
+
+### Two-tone headings
+
+The house way to set part of a heading apart is to **drop that fragment to
+weight 500** against the heading's 700. It keeps the same size, colour and
+face, and it is not italic.
+
+> **April 3rd:** Hot Cross Buns — "April 3rd:" in 700, "Hot Cross Buns" in 500
+>
+> **Our story** (in brief) — "(in brief)" in 500
+
+Use it on a fragment, never on a whole heading, and never in body text.
+
+---
+
+## 4. Space, shape and depth
 
 ### Spacing
 
-The base unit is 4px: `p-4` is 1rem and `gap-6` is 1.5rem. Any integer step
-works. Use the steps the system already uses:
+The base unit is **4px**. Use multiples: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64.
 
-| Purpose                     | Classes                                           |
-| --------------------------- | ------------------------------------------------- |
-| Heading → body              | `mt-4` to `mt-6` (`mt-5` is typical)              |
-| Body → buttons              | `mt-8`                                            |
-| Intro block → grid of cards | `mt-12`                                           |
-| Card padding                | `p-5` / `p-6 sm:p-8` / `p-8 sm:p-10` (via `Card`) |
-| Grid gaps                   | `gap-6 sm:gap-8` (md), `gap-8 sm:gap-12` (lg)     |
-| Button groups               | `gap-3`                                           |
+| Relationship                | Space                               |
+| --------------------------- | ----------------------------------- |
+| Eyebrow → title             | 8px                                 |
+| Heading → its body text     | 16–24px (20px typical)              |
+| Paragraph → paragraph       | 16px                                |
+| Body → buttons              | 32px                                |
+| Buttons side by side        | 12px                                |
+| Intro block → grid of cards | 48px                                |
+| Grid gap                    | 24px (mobile) → 32px (750px and up) |
+| Card padding                | 24px (mobile) → 32px (750px and up) |
 
-### Section rhythm (vertical)
+### Sections and page frame (web)
 
-Prefer `<Section spacing>` over these utilities.
+| Token                     | Mobile → desktop | Use                                      |
+| ------------------------- | ---------------- | ---------------------------------------- |
+| Section padding (small)   | 32 → 48px        | Top and bottom of a compact band         |
+| Section padding (default) | 44 → 72px        | Top and bottom of a normal band          |
+| Section padding (large)   | 56 → 96px        | Top and bottom of a feature band         |
+| Page gutter               | 20 → 48px        | Left and right padding of the page frame |
 
-| Utility        | `Section spacing` | Value                                         |
-| -------------- | ----------------- | --------------------------------------------- |
-| `section-y-sm` | `sm`              | 32 → 48px top and bottom                      |
-| `section-y`    | `md` (default)    | 44 → 72px top and bottom                      |
-| `section-y-lg` | `lg`              | 56 → 96px top and bottom                      |
-| `section-t-lg` | `header`          | 56 → 96px **top only**: a page's opening band |
+Every band pads its own top and bottom, so the visible gap between two bands
+is the sum of both. A page's opening band (its title) pads the top only, so
+the intro sits with the content that follows it.
 
-These are **half-gaps**. Stacked sections add their padding together, so don't
-add margins between sections.
+| Container | Max width | Use                                    |
+| --------- | --------- | -------------------------------------- |
+| Narrow    | 544px     | Forms, single narrow column            |
+| Text      | 704px     | Articles, page intros, calls to action |
+| Default   | 1248px    | Standard page frame                    |
+| Wide      | 1440px    | Near-full-bleed media                  |
 
-### Gutter and containers
+**Breakpoints**, mobile-first: **500**, **750**, **1150**, **1350** and
+**1500px**. Layouts usually go from one column to two at 750px and to three or
+four at 1150px.
 
-`gutter` (20 → 48px inline padding) comes from `Container`. Don't apply it by
-hand, except inside full-bleed chrome such as the nav drawer.
+### Shape
 
-| `Container size` | Max width | Use                                    |
-| ---------------- | --------- | -------------------------------------- |
-| `narrow`         | 544px     | Forms, a single narrow column          |
-| `text`           | 704px     | Article/prose pages, `PageHeader`, CTA |
-| `default`        | 1248px    | The standard page frame                |
-| `wide`           | 1440px    | Near-full-bleed media                  |
-| `full`           | none      | Edge to edge (gutter still applies)    |
+| Radius | px   | Use                                       |
+| ------ | ---- | ----------------------------------------- |
+| sm     | 4px  | Focus ring, checkboxes                    |
+| md     | 8px  | Form fields, inline messages              |
+| lg     | 14px | Cards, images, dialogs                    |
+| pill   | full | Buttons, badges, round icon buttons, dots |
 
-The matching `max-w-narrow`, `max-w-text`, `max-w-default` and `max-w-wide`
-classes exist. `flush` removes the gutter.
+### Depth
 
-### Breakpoints (mobile-first)
-
-| Prefix | Min width |
-| ------ | --------- |
-| `xs:`  | 500px     |
-| `sm:`  | 750px     |
-| `md:`  | 1150px    |
-| `lg:`  | 1350px    |
-| `xl:`  | 1500px    |
-
-These are not Tailwind's defaults. `sm` is 750px and `md` is 1150px. The usual
-two-column split happens at `sm:`.
-
-### Radius
-
-| Class          | Value | Use                                 |
-| -------------- | ----- | ----------------------------------- |
-| `rounded-none` | 0     | —                                   |
-| `rounded-sm`   | 4px   | Focus ring, checkboxes              |
-| `rounded-md`   | 8px   | Form controls, `FormStatus`         |
-| `rounded-lg`   | 14px  | Cards, media, dialogs               |
-| `rounded-pill` | pill  | Buttons, badges, icon buttons, dots |
-
-There is no `rounded-xl` or `rounded-2xl`. Keep radii tight.
-
-### Elevation and depth
-
-- Depth means a **hairline border** (`border border-line`), not a shadow.
-- `shadow-overlay`: dialogs and floating controls. `shadow-popover`: popovers.
-  These are the only two.
-- Z-index utilities: `z-sticky` (100), `z-nav` (200), `z-dropdown` (300),
-  `z-overlay` (800), `z-modal` (900), `z-toast` (1000). Use these, not
-  `z-[999]`.
+- Express depth with a **1px hairline** in `#E0E0DB` (`#C5C5C2` on hover or
+  for stronger edges). Lift with colour: a white card on the paper page.
+- Use shadows only for floating layers:
+    - **Overlay** (dialogs, floating buttons):
+      `0 1px 2px rgba(11,12,23,0.04), 0 8px 24px rgba(11,12,23,0.08)`
+    - **Popover:** `0 1px 2px rgba(11,12,23,0.05), 0 16px 48px rgba(11,12,23,0.12)`
+- Modal backdrop: `rgba(11,12,23,0.4)` with a 2px blur.
 
 ---
 
-## 6. Motion
+## 5. Components
 
-| Duration utility   | Value | Use                                 |
-| ------------------ | ----- | ----------------------------------- |
-| `duration-instant` | 80ms  | Colour on hover                     |
-| `duration-fast`    | 160ms | Small state changes, links, buttons |
-| `duration-base`    | 240ms | The default; cards, dialogs         |
-| `duration-slow`    | 400ms | Reveals, drawers, crossfades        |
-| `duration-slower`  | 640ms | Full-page transitions               |
+These are visual specs, independent of any framework. Build them in whatever
+the target medium uses.
 
-| Easing utility  | Curve                     | Use                    |
-| --------------- | ------------------------- | ---------------------- |
-| `ease-standard` | `cubic-bezier(0.2,0,0,1)` | Default for everything |
-| `ease-entrance` | `cubic-bezier(0,0,0,1)`   | Things arriving        |
-| `ease-exit`     | `cubic-bezier(0.3,0,1,1)` | Things leaving         |
-| `ease-linear`   | linear                    | Progress only          |
+### Buttons
 
-The canonical hover transition is
-`transition-colors duration-fast ease-standard`. Name the properties when you
-mix them: `transition-[border-color,background-color,translate]`.
+All buttons are pills with bold (700) labels, no wrapping, a gap of 8px between
+an icon and the label, and a press scale of 0.98.
 
-Movement stays small. A reveal rises 12px and an interactive card lifts with
-`hover:-translate-y-0.5`. Buttons press with `active:scale-[0.98]` (already in
-`Button`).
+| Size   | Height | Horizontal padding | Label size |
+| ------ | ------ | ------------------ | ---------- |
+| Small  | 36px   | 16px               | Body small |
+| Medium | 44px   | 24px               | Body small |
+| Large  | 52px   | 32px               | Body       |
 
-**Scroll reveals:** wrap content in `<Reveal>`. For a list or grid use
-`<Stagger>`, which gives one observer per child. Inside a grid, pass
-`itemClassName="h-full"` so equal-height cards stay equal. The reveal is
-CSS-driven and gated on `@media (scripting: enabled)`, so no-JS visitors still
-see content.
+| Variant               | Rest                                                 | Hover            | Pressed        |
+| --------------------- | ---------------------------------------------------- | ---------------- | -------------- |
+| **Primary**           | Fill `#FF9035`, label `#0B0C17`                      | Fill `#F99C57`   | Fill `#D56E00` |
+| **Secondary**         | Transparent, 1px border `#C5C5C2`, label `#0B0C17`   | Fill `#F2F2EC`   | —              |
+| **Ghost**             | Transparent, label `#0B0C17`                         | Fill `#F2F2EC`   | —              |
+| **Inverse** (on dark) | Transparent, 1px border white @ 16%, label `#FCFCF5` | Fill paper @ 10% | —              |
 
-```tsx
-<Stagger
-	className="mt-12 grid grid-cols-1 gap-6 xs:grid-cols-2 md:grid-cols-3"
-	itemClassName="h-full"
->
-	{items.map((item) => (
-		<Card key={item.id} className="h-full">
-			…
-		</Card>
-	))}
-</Stagger>
+- Use **one primary per group.** Every other button in the group is
+  secondary.
+- Disabled buttons are at 50% opacity. A loading button shows a small spinning
+  ring in the label colour; it's the only looping animation allowed.
+- Labels are short verbs in sentence case: "Get in touch", "Find out more",
+  "Get directions".
+
+### Links
+
+| Context                  | Style                                                                                                    |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Inline, in a paragraph   | `#AE5900`, underlined with a 1px `#C5C5C2` line offset 4px. On hover the underline takes the text colour |
+| Standalone (lists, nav)  | `#0B0C17`, no underline. On hover the text turns `#AE5900` and gets an underline                         |
+| Muted (footer, metadata) | `#606162`. On hover the text turns `#0B0C17` and gets an underline                                       |
+| On dark                  | `#FCFCF5` with an underline in the same colour                                                           |
+
+External links open in a new tab.
+
+### Cards
+
+- Radius 14px, padding 24px (32px from 750px up).
+- **Outlined** (the default): transparent with a 1px `#E0E0DB` border.
+  **Raised:** white with the same border. **Sunken:** `#F2F2EC` with no border.
+- A clickable card's border goes to `#C5C5C2` on hover and the card lifts 2px.
+- A typical card holds an H4 title, an optional overline eyebrow in `#AE5900`,
+  and body text in `#47474B`.
+
+### Badge
+
+A pill with 12px horizontal and 4px vertical padding, in the overline style.
+
+| Tone    | Background                 | Text      | Notes                                                                 |
+| ------- | -------------------------- | --------- | --------------------------------------------------------------------- |
+| Neutral | `#F2F2EC`                  | `#47474B` | The default for new work                                              |
+| Outline | none, 1px border `#E0E0DB` | `#47474B` |                                                                       |
+| Accent  | `#FFE8D9`                  | `#0B0C17` | Use ink text. `#AE5900` on this wash is 4.21:1, below AA at this size |
+
+### Notice band
+
+A site-wide strip for a change to the normal routine, such as "No Sunday
+service this week".
+
+- Full width, background `#FFE8D9`, with 1px `#E0E0DB` hairlines above and
+  below.
+- **One centred line**: body small, `#47474B`, with the key phrase bold in
+  `#0B0C17`. It's about 50px tall.
+- Never use full-strength orange here. It outshouts the page title and
+  competes with the logo.
+- If the message needs more than one line, it needs its own page.
+
+### Forms
+
+- **Field:** white background, 1px `#C5C5C2` border, radius 8px, padding
+  12px × 16px, body-size text in ink, placeholder in `#606162`. The border
+  goes to `#606162` on hover and to `#BE2323` when the field is invalid.
+- **Label:** above the field, body small, bold, ink. Optional fields add
+  "(optional)" after the label, in weight 500 and `#606162`. Required fields
+  carry no marker.
+- **Hint and error:** caption size, below the label and below the field. Hints
+  are `#606162` and errors `#BE2323`. The space between label, field and
+  messages is 8px.
+- **Checkboxes and radios** are native controls tinted `#FF9035`, at 20px.
+- **Outcome message:** shown inline, never in a pop-up. Radius 8px, 20px
+  padding, a bold ink title over body-small `#47474B` text. A success message
+  has a `#298646` border on `#E1F5E4`; an error has a `#BE2323` border on
+  `#FFE6E2`.
+
+### Dialog
+
+Background `#FCFCF5`, 1px `#E0E0DB` border, radius 14px, overlay shadow, and a
+width of at most 576px. Padding is 24px (32px from 750px up). The title is H3.
+A round ghost close button with a ✕ icon sits at the top right. The backdrop is
+ink at 40% with a 2px blur. It fades in and scales from 0.98 to 1.
+
+### Images
+
+- Radius 14px. Reserve the space with a fixed ratio and fill it with
+  `#F2F2EC` until the image loads.
+- Ratios: **4:3 (default)**, 1:1, 3:4, 16:9 and 21:9.
+- A slideshow crossfades over 400ms and never cuts. It pauses on hover and
+  focus, has previous and next controls, and doesn't autoplay under reduced
+  motion. The position dots are 6px; the active one is a 24px-wide orange
+  pill.
+
+### Focus and selection
+
+- **Focus:** a 2px solid `#D56E00` outline, offset 2px, with a 4px radius, on
+  every interactive element.
+- **Text selection:** `#FF9035` background with `#0B0C17` text.
+
+---
+
+## 6. Iconography
+
+- Outline icons on a **24×24 grid** with a **1.75px stroke**, round caps and
+  joins, and no fill. They are drawn in the text colour (`currentColor`).
+- Default size is 24px; 16px in the footer and in dense rows.
+- **Brand marks such as Instagram and Facebook are drawn as outlines too,**
+  not as their solid official forms. Mixed solid and outline icons read as
+  three different weights at 16px.
+- The current set is arrow left and right, chevron left, right and down,
+  close, menu, mail, phone, map pin, calendar, external link, Instagram and
+  Facebook. New icons should match that style. Lucide icons with
+  `stroke-width="1.75"` are the closest library match.
+
+---
+
+## 7. Logo
+
+The mark is a **filled disc with "vpcc" knocked out** in lowercase. The SVG is
+in Appendix C.
+
+- **Colour:** `#FF9035` on light backgrounds and `#FCFCF5` on dark. It is a
+  single colour; don't use gradients, outlines or other colours.
+- **Size:** at least 40px (44px on desktop in the header, 48px in the footer).
+- **Clear space:** at least a quarter of the disc's diameter on every side.
+  This is a recommendation; no formal clear-space rule has been set.
+- Don't place it on busy photography. Don't stretch it, rotate it or add a
+  shadow.
+- The orange logo and the primary button are the two places the brand orange
+  is meant to land. Keep other orange near the logo to a minimum.
+- **Accessible name:** "Victoria Park Community Church".
+
+---
+
+## 8. Imagery
+
+- Use real photographs of the church community, its events and the
+  neighbourhood around Victoria Park. Avoid stock imagery.
+- Present photos plainly: 14px radius and no borders, frames or overlays.
+- **This is still undecided:** whether the old site's filtered or duotone
+  photo treatment carries over. Until it's decided, use unfiltered photos, and
+  don't introduce a new filter.
+- Every image needs real alt text that describes it. Use empty alt text only
+  for decoration.
+
+---
+
+## 9. Motion
+
+| Duration | Value | Use                                 |
+| -------- | ----- | ----------------------------------- |
+| Instant  | 80ms  | Colour change on hover              |
+| Fast     | 160ms | Buttons, links, small state changes |
+| Base     | 240ms | The default: cards, dialogs         |
+| Slow     | 400ms | Reveals, drawers, crossfades        |
+| Slower   | 640ms | Full-page transitions               |
+
+| Easing   | Curve                        | Use               |
+| -------- | ---------------------------- | ----------------- |
+| Standard | `cubic-bezier(0.2, 0, 0, 1)` | The default       |
+| Entrance | `cubic-bezier(0, 0, 0, 1)`   | Elements arriving |
+| Exit     | `cubic-bezier(0.3, 0, 1, 1)` | Elements leaving  |
+
+- Animate only transform, opacity, filter and colour.
+- **Scroll reveal:** fade from 0 and rise 12px over 400ms with the entrance
+  easing. Stagger list items 70ms apart.
+- **Page transition:** fade in and rise 4px over 240ms.
+- **Drawer:** slide in from the right over 400ms. Don't also fade or scale it.
+- Nothing loops, bounces or overshoots. The one exception is a loading
+  spinner.
+- **Reduced motion:** when `prefers-reduced-motion: reduce` is set, collapse
+  every duration to about 0 (use 0.01ms so end events still fire) and set the
+  reveal distance to 0. Content without JavaScript must never stay hidden.
+
+---
+
+## 10. Accessibility
+
+The target is **WCAG 2.2 AA**.
+
+- Use only the text and background pairs in §2.
+- Give every interactive element a visible focus ring (§5). Don't remove one
+  without replacing it.
+- Underline inline links.
+- Use one H1 per page and don't skip heading levels. Choose the heading level
+  for the page structure; visual size is a separate decision.
+- Give icon-only buttons an accessible name.
+- Use real buttons and links, never clickable divs.
+- Moving content can be paused and doesn't autoplay under reduced motion.
+- Give form fields visible labels (not placeholder-only). Connect errors to
+  their field and announce them.
+- Put a "Skip to content" link first on every web page.
+- Touch targets are at least 36px, and 44px for primary actions.
+
+---
+
+## 11. Voice and copy
+
+- **Warm, plain and direct.** Write as a welcoming local church, not an
+  institution. Use short sentences and everyday words.
+- Use **British English**: colour, organise, programme, neighbourhood.
+- Use typographic punctuation: curly apostrophes and quotes (’ “ ”), and an em
+  dash with spaces for asides ( — ).
+- **Dates:** "Sunday 23 August", "Wednesday 2 September", with no ordinal
+  suffixes in running text. **Times:** lowercase with no space: "3:15pm",
+  "10am".
+- **Casing:** sentence case for headings, buttons, form labels and UI text.
+  Proper names keep their capitals, as do the established page names: "What’s
+  On", "About", "Beliefs", "Connect", "Donate".
+- A notice is one line. A button label is a short verb phrase.
+
+---
+
+## 12. Applying the system to other media
+
+| Medium              | Guidance                                                                                                                                                                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Slides**          | Use a paper `#FCFCF5` background, ink titles and one orange element per slide at most (the logo counts). Section dividers can use the dark band with paper text. Use the desktop type sizes, scaled to the canvas, with generous margins of at least 1/12 of the width |
+| **Social graphics** | Use a paper or dark background, with orange as a block, shape or the logo, never as text. Make the headline H1 style in ink or paper, and set the logo in a corner with clear space. Keep text to one short line and a date                                            |
+| **Email**           | The web font won't load, so use the fallback stack. Use paper or white as the background. Make buttons orange pills with dark ink labels, built with a table so they render everywhere. Underline links in `#AE5900`                                                   |
+| **Print**           | Use Area Inktrap via Adobe Fonts. Uncoated paper suits the warm-paper feel. Orange `#FF9035` will shift in CMYK, so proof it. Keep body text at 9pt or above in `#47474B` or ink                                                                                       |
+| **Charts and data** | Use the palette advice in §2. Draw gridlines in `#E0E0DB`, set labels in `#606162` and leave the chart without shadows or 3D effects                                                                                                                                   |
+
+---
+
+## Appendix A: CSS tokens
+
+Paste this into any web project. Hex values are exact equivalents of the
+production OKLCH values.
+
+```css
+:root {
+	/* Colour — surfaces */
+	--color-surface: #fcfcf5;
+	--color-surface-raised: #ffffff;
+	--color-surface-sunken: #f2f2ec;
+	--color-surface-inverse: #0b0c17;
+
+	/* Colour — text */
+	--color-ink: #0b0c17;
+	--color-ink-secondary: #47474b;
+	--color-ink-muted: #606162;
+	--color-ink-inverse: #fcfcf5;
+	--color-ink-accent: #ae5900;
+
+	/* Colour — lines */
+	--color-line: #e0e0db;
+	--color-line-strong: #c5c5c2;
+	--color-line-inverse: rgba(255, 255, 255, 0.16);
+
+	/* Colour — accent */
+	--color-accent: #ff9035;
+	--color-accent-hover: #f99c57;
+	--color-accent-pressed: #d56e00;
+	--color-accent-contrast: #0b0c17;
+	--color-accent-subtle: #ffe8d9;
+
+	/* Colour — state */
+	--color-focus-ring: #d56e00;
+	--color-success: #298646;
+	--color-success-surface: #e1f5e4;
+	--color-danger: #be2323;
+	--color-danger-surface: #ffe6e2;
+
+	/* Type */
+	--font-sans:
+		"area-inktrap", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+		Roboto, "Helvetica Neue", Arial, sans-serif;
+	--font-weight-medium: 500;
+	--font-weight-bold: 700;
+
+	--text-display: clamp(2.75rem, 1.6667rem + 4.622vw, 6rem);
+	--text-h1: clamp(2.25rem, 1.6667rem + 2.489vw, 4rem);
+	--text-h2: clamp(1.75rem, 1.4167rem + 1.422vw, 2.75rem);
+	--text-h3: clamp(1.375rem, 1.2083rem + 0.711vw, 1.875rem);
+	--text-h4: clamp(1.125rem, 1.0417rem + 0.356vw, 1.375rem);
+	--text-body-lg: clamp(1.125rem, 1.0625rem + 0.267vw, 1.3125rem);
+	--text-body: clamp(1rem, 0.9583rem + 0.178vw, 1.125rem);
+	--text-body-sm: clamp(0.9375rem, 0.9167rem + 0.089vw, 1rem);
+	--text-caption: clamp(0.8125rem, 0.7917rem + 0.089vw, 0.875rem);
+	--text-overline: clamp(0.75rem, 0.7292rem + 0.089vw, 0.8125rem);
+
+	--measure-tight: 44ch;
+	--measure: 68ch;
+	--measure-wide: 82ch;
+
+	/* Space */
+	--space-unit: 0.25rem; /* 4px */
+	--space-section-sm: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+	--space-section: clamp(2.75rem, 2rem + 2.5vw, 4.5rem);
+	--space-section-lg: clamp(3.5rem, 2.5rem + 3.5vw, 6rem);
+	--space-gutter: clamp(1.25rem, 0.75rem + 2.2vw, 3rem);
+
+	/* Containers */
+	--container-narrow: 34rem; /* 544px */
+	--container-text: 44rem; /* 704px */
+	--container-default: 78rem; /* 1248px */
+	--container-wide: 90rem; /* 1440px */
+
+	/* Shape */
+	--radius-sm: 0.25rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.875rem;
+	--radius-pill: 999px;
+
+	/* Elevation — floating layers only */
+	--shadow-overlay:
+		0 1px 2px rgba(11, 12, 23, 0.04), 0 8px 24px rgba(11, 12, 23, 0.08);
+	--shadow-popover:
+		0 1px 2px rgba(11, 12, 23, 0.05), 0 16px 48px rgba(11, 12, 23, 0.12);
+
+	/* Motion */
+	--duration-instant: 80ms;
+	--duration-fast: 160ms;
+	--duration-base: 240ms;
+	--duration-slow: 400ms;
+	--duration-slower: 640ms;
+	--ease-standard: cubic-bezier(0.2, 0, 0, 1);
+	--ease-entrance: cubic-bezier(0, 0, 0, 1);
+	--ease-exit: cubic-bezier(0.3, 0, 1, 1);
+	--reveal-distance: 0.75rem;
+	--reveal-stagger: 70ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--duration-instant: 0.01ms;
+		--duration-fast: 0.01ms;
+		--duration-base: 0.01ms;
+		--duration-slow: 0.01ms;
+		--duration-slower: 0.01ms;
+		--reveal-distance: 0rem;
+		--reveal-stagger: 0ms;
+	}
+}
+
+/* Element defaults */
+body {
+	background: var(--color-surface);
+	color: var(--color-ink);
+	font-family: var(--font-sans);
+	font-size: var(--text-body);
+	font-weight: var(--font-weight-medium);
+	line-height: 1.65;
+	font-synthesis: none;
+	-webkit-font-smoothing: antialiased;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: var(--font-weight-bold);
+	text-wrap: balance;
+}
+p {
+	text-wrap: pretty;
+}
+:focus-visible {
+	outline: 2px solid var(--color-focus-ring);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}
+::selection {
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+}
 ```
 
-Reduced motion collapses every duration token to `0.01ms` and the reveal
-distance to 0. You get it for free when you use the tokens. A looping animation
-must be `motion-safe:` only.
+Breakpoints for media queries: `500px`, `750px`, `1150px`, `1350px` and
+`1500px`, all as `min-width`.
 
 ---
 
-## 7. Component reference
+## Appendix B: JSON tokens
 
-Import from `@/components/ui` (barrel) or the specific file. Every component
-accepts `className`, which `cn()` merges, so a later class correctly overrides a
-variant's class.
+For tools that don't take CSS, such as slide generators, design tools and
+image scripts.
 
-### Layout: `layout.tsx`
-
-| Component   | Props (default **bold**)                                                                                                      | Notes                                                                               |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `Section`   | `as` (**section**), `spacing`: none · sm · **md** · lg · header; `tone`: **default** · sunken · inverse; `id`                 | A page band. Owns vertical rhythm and background. `inverse` sets `text-ink-inverse` |
-| `Container` | `as` (**div**), `size`: narrow · text · **default** · wide · full; `flush`                                                    | The page frame. Owns the gutter                                                     |
-| `Stack`     | `direction`: **column** · row (wraps); `gap`: none · xs(2) · sm(3) · **md(5)** · lg(8) · xl(12) · 2xl(16); `align`; `justify` | Flex stack                                                                          |
-| `Grid`      | `cols`: 1 · 2 · 3 · 4 · **12** (responsive presets); `gap`: none · sm · **md** · lg                                           | `3` = 1 → 2 at xs → 3 at md                                                         |
-
-### Typography: `typography.tsx`
-
-| Component | Props                                                                                                                                | Notes                                                                                                                                                                           |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Heading` | `as`: h1–h6 · p · span (**h2**); `size`: display · h1 · **h2** · h3 · h4; `tone`: **primary** · secondary · muted · inverse · accent | Level and size are independent                                                                                                                                                  |
-| `Text`    | `as` (**p**); `size`: lg · **md** · sm · caption · overline; `tone` (as Heading); `weight`: **medium** · bold; `measure`             | `overline` adds `uppercase`                                                                                                                                                     |
-| `Accent`  | children                                                                                                                             | Weight-500 fragment inside a heading                                                                                                                                            |
-| `Prose`   | `tone`: **default** · inverse                                                                                                        | For CMS rich text. Styles bare `p`, `h2`, `h3`, `ul`, `ol`, `a`, `strong` and `em`. On dark bands **pass `tone="inverse"`**; a `text-ink-inverse` className leaves links orange |
-
-### Actions: `button.tsx`, `link.tsx`
-
-| Component | Props                                                                                                                                      | Notes                                                                                                                                                                                                                      |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Button`  | `variant`: **primary** · secondary · ghost · inverse; `size`: sm (h-9) · **md** (h-11) · lg (h-13); `block`; `href`; `loading`; `download` | With `href` it renders `NextLink`, or `<a>` for external links and downloads, with `target`/`rel` set automatically. Without `href` it renders `<button type="button">`. `loading` shows a spinner and disables the button |
-| `Link`    | `href`; `variant`: **inline** · standalone · inverse · muted                                                                               | Text link. External links get `_blank` + `noopener`                                                                                                                                                                        |
-
-Use one `primary` button per group. Every other button in the group is
-`secondary`; `PrismicButtonGroup` does this for you. Use `inverse` buttons and
-links on `surface-inverse`.
-
-### Surfaces: `surface.tsx`
-
-| Component | Props                                                                                                   | Notes                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `Card`    | `as`; `tone`: **outlined** · raised · sunken · plain; `padding`: none · sm · **md** · lg; `interactive` | `rounded-lg`. `interactive` adds a hover border and a 2px lift                                |
-| `Badge`   | `tone`: **accent** · neutral · outline                                                                  | Pill, overline type                                                                           |
-| `Divider` | `tone`: **default** · inverse                                                                           | `<hr>` hairline                                                                               |
-| `Notice`  | children (one line; bold is the emphasis)                                                               | Site-wide notice band. Rendered by `layout/site-notice.tsx`; don't reuse it for inline alerts |
-
-### Media: `media.tsx`, `slideshow.tsx`, `icon.tsx`
-
-| Component   | Props                                                                                                                                                           | Notes                                                                                                                                                                                                                                              |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Media`     | `ratio`: square · portrait (3/4) · **landscape** (4/3) · wide (16/9) · ultrawide (21/9) · auto; `rounded` (**true**); `sizes` (**100vw**); `blurDataURL`; `alt` | Wraps `next/image` in a ratio box. **Always pass a real `sizes`** when the image is narrower than the viewport, for example `"(min-width: 750px) 50vw, 100vw"`                                                                                     |
-| `Slideshow` | `images: SlideshowImage[]`; `interval` (**5000**); `ratio`; `sizes`; `priority`                                                                                 | Crossfades, pauses on hover and focus, and has keyboard, swipe and dot controls. No autoplay under reduced motion. One image renders a plain `Media`                                                                                               |
-| `Icon`      | `name`; `label` (only when the icon is a control's sole content)                                                                                                | 24px grid with a 1.75 stroke in `currentColor`; `size-6` by default. Names: `arrow-right`, `arrow-left`, `chevron-left`, `chevron-right`, `chevron-down`, `close`, `menu`, `mail`, `phone`, `pin`, `calendar`, `external`, `instagram`, `facebook` |
-| `Logo`      | `className`, `title` (`@/components/brand/logo`)                                                                                                                | `currentColor`: `text-accent` on light surfaces, inherits `ink-inverse` in the footer                                                                                                                                                              |
-
-To add an icon, add a stroked path to `PATHS` in `icon.tsx` on the 24×24 grid,
-outline style. Don't add filled brand marks.
-
-### Overlay: `dialog.tsx`
-
-`Dialog`: `open`, `onClose`, `title` (the accessible name), `hideTitle`. It is
-the native `<dialog>` with `showModal()`, so the focus trap, Esc and inert
-background come from the browser. Clicking the backdrop closes it. Its width is
-`min(36rem, 100vw - 2rem)`; override it with `className`. It is a client
-component.
-
-### Forms: `form.tsx` (client)
-
-```tsx
-<Field name="email" label="Email" hint="We'll only use it to reply." error={errors.email} required>
-	<Input type="email" autoComplete="email" />
-</Field>
-<Field name="message" label="Message" required>
-	<Textarea />
-</Field>
-<Toggle label="Keep me updated" name="updates" />
-<FormStatus tone="success" title="Thanks — message sent">We'll be in touch soon.</FormStatus>
-```
-
-- `Field` supplies the `id`, `name`, `required`, `aria-invalid` and
-  `aria-describedby` that `Input`, `Textarea` and `Select` read. Don't pass
-  those props yourself. A control outside a `Field` throws.
-- Required fields carry no marker. Optional fields show "(optional)" after
-  the label, so pass `required` on every field that is required.
-- The error region always renders and is hidden until it has content, so screen
-  readers announce it.
-- `FormStatus` shows the outcome inline. Don't open a modal and don't redirect.
-
-### Accessibility helpers: `a11y.tsx`
-
-`SkipLink` comes first in the root layout and targets `#main`. Use
-`VisuallyHidden` (`sr-only`) for screen-reader-only text.
-
----
-
-## 8. Prismic slices
-
-Pages are slice-driven. Use the bridges in `src/components/prismic/`. Don't
-render Prismic fields raw.
-
-| Helper                                    | Use                                                                                                        |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `PrismicHeading field as size tone`       | A single-block rich-text heading. The slice picks the level; italic becomes `Accent`                       |
-| `PrismicProse field tone className`       | Rich-text body inside `Prose`. Returns `null` when empty                                                   |
-| `PrismicInline field`                     | Rich text flattened to spans, for one line. Inherits colour; its links underline with `decoration-current` |
-| `PrismicButtonGroup buttons size variant` | Repeatable label+link rows. Skips half-filled rows. First is `primary`, the rest `secondary`               |
-| `linkHref(field)`                         | Resolves a link field to an `href`, or `undefined`                                                         |
-| `hasContent(field)`                       | Use this, never `field.length`. Prismic leaves an empty paragraph behind when a field is cleared           |
-| `isLeadImageSlice(slices, index)`         | `true` only for the page's first image slice. Only that one gets `priority`                                |
-
-### Slice skeleton
-
-```tsx
-import type { Content } from "@prismicio/client";
-import type { SliceComponentProps } from "@prismicio/react";
-import type { FC } from "react";
-
-import { Reveal } from "@/components/motion/reveal";
-import { PrismicButtonGroup } from "@/components/prismic/link";
-import { PrismicHeading, PrismicProse } from "@/components/prismic/rich-text";
-import { Container, Section } from "@/components/ui/layout";
-
-export type ExampleProps = SliceComponentProps<Content.ExampleSlice>;
-
-const Example: FC<ExampleProps> = ({ slice }) => (
-	<Section spacing="md">
-		<Container>
-			<Reveal>
-				<div className="measure">
-					<PrismicHeading
-						field={slice.primary.title}
-						as="h2"
-						size="h2"
-					/>
-					<PrismicProse field={slice.primary.body} className="mt-5" />
-				</div>
-				<div className="mt-8">
-					<PrismicButtonGroup buttons={slice.primary.buttons} />
-				</div>
-			</Reveal>
-		</Container>
-	</Section>
-);
-
-export default Example;
-```
-
-- Slices are **server components** by default. If a slice needs
-  interactivity, split it: an async server `index.tsx` prepares the data (for
-  example blur placeholders via `getBlurDataURL`) and a `"use client"` body
-  renders it. `Feature` is the model to follow.
-- Slices are pure functions of their props. If a slice needs the current time,
-  read it from `context.now` (`SliceContext`), not `Date.now()`.
-- Register new slices in `src/slices/index.ts`. That file is Prismic-generated,
-  so keep its format.
-
----
-
-## 9. Recipes
-
-**Dark call-to-action band**
-
-```tsx
-<Section tone="inverse">
-	<Container size="text" className="text-center">
-		<Heading as="h2" size="h2" tone="inverse">
-			Join us on Sunday
-		</Heading>
-		<Prose tone="inverse" className="mx-auto mt-5">
-			…
-		</Prose>
-		<div className="mt-8 flex justify-center gap-3">
-			<Button href="/visit" size="lg">
-				Plan a visit
-			</Button>
-			<Button href="/connect" size="lg" variant="inverse">
-				Get in touch
-			</Button>
-		</div>
-	</Container>
-</Section>
-```
-
-**Image beside text** (stacked on mobile, two columns from `sm`)
-
-```tsx
-<Section>
-	<Container>
-		<div className="grid items-center gap-8 sm:grid-cols-2 sm:gap-12">
-			<Media
-				src={src}
-				alt={alt}
-				ratio="landscape"
-				sizes="(min-width: 750px) 50vw, 100vw"
-			/>
-			<div>
-				<Heading as="h2" size="h2">
-					…
-				</Heading>
-				<Prose className="mt-5">…</Prose>
-			</div>
-		</div>
-	</Container>
-</Section>
-```
-
-**Eyebrow + title in a card**
-
-```tsx
-<Card className="h-full">
-	<Heading as="h3" size="h4">
-		Life Skills
-	</Heading>
-	<Text size="overline" tone="accent" className="mt-2">
-		Thursdays
-	</Text>
-	<Text tone="secondary" className="mt-4">
-		…
-	</Text>
-</Card>
-```
-
-**Page opening** (only on hand-built routes; CMS pages use the `PageHeader`
-slice)
-
-```tsx
-<Section as="header" spacing="header">
-	<Container size="text">
-		<Heading as="h1" size="h1">
-			What’s On
-		</Heading>
-		<Text size="lg" tone="secondary" className="mt-6">
-			…
-		</Text>
-	</Container>
-</Section>
+```json
+{
+	"color": {
+		"surface": "#FCFCF5",
+		"surfaceRaised": "#FFFFFF",
+		"surfaceSunken": "#F2F2EC",
+		"surfaceInverse": "#0B0C17",
+		"ink": "#0B0C17",
+		"inkSecondary": "#47474B",
+		"inkMuted": "#606162",
+		"inkInverse": "#FCFCF5",
+		"inkAccent": "#AE5900",
+		"line": "#E0E0DB",
+		"lineStrong": "#C5C5C2",
+		"accent": "#FF9035",
+		"accentHover": "#F99C57",
+		"accentPressed": "#D56E00",
+		"accentContrast": "#0B0C17",
+		"accentSubtle": "#FFE8D9",
+		"focusRing": "#D56E00",
+		"success": "#298646",
+		"successSurface": "#E1F5E4",
+		"danger": "#BE2323",
+		"dangerSurface": "#FFE6E2"
+	},
+	"font": {
+		"family": "Area Inktrap",
+		"webFamily": "area-inktrap",
+		"adobeFontsKit": "ccy7tqi",
+		"weights": { "medium": 500, "bold": 700 },
+		"fallback": "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
+	},
+	"type": {
+		"display": {
+			"min": 44,
+			"max": 96,
+			"weight": 700,
+			"lineHeight": 0.95,
+			"tracking": "-0.03em"
+		},
+		"h1": {
+			"min": 36,
+			"max": 64,
+			"weight": 700,
+			"lineHeight": 1.02,
+			"tracking": "-0.025em"
+		},
+		"h2": {
+			"min": 28,
+			"max": 44,
+			"weight": 700,
+			"lineHeight": 1.08,
+			"tracking": "-0.02em"
+		},
+		"h3": {
+			"min": 22,
+			"max": 30,
+			"weight": 700,
+			"lineHeight": 1.2,
+			"tracking": "-0.015em"
+		},
+		"h4": {
+			"min": 18,
+			"max": 22,
+			"weight": 700,
+			"lineHeight": 1.3,
+			"tracking": "-0.01em"
+		},
+		"bodyLg": {
+			"min": 18,
+			"max": 21,
+			"weight": 500,
+			"lineHeight": 1.6,
+			"tracking": "-0.005em"
+		},
+		"body": {
+			"min": 16,
+			"max": 18,
+			"weight": 500,
+			"lineHeight": 1.65,
+			"tracking": "0"
+		},
+		"bodySm": {
+			"min": 15,
+			"max": 16,
+			"weight": 500,
+			"lineHeight": 1.6,
+			"tracking": "0"
+		},
+		"caption": {
+			"min": 13,
+			"max": 14,
+			"weight": 500,
+			"lineHeight": 1.5,
+			"tracking": "0.005em"
+		},
+		"overline": {
+			"min": 12,
+			"max": 13,
+			"weight": 700,
+			"lineHeight": 1.4,
+			"tracking": "0.09em",
+			"uppercase": true
+		}
+	},
+	"radius": { "sm": 4, "md": 8, "lg": 14, "pill": 999 },
+	"spaceUnit": 4,
+	"breakpoints": { "xs": 500, "sm": 750, "md": 1150, "lg": 1350, "xl": 1500 },
+	"container": { "narrow": 544, "text": 704, "default": 1248, "wide": 1440 },
+	"duration": {
+		"instant": 80,
+		"fast": 160,
+		"base": 240,
+		"slow": 400,
+		"slower": 640
+	},
+	"easing": {
+		"standard": "cubic-bezier(0.2, 0, 0, 1)",
+		"entrance": "cubic-bezier(0, 0, 0, 1)",
+		"exit": "cubic-bezier(0.3, 0, 1, 1)"
+	}
+}
 ```
 
 ---
 
-## 10. Wrong → right
+## Appendix C: Logo SVG
 
-| Wrong                                            | Right                                                                        |
-| ------------------------------------------------ | ---------------------------------------------------------------------------- |
-| `bg-neutral-100`                                 | `bg-surface-sunken`                                                          |
-| `text-primary-500` / `text-accent`               | `text-ink-accent` (as text), or `bg-accent text-accent-contrast` (as a fill) |
-| `text-gray-500`, `text-sm`, `font-semibold`      | `text-ink-muted`, `text-body-sm`, `font-bold`                                |
-| `<h2 className="text-4xl font-bold">`            | `<Heading as="h2" size="h2">`                                                |
-| `<div className="px-6 max-w-7xl mx-auto">`       | `<Container>`                                                                |
-| `<div className="py-24">` around a band          | `<Section spacing="lg">`                                                     |
-| `shadow-md` on a card                            | `<Card>` (hairline) or `<Card tone="raised">`                                |
-| `rounded-xl`, `rounded-2xl`                      | `rounded-lg`                                                                 |
-| `mt-[13px]`, `w-[320px]`                         | `mt-3`, `w-80` or a token                                                    |
-| `<a onClick={…}>`, `<div onClick>`               | `<Button>` (or a real `<button>`)                                            |
-| `<a href="https://…" target="_blank">`           | `<Link href="https://…">` / `<Button href=…>`                                |
-| `<Prose className="text-ink-inverse">`           | `<Prose tone="inverse">`                                                     |
-| `<input id="x" aria-describedby=…>` + `<label>`  | `<Field name label><Input /></Field>`                                        |
-| `transition-all duration-300 ease-in-out`        | `transition-colors duration-fast ease-standard`                              |
-| `@media (prefers-reduced-motion)` in a component | Use the duration tokens; they already collapse                               |
-| `animate-bounce`, `animate-pulse`                | Don't. Static, or `Reveal`                                                   |
-| `if (field.length)` on rich text                 | `hasContent(field)`                                                          |
-| `priority` on every image                        | Only where `isLeadImageSlice(...)` is true                                   |
-| `<Image sizes="100vw">` in a half-width column   | `sizes="(min-width: 750px) 50vw, 100vw"`                                     |
-| `cn("text-h1", someCustomSize)` with a new token | Add the token to the lists in `src/lib/cn.ts` first                          |
+The mark is single-colour and inherits `currentColor`. Set `color: #FF9035` on
+light backgrounds and `color: #FCFCF5` on dark.
 
----
-
-## 11. Accessibility checklist
-
-- [ ] The focus ring is visible. It's global (`:focus-visible`, 2px
-      `focus-ring`, 2px offset). Don't remove an outline without replacing it.
-- [ ] Every text/surface pair is from the allowed list in §3.
-- [ ] Inline links are underlined. Colour is never the only affordance.
-- [ ] Heading levels form a valid outline: one `h1`, no skipped levels.
-- [ ] Icon-only controls have an accessible name (`aria-label` on the button,
-      or `Icon label`).
-- [ ] Images have meaningful `alt`, or `alt=""` if they're decorative.
-- [ ] Interactive elements are `<button>` or `<a>`, never a div with a click
-      handler.
-- [ ] Carousels and other moving content can be paused and don't autoplay under
-      reduced motion.
-- [ ] Hidden-but-mounted content is `inert` + `aria-hidden`.
-- [ ] Live regions exist before they need to announce (render them always, hide
-      them with a class).
-
----
-
-## 12. Copy conventions
-
-- **British English** (colour, organise, programme). Use typographic
-  apostrophes and quotes (’ “ ”) in content. Use an em dash with spaces
-  (`—`) for asides.
-- Dates read naturally: "Sunday 23 August", "Wednesday 2 September". Times are
-  lowercase with no space: "3:15pm".
-- Use sentence case for buttons, form labels and UI text ("Get in touch",
-  "Email address"). Page and nav names keep their established casing ("What’s
-  On", "Quick Links"), as do policy titles. Make button labels verbs ("Get
-  directions", "Find out more").
-- A site-wide notice is **one line**. If it needs more, it needs a page.
-
----
-
-## 13. Extending the system
-
-1. **Can an existing primitive do it with a new variant?** Add the variant to
-   its `cva` config.
-2. **Does it need a value that isn't a token?** Add the token to the right
-   `tokens.*.css` file first, then use it. Tailwind v4 has no `duration-*` or
-   `z-*` theme namespace, so new tokens of those kinds also need an `@utility`
-   in `utilities.css`.
-3. **New colour or text size?** Add it to `COLORS` or `TEXT_SIZES` in
-   `src/lib/cn.ts`. Otherwise `tailwind-merge` won't dedupe it.
-4. **New component?** Put it in `src/components/ui/`, use `cva` for variants,
-   accept `className` and merge it with `cn()`, export it from
-   `src/components/ui/index.ts`, and add `"use client"` only if it needs state
-   or effects.
-5. **Show it** on `/design-system` (`src/app/design-system/design-system.tsx`)
-   in every state it supports.
-6. **Verify** with `npm run check` and a visual check at 375px, 750px and
-   1150px or wider.
-7. **Document** any non-obvious decision in `docs/design-system.md` (the why)
-   and update this file (the what).
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Victoria Park Community Church">
+	<path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M50 100C77.6142 100 100 77.6142 100 50C100 22.3858 77.6142 0 50 0C22.3858 0 0 22.3858 0 50C0 77.6142 22.3858 100 50 100ZM12.32 43.36L19.04 60H23.52L30.24 43.36H25.76L21.28 55.44L16.8 43.36H12.32ZM40.8638 42.96C36.0638 42.96 31.9037 46.88 31.9037 51.68V68.32H36.3838V58.96C37.8237 60 39.4238 60.4 41.1037 60.4C45.8237 60.4 49.8237 56.48 49.8237 51.68C49.8237 46.48 46.0638 42.96 40.8638 42.96ZM45.3438 51.68C45.3438 54.24 43.5037 56.24 40.8638 56.24C38.3037 56.24 36.3838 54.24 36.3838 51.68C36.3838 49.04 38.3037 47.12 40.8638 47.12C43.5037 47.12 45.3438 49.04 45.3438 51.68ZM52.5491 51.68C52.5491 56.88 56.3091 60.4 61.5091 60.4C63.8291 60.4 66.0691 59.44 67.6691 57.76L64.7091 54.88C63.9091 55.68 62.7091 56.24 61.5091 56.24C58.9491 56.24 57.0291 54.24 57.0291 51.68C57.0291 49.04 58.9491 47.12 61.5091 47.12C62.7891 47.12 63.9091 47.6 64.7891 48.4L67.7491 45.44C65.9891 43.68 63.9891 42.96 61.5091 42.96C56.7091 42.96 52.5491 46.88 52.5491 51.68ZM70.3225 51.68C70.3225 56.88 74.0825 60.4 79.2825 60.4C81.6025 60.4 83.8425 59.44 85.4425 57.76L82.4825 54.88C81.6825 55.68 80.4825 56.24 79.2825 56.24C76.7225 56.24 74.8025 54.24 74.8025 51.68C74.8025 49.04 76.7225 47.12 79.2825 47.12C80.5625 47.12 81.6825 47.6 82.5625 48.4L85.5225 45.44C83.7625 43.68 81.7625 42.96 79.2825 42.96C74.4825 42.96 70.3225 46.88 70.3225 51.68Z"/>
+</svg>
+```

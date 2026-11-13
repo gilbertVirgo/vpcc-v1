@@ -47,8 +47,9 @@ docs/             design-system.md, events.md
   questions
 - [`docs/design-system.md`](docs/design-system.md) — how to use and extend the
   design system
-- [`DESIGN.md`](DESIGN.md) — the design system as a rules-first reference for
-  coding agents: tokens, component APIs, recipes, wrong → right
+- [`DESIGN.md`](DESIGN.md) / [`DESIGN.pdf`](DESIGN.pdf) — the brand and design
+  system as a self-contained spec for agents and designers working outside
+  this repo (hex values, type sizes, component specs, CSS/JSON tokens, logo)
 - [`docs/events.md`](docs/events.md) — how an event puts itself on What's On and takes
   itself down
 
