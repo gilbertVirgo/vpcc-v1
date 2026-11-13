@@ -3,6 +3,11 @@
 The rules that keep the site looking like one thing. Read this before adding a
 component or reaching for a value.
 
+This file explains the reasoning for work inside this repo.
+[`DESIGN.md`](../DESIGN.md) (and its PDF export, `DESIGN.pdf`) is the
+self-contained version for agents and designers working outside it: raw hex
+values and sizes, no code. When a token changes, update it there too.
+
 ## The one rule
 
 **Components consume semantic tokens. Nothing else.**
