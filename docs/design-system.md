@@ -3,6 +3,10 @@
 The rules that keep the site looking like one thing. Read this before adding a
 component or reaching for a value.
 
+This file explains the reasoning. [`DESIGN.md`](../DESIGN.md) at the repo root
+is the condensed, rules-first version written for coding agents. Keep the two
+in step.
+
 ## The one rule
 
 **Components consume semantic tokens. Nothing else.**
